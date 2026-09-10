@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Apply saved settings on every page load -->
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    var root = document.documentElement;
+    // Accent color
+    if(s.accent){ root.style.setProperty('--sage', s.accent); }
+    if(s.accentPale){ root.style.setProperty('--sage-pale', s.accentPale); }
+    // Sage light derived from accent
+    if(s.accentLight){ root.style.setProperty('--sage-light', s.accentLight); }
+    // Dark mode
+    if(s.dark){
+      document.documentElement.setAttribute('data-theme','dark');
+      document.body && (document.body.style.background = '#1A1A2E');
+    }
+    // Font
+    if(s.font){
+      var fontMap = {
+        'Lora': "'Lora', serif",
+        'DM Serif': "'DM Serif Display', serif",
+        'Sans': "'Instrument Sans', sans-serif"
+      };
+      var f = fontMap[s.font];
+      if(f) root.style.setProperty('--body-font', f);
+    }
+  } catch(e) {}
+})();
+</script>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — View Entry</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --sage:#6B8F6B;--sage-light:#A8C5A0;--sage-pale:#D4E8CC;
+  --pink:#C4717A;--pink-pale:#F5D8DC;
+  --cream:#FAF6EE;--cream-dark:#F0EAD8;
+  --gold:#B8962E;--gold-light:#D4B060;
+  --text:#2C2418;--text-mid:#6B5840;--text-light:#A89880;
+}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;background:var(--cream);font-family:'Instrument Sans',sans-serif;font-weight:300;}
+
+/* topbar */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(250,246,238,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(168,197,160,0.15);
+}
+.topbar-left{display:flex;align-items:center;gap:1rem;}
+.back-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.76rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-mid);text-decoration:none;background:none;border:none;
+  cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:color 0.2s;
+}
+.back-btn:hover{color:var(--sage);}
+.back-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;transition:transform 0.2s;}
+.back-btn:hover svg{transform:translateX(-3px);}
+.logo{font-family:'DM Serif Display',serif;font-size:1.3rem;font-style:italic;color:var(--sage);text-decoration:none;}
+.logo span{color:var(--pink);}
+.topbar-right{display:flex;gap:0.8rem;}
+.btn-edit{
+  padding:0.55rem 1.2rem;border-radius:8px;
+  background:var(--text);color:white;border:none;
+  font-size:0.74rem;letter-spacing:0.09em;text-transform:uppercase;
+  cursor:pointer;font-family:'Instrument Sans',sans-serif;
+  display:flex;align-items:center;gap:0.5rem;transition:all 0.25s;
+}
+.btn-edit:hover{background:var(--sage);transform:translateY(-1px);}
+.btn-edit svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.btn-del{
+  padding:0.55rem 1rem;border-radius:8px;
+  border:1.5px solid rgba(196,113,122,0.3);background:transparent;
+  color:var(--pink);font-size:0.74rem;letter-spacing:0.09em;text-transform:uppercase;
+  cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.25s;
+}
+.btn-del:hover{background:var(--pink-pale);}
+
+/* content */
+.page{max-width:720px;margin:0 auto;padding:3.5rem 2rem 6rem;}
+
+/* lock screen */
+.lock-screen{
+  max-width:400px;margin:6rem auto;text-align:center;
+  background:white;border:1px solid rgba(168,197,160,0.2);
+  border-radius:20px;padding:3rem 2rem;
+  box-shadow:0 4px 24px rgba(107,143,107,0.08);
+}
+.lock-icon{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sage-pale),var(--pink-pale));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.2rem;
+}
+.lock-icon svg{width:24px;height:24px;stroke:var(--sage);fill:none;stroke-width:1.5;}
+.lock-screen h2{font-family:'DM Serif Display',serif;font-size:1.5rem;font-style:italic;color:var(--text);margin-bottom:0.5rem;}
+.lock-screen p{font-family:'Lora',serif;font-style:italic;font-size:0.88rem;color:var(--text-mid);margin-bottom:1.5rem;}
+.lock-input{
+  width:100%;background:var(--cream);border:1.5px solid rgba(196,113,122,0.25);
+  border-radius:10px;padding:0.8rem 1rem;font-size:0.88rem;
+  font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;
+  transition:border-color 0.2s;margin-bottom:0.8rem;
+}
+.lock-input:focus{border-color:var(--pink);}
+.btn-unlock{
+  width:100%;background:var(--text);color:white;border:none;
+  padding:0.9rem;border-radius:10px;font-size:0.8rem;
+  letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;transition:background 0.2s;
+}
+.btn-unlock:hover{background:var(--sage);}
+.lock-error{font-size:0.75rem;color:var(--pink);margin-top:0.3rem;display:none;font-style:italic;}
+
+/* entry header */
+.entry-header{margin-bottom:2.5rem;}
+.entry-meta-row{
+  display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;
+  font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-light);
+}
+.entry-meta-row::before{content:'';width:24px;height:1px;background:rgba(168,197,160,0.4);}
+.entry-mood-badge{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  background:var(--sage-pale);border-radius:999px;
+  padding:0.25rem 0.7rem;font-size:0.72rem;color:var(--sage);
+  text-transform:none;letter-spacing:0;
+}
+.entry-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(2rem,5vw,3.2rem);
+  font-style:italic;color:var(--text);line-height:1.1;margin-bottom:1rem;
+}
+.entry-tags{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.tag-badge{
+  display:inline-block;background:var(--cream-dark);border-radius:999px;
+  padding:0.2rem 0.65rem;font-size:0.72rem;color:var(--text-light);
+}
+
+/* divider */
+.entry-divider{
+  height:1px;background:linear-gradient(to right,rgba(168,197,160,0.3),transparent);
+  margin:2rem 0;
+}
+
+/* entry body */
+.entry-body{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:1.08rem;color:var(--text);line-height:1.92;
+  white-space:pre-wrap;word-break:break-word;
+}
+
+/* footer nav */
+.entry-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:4rem;padding-top:2rem;
+  border-top:1px solid rgba(168,197,160,0.15);
+}
+.entry-nav-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.76rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-mid);text-decoration:none;background:none;border:none;
+  cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:color 0.2s;
+}
+.entry-nav-btn:hover{color:var(--sage);}
+.entry-nav-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* not found */
+.not-found{text-align:center;padding:6rem 2rem;}
+.not-found h2{font-family:'DM Serif Display',serif;font-size:1.8rem;font-style:italic;color:var(--text);margin-bottom:0.5rem;}
+.not-found p{font-size:0.85rem;color:var(--text-mid);margin-bottom:1.5rem;}
+.btn-back{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--text);color:white;padding:0.85rem 1.8rem;border-radius:10px;
+  font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;transition:background 0.25s;
+}
+.btn-back:hover{background:var(--sage);}
+
+@media(max-width:600px){
+  .topbar{padding:1rem 1.2rem;}
+  .page{padding:2rem 1.2rem 4rem;}
+  .topbar-right .btn-del span{display:none;}
+}
+
+/* guest banner */
+.guest-top-bar{
+  background:linear-gradient(135deg,rgba(184,150,46,0.1),rgba(196,113,122,0.08));
+  border-bottom:1px solid rgba(184,150,46,0.18);
+  padding:0.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.74rem;color:var(--text-mid);flex-wrap:wrap;gap:0.5rem;
+}
+.guest-top-bar svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:1.5;flex-shrink:0;}
+.guest-top-bar-left{display:flex;align-items:center;gap:0.5rem;}
+.guest-top-bar-right{display:flex;align-items:center;gap:0.8rem;}
+.gtb-link{color:var(--sage);text-decoration:none;font-size:0.72rem;letter-spacing:0.06em;border-bottom:1px solid rgba(107,143,107,0.3);transition:color 0.2s;}
+.gtb-link:hover{color:var(--pink);}
+.gtb-close{background:none;border:none;cursor:pointer;color:var(--text-light);font-size:0.9rem;padding:0;line-height:1;transition:color 0.2s;}
+.gtb-close:hover{color:var(--text);}
+
+</style>
+</head>
+<body>
+
+<!-- guest bar -->
+<div style="background:linear-gradient(135deg,rgba(184,150,46,0.1),rgba(196,113,122,0.08));border-bottom:1px solid rgba(184,150,46,0.18);padding:0.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;font-size:0.74rem;color:#6B5840;flex-wrap:wrap;gap:0.5rem;position:relative;z-index:60;" id="guestTopBar">
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>You're exploring as a guest — entries saved on this device only.</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <a href="register.html" style="color:#6B8F6B;text-decoration:none;font-size:0.72rem;border-bottom:1px solid rgba(107,143,107,0.3);">Create free account</a>
+    <a href="login.html" style="color:#6B5840;text-decoration:none;font-size:0.72rem;">Sign in</a>
+    <button onclick="document.getElementById('guestTopBar').style.display='none'" style="background:none;border:none;cursor:pointer;color:#A89880;font-size:1rem;line-height:1;">✕</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      back
+    </a>
+    <a href="index.html" class="logo">Petal<span>Pages</span></a>
+  </div>
+  <div class="topbar-right" id="topbarActions" style="display:none;">
+    <button class="btn-edit" id="editBtn">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>edit</span>
+    </button>
+    <button class="btn-del" id="deleteBtn"><span>delete</span></button>
+  </div>
+</div>
+
+<div id="lockScreen" style="display:none;">
+  <div class="lock-screen">
+    <div class="lock-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <h2>this entry is <em style="color:var(--pink);">locked</em></h2>
+    <p>enter the entry password to read it.</p>
+    <input type="password" class="lock-input" id="lockInput" placeholder="entry password..."/>
+    <p class="lock-error" id="lockError">wrong password — try again</p>
+    <button class="btn-unlock" onclick="tryUnlock()">unlock →</button>
+  </div>
+</div>
+
+<div id="entryContent" style="display:none;">
+  <div class="page">
+    <div class="entry-header">
+      <div class="entry-meta-row">
+        <span id="entryDate">—</span>
+        <span id="entryTime">—</span>
+        <span class="entry-mood-badge" id="entryMood" style="display:none;"></span>
+      </div>
+      <h1 class="entry-title" id="entryTitle">—</h1>
+      <div class="entry-tags" id="entryTags"></div>
+    </div>
+
+    <div class="entry-divider"></div>
+    <div class="entry-body" id="entryBody"></div>
+
+    <div class="entry-nav">
+      <a href="dashboard.html" class="entry-nav-btn">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        back to garden
+      </a>
+      <button class="entry-nav-btn" id="editBtnBottom">
+        edit entry
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="notFound" style="display:none;">
+  <div class="not-found">
+    <span style="font-size:3rem;display:block;margin-bottom:1rem;opacity:0.3;">🌱</span>
+    <h2>entry not found</h2>
+    <p>this page may have been deleted or the link is broken.</p>
+    <a href="dashboard.html" class="btn-back">← back to garden</a>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'petalpages_guest_entries';
+const params = new URLSearchParams(window.location.search);
+const id = parseInt(params.get('id'));
+let currentEntry = null;
+
+function getEntries() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function loadEntry() {
+  const entries = getEntries();
+  currentEntry = entries.find(e => e.id === id);
+
+  if (!currentEntry) {
+    document.getElementById('notFound').style.display = 'block';
+    return;
+  }
+
+  if (currentEntry.locked && currentEntry.lockPw) {
+    document.getElementById('lockScreen').style.display = 'block';
+    document.getElementById('lockInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') tryUnlock();
+    });
+  } else {
+    showEntry();
+  }
+}
+
+function tryUnlock() {
+  const input = document.getElementById('lockInput').value;
+  if (input === currentEntry.lockPw) {
+    document.getElementById('lockScreen').style.display = 'none';
+    showEntry();
+  } else {
+    document.getElementById('lockError').style.display = 'block';
+    document.getElementById('lockInput').style.borderColor = 'var(--pink)';
+  }
+}
+
+function showEntry() {
+  document.getElementById('topbarActions').style.display = 'flex';
+  document.getElementById('entryContent').style.display = 'block';
+
+  document.getElementById('entryTitle').textContent = currentEntry.title;
+  document.getElementById('entryDate').textContent = currentEntry.date;
+  document.getElementById('entryTime').textContent = currentEntry.time;
+  document.getElementById('entryBody').textContent = currentEntry.content;
+
+  if (currentEntry.mood) {
+    const moodEl = document.getElementById('entryMood');
+    moodEl.textContent = currentEntry.mood;
+    moodEl.style.display = 'inline-flex';
+  }
+
+  if (currentEntry.tags && currentEntry.tags.length) {
+    document.getElementById('entryTags').innerHTML =
+      currentEntry.tags.map(t => `<span class="tag-badge">${t}</span>`).join('');
+  }
+
+  document.getElementById('editBtn').onclick = () => window.location.href = `edit-entry.html?id=${id}`;
+  document.getElementById('editBtnBottom').onclick = () => window.location.href = `edit-entry.html?id=${id}`;
+  document.getElementById('deleteBtn').onclick = () => {
+    if (!confirm('delete this entry forever?')) return;
+    const entries = getEntries().filter(e => e.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    window.location.href = 'dashboard.html';
+  };
+}
+
+loadEntry();
+</script>
+</body>
+</html>

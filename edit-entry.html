@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Apply saved settings on every page load -->
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    var root = document.documentElement;
+    // Accent color
+    if(s.accent){ root.style.setProperty('--sage', s.accent); }
+    if(s.accentPale){ root.style.setProperty('--sage-pale', s.accentPale); }
+    // Sage light derived from accent
+    if(s.accentLight){ root.style.setProperty('--sage-light', s.accentLight); }
+    // Dark mode
+    if(s.dark){
+      document.documentElement.setAttribute('data-theme','dark');
+      document.body && (document.body.style.background = '#1A1A2E');
+    }
+    // Font
+    if(s.font){
+      var fontMap = {
+        'Lora': "'Lora', serif",
+        'DM Serif': "'DM Serif Display', serif",
+        'Sans': "'Instrument Sans', sans-serif"
+      };
+      var f = fontMap[s.font];
+      if(f) root.style.setProperty('--body-font', f);
+    }
+  } catch(e) {}
+})();
+</script>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — Edit Entry</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --sage:#6B8F6B;--sage-light:#A8C5A0;--sage-pale:#D4E8CC;
+  --pink:#C4717A;--pink-pale:#F5D8DC;
+  --cream:#FAF6EE;--cream-dark:#F0EAD8;
+  --gold:#B8962E;--gold-light:#D4B060;
+  --text:#2C2418;--text-mid:#6B5840;--text-light:#A89880;
+}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;background:var(--cream);font-family:'Instrument Sans',sans-serif;font-weight:300;}
+
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(250,246,238,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(168,197,160,0.15);
+}
+.topbar-left{display:flex;align-items:center;gap:1rem;}
+.back-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.76rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-mid);background:none;border:none;cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;transition:color 0.2s;text-decoration:none;
+}
+.back-btn:hover{color:var(--sage);}
+.back-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;transition:transform 0.2s;}
+.back-btn:hover svg{transform:translateX(-3px);}
+.logo{font-family:'DM Serif Display',serif;font-size:1.3rem;font-style:italic;color:var(--sage);text-decoration:none;}
+.logo span{color:var(--pink);}
+.topbar-right{display:flex;align-items:center;gap:0.8rem;}
+.save-status{font-size:0.72rem;color:var(--text-light);display:flex;align-items:center;gap:0.4rem;font-style:italic;font-family:'Lora',serif;}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--text-light);transition:background 0.3s;}
+.save-dot.saved{background:var(--sage-light);}
+.btn-update{
+  padding:0.55rem 1.3rem;border-radius:8px;background:var(--text);color:white;border:none;
+  font-size:0.74rem;letter-spacing:0.09em;text-transform:uppercase;cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;display:flex;align-items:center;gap:0.5rem;
+  transition:all 0.25s;
+}
+.btn-update:hover{background:var(--sage);transform:translateY(-1px);}
+.btn-update svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.btn-cancel{
+  padding:0.55rem 1rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.3);
+  background:transparent;color:var(--text-mid);font-size:0.74rem;letter-spacing:0.09em;
+  text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.2s;
+  text-decoration:none;display:inline-flex;align-items:center;
+}
+.btn-cancel:hover{border-color:var(--sage);color:var(--sage);}
+
+.layout{display:grid;grid-template-columns:1fr 280px;min-height:calc(100vh - 65px);}
+.editor-area{padding:3rem 3.5rem;border-right:1px solid rgba(168,197,160,0.12);}
+.edit-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(184,150,46,0.1);border:1px solid rgba(184,150,46,0.2);
+  border-radius:6px;padding:0.3rem 0.8rem;
+  font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.5rem;
+}
+.entry-dateline{
+  font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.entry-dateline::before{content:'';width:24px;height:1px;background:rgba(168,197,160,0.4);}
+.title-input{
+  width:100%;background:transparent;border:none;outline:none;
+  font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);
+  font-style:italic;color:var(--text);line-height:1.15;
+  margin-bottom:1.5rem;resize:none;overflow:hidden;
+  border-bottom:1.5px solid rgba(168,197,160,0.3);padding:0 0 0.5rem;
+}
+.title-input::placeholder{color:rgba(44,36,24,0.2);}
+.mood-section{margin-bottom:1.8rem;}
+.mood-label{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.6rem;display:block;}
+.mood-pills{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.mood-pill{
+  padding:0.3rem 0.75rem;border-radius:999px;
+  border:1.5px solid rgba(168,197,160,0.25);background:transparent;cursor:pointer;
+  font-size:0.78rem;color:var(--text-mid);font-family:'Instrument Sans',sans-serif;transition:all 0.2s;
+}
+.mood-pill:hover,.mood-pill.selected{background:var(--sage-pale);border-color:var(--sage-light);color:var(--sage);}
+.editor-divider{height:1px;background:linear-gradient(to right,rgba(168,197,160,0.3),transparent);margin-bottom:1.8rem;}
+.content-area{
+  width:100%;background:transparent;border:none;outline:none;
+  font-family:'Lora',serif;font-style:italic;
+  font-size:1.08rem;color:var(--text);line-height:1.92;
+  resize:none;min-height:400px;
+}
+.content-area::placeholder{color:rgba(44,36,24,0.18);}
+.word-count-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(168,197,160,0.12);
+}
+.word-count{font-size:0.72rem;color:var(--text-light);display:flex;gap:1.5rem;}
+
+/* sidebar */
+.sidebar-panel{background:white;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem;overflow-y:auto;}
+.panel-title{font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+.panel-title::after{content:'';flex:1;height:1px;background:rgba(168,197,160,0.18);}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.6rem;}
+.tag-chip{display:inline-flex;align-items:center;gap:0.3rem;background:var(--sage-pale);border-radius:999px;padding:0.22rem 0.65rem;font-size:0.72rem;color:var(--sage);}
+.tag-chip button{background:none;border:none;cursor:pointer;color:var(--sage);font-size:0.75rem;padding:0;line-height:1;}
+.tag-input{background:var(--cream);border:1.5px solid rgba(168,197,160,0.22);border-radius:8px;padding:0.5rem 0.7rem;font-size:0.8rem;font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;width:100%;transition:border-color 0.2s;}
+.tag-input:focus{border-color:var(--sage);}
+.tag-input::placeholder{color:var(--text-light);font-style:italic;}
+.lock-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--cream);border-radius:10px;padding:0.9rem 1rem;cursor:pointer;transition:background 0.2s;border:1.5px solid rgba(168,197,160,0.18);}
+.lock-toggle:hover{background:var(--cream-dark);}
+.lock-toggle-left{display:flex;align-items:center;gap:0.7rem;}
+.lock-toggle-left svg{width:16px;height:16px;stroke:var(--text-mid);fill:none;stroke-width:1.5;}
+.lock-toggle-text p{font-size:0.8rem;color:var(--text);font-weight:400;}
+.lock-toggle-text span{font-size:0.68rem;color:var(--text-light);}
+.toggle-switch{width:36px;height:20px;border-radius:999px;background:rgba(168,197,160,0.3);position:relative;transition:background 0.3s;flex-shrink:0;}
+.toggle-switch.on{background:var(--sage);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transition:transform 0.3s;}
+.toggle-switch.on .toggle-knob{transform:translateX(16px);}
+.lock-pw-section{display:none;margin-top:0.8rem;}
+.lock-pw-section.show{display:block;}
+.lock-pw-input{background:var(--cream);border:1.5px solid rgba(196,113,122,0.25);border-radius:8px;padding:0.55rem 0.8rem;font-size:0.8rem;font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;width:100%;transition:border-color 0.2s;}
+.lock-pw-input:focus{border-color:var(--pink);}
+.lock-pw-input::placeholder{color:var(--text-light);font-style:italic;}
+.lock-hint{font-size:0.68rem;color:var(--text-light);margin-top:0.3rem;font-style:italic;}
+
+/* success overlay */
+.success-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(250,246,238,0.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;text-align:center;}
+.success-overlay.show{display:flex;}
+.success-box{max-width:420px;padding:2rem;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sage-pale),var(--pink-pale));display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;}
+.success-icon svg{width:28px;height:28px;stroke:var(--sage);fill:none;stroke-width:1.5;}
+.success-box h2{font-family:'DM Serif Display',serif;font-size:2rem;font-style:italic;color:var(--text);margin-bottom:0.5rem;}
+.success-box h2 em{color:var(--sage);}
+.success-box p{font-family:'Lora',serif;font-style:italic;font-size:0.9rem;color:var(--text-mid);line-height:1.7;margin-bottom:1.8rem;}
+.success-actions{display:flex;gap:0.8rem;justify-content:center;}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr;}.sidebar-panel{display:none;}.editor-area{padding:2rem 1.5rem;}.topbar{padding:1rem 1.5rem;}}
+
+/* guest banner */
+.guest-top-bar{
+  background:linear-gradient(135deg,rgba(184,150,46,0.1),rgba(196,113,122,0.08));
+  border-bottom:1px solid rgba(184,150,46,0.18);
+  padding:0.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.74rem;color:var(--text-mid);flex-wrap:wrap;gap:0.5rem;
+}
+.guest-top-bar svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:1.5;flex-shrink:0;}
+.guest-top-bar-left{display:flex;align-items:center;gap:0.5rem;}
+.guest-top-bar-right{display:flex;align-items:center;gap:0.8rem;}
+.gtb-link{color:var(--sage);text-decoration:none;font-size:0.72rem;letter-spacing:0.06em;border-bottom:1px solid rgba(107,143,107,0.3);transition:color 0.2s;}
+.gtb-link:hover{color:var(--pink);}
+.gtb-close{background:none;border:none;cursor:pointer;color:var(--text-light);font-size:0.9rem;padding:0;line-height:1;transition:color 0.2s;}
+.gtb-close:hover{color:var(--text);}
+
+</style>
+</head>
+<body>
+
+<!-- guest bar -->
+<div style="background:linear-gradient(135deg,rgba(184,150,46,0.1),rgba(196,113,122,0.08));border-bottom:1px solid rgba(184,150,46,0.18);padding:0.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;font-size:0.74rem;color:#6B5840;flex-wrap:wrap;gap:0.5rem;position:relative;z-index:60;" id="guestTopBar">
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>You're exploring as a guest — entries saved on this device only.</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <a href="register.html" style="color:#6B8F6B;text-decoration:none;font-size:0.72rem;border-bottom:1px solid rgba(107,143,107,0.3);">Create free account</a>
+    <a href="login.html" style="color:#6B5840;text-decoration:none;font-size:0.72rem;">Sign in</a>
+    <button onclick="document.getElementById('guestTopBar').style.display='none'" style="background:none;border:none;cursor:pointer;color:#A89880;font-size:1rem;line-height:1;">✕</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a class="back-btn" id="backBtn" href="dashboard.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      back
+    </a>
+    <a href="index.html" class="logo">Petal<span>Pages</span></a>
+  </div>
+  <div class="topbar-right">
+    <div class="save-status">
+      <div class="save-dot" id="saveDot"></div>
+      <span id="saveText">editing</span>
+    </div>
+    <a class="btn-cancel" id="cancelBtn" href="dashboard.html">cancel</a>
+    <button class="btn-update" onclick="updateEntry()">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      save changes
+    </button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="editor-area">
+    <div class="edit-badge">✦ editing entry</div>
+    <p class="entry-dateline" id="dateLine">—</p>
+    <textarea class="title-input" id="entryTitle" placeholder="entry title..." rows="1" oninput="autoResize(this);markChanged();"></textarea>
+    <div class="mood-section">
+      <span class="mood-label">mood</span>
+      <div class="mood-pills">
+        <button class="mood-pill" onclick="selectMood(this,'🌸 blooming')">🌸 blooming</button>
+        <button class="mood-pill" onclick="selectMood(this,'🌧 heavy')">🌧 heavy</button>
+        <button class="mood-pill" onclick="selectMood(this,'✨ grateful')">✨ grateful</button>
+        <button class="mood-pill" onclick="selectMood(this,'🌙 reflective')">🌙 reflective</button>
+        <button class="mood-pill" onclick="selectMood(this,'🔥 fired up')">🔥 fired up</button>
+        <button class="mood-pill" onclick="selectMood(this,'😶 numb')">😶 numb</button>
+      </div>
+    </div>
+    <div class="editor-divider"></div>
+    <textarea class="content-area" id="entryContent" oninput="updateWordCount();markChanged();"></textarea>
+    <div class="word-count-bar">
+      <div class="word-count">
+        <div><span id="wordCount">0</span> words</div>
+        <div><span id="charCount">0</span> characters</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-panel">
+    <div>
+      <p class="panel-title">tags</p>
+      <div class="tags-wrap" id="tagsWrap"></div>
+      <input type="text" class="tag-input" id="tagInput" placeholder="add a tag, press enter..." onkeydown="handleTagInput(event)"/>
+    </div>
+    <div>
+      <p class="panel-title">privacy</p>
+      <div class="lock-toggle" onclick="toggleLock()">
+        <div class="lock-toggle-left">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div class="lock-toggle-text">
+            <p id="lockLabel">lock this entry</p>
+            <span id="lockSub">requires a password to open</span>
+          </div>
+        </div>
+        <div class="toggle-switch" id="lockSwitch"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="lock-pw-section" id="lockPwSection">
+        <input type="password" class="lock-pw-input" id="lockPw" placeholder="entry password..."/>
+        <p class="lock-hint">leave blank to keep existing password</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>entry <em>updated</em></h2>
+    <p>your changes have been saved.</p>
+    <div class="success-actions">
+      <a href="dashboard.html" class="btn-update" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        go to garden
+      </a>
+      <a class="btn-cancel" id="viewBtn" href="#" style="display:inline-flex;">view entry</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'petalpages_guest_entries';
+const params = new URLSearchParams(window.location.search);
+const id = parseInt(params.get('id'));
+let currentEntry = null;
+let selectedMood = '';
+let isLocked = false;
+let tags = [];
+
+function getEntries() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+// Load entry
+function loadEntry() {
+  const entries = getEntries();
+  currentEntry = entries.find(e => e.id === id);
+  if (!currentEntry) { window.location.href = 'dashboard.html'; return; }
+
+  // populate fields
+  const titleEl = document.getElementById('entryTitle');
+  titleEl.value = currentEntry.title;
+  document.getElementById('entryContent').value = currentEntry.content;
+  document.getElementById('dateLine').textContent = `editing · originally ${currentEntry.date} at ${currentEntry.time}`;
+
+  // mood
+  selectedMood = currentEntry.mood || '';
+  if (selectedMood) {
+    document.querySelectorAll('.mood-pill').forEach(btn => {
+      if (btn.textContent.trim() === selectedMood) btn.classList.add('selected');
+    });
+  }
+
+  // tags
+  tags = currentEntry.tags || [];
+  renderTags();
+
+  // lock
+  isLocked = currentEntry.locked || false;
+  if (isLocked) {
+    document.getElementById('lockSwitch').classList.add('on');
+    document.getElementById('lockPwSection').classList.add('show');
+    document.getElementById('lockLabel').textContent = 'entry is locked';
+    document.getElementById('lockSub').textContent = 'password protected ✦';
+  }
+
+  autoResize(titleEl);
+  updateWordCount();
+
+  // back/cancel → view entry
+  document.getElementById('backBtn').href = `view-entry.html?id=${id}`;
+  document.getElementById('cancelBtn').href = `view-entry.html?id=${id}`;
+  document.getElementById('viewBtn').href = `view-entry.html?id=${id}`;
+}
+
+function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+function selectMood(btn, mood) {
+  document.querySelectorAll('.mood-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMood = mood;
+  markChanged();
+}
+
+function updateWordCount() {
+  const text = document.getElementById('entryContent').value;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  document.getElementById('wordCount').textContent = words;
+  document.getElementById('charCount').textContent = text.length;
+}
+
+function markChanged() {
+  document.getElementById('saveDot').className = 'save-dot';
+  document.getElementById('saveText').textContent = 'unsaved changes';
+}
+
+function handleTagInput(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = document.getElementById('tagInput').value.trim().replace(',','');
+    if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+    document.getElementById('tagInput').value = '';
+  }
+}
+function renderTags() {
+  document.getElementById('tagsWrap').innerHTML = tags.map(t =>
+    `<span class="tag-chip">${t}<button onclick="removeTag('${t}')" type="button">×</button></span>`
+  ).join('');
+}
+function removeTag(t) { tags = tags.filter(x => x !== t); renderTags(); }
+
+function toggleLock() {
+  isLocked = !isLocked;
+  document.getElementById('lockSwitch').classList.toggle('on', isLocked);
+  document.getElementById('lockPwSection').classList.toggle('show', isLocked);
+  document.getElementById('lockLabel').textContent = isLocked ? 'entry is locked' : 'lock this entry';
+  document.getElementById('lockSub').textContent = isLocked ? 'password protected ✦' : 'requires a password to open';
+}
+
+function updateEntry() {
+  const title = document.getElementById('entryTitle').value.trim();
+  const content = document.getElementById('entryContent').value.trim();
+  if (!content) {
+    document.getElementById('entryContent').style.borderBottom = '1.5px solid var(--pink)';
+    return;
+  }
+
+  const entries = getEntries();
+  const idx = entries.findIndex(e => e.id === id);
+  if (idx < 0) return;
+
+  const newPw = document.getElementById('lockPw').value;
+  entries[idx] = {
+    ...currentEntry,
+    title: title || 'untitled entry',
+    content,
+    mood: selectedMood,
+    tags,
+    locked: isLocked,
+    lockPw: newPw ? newPw : (currentEntry.lockPw || ''),
+    edited: true,
+    editedDate: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+
+  document.getElementById('saveDot').className = 'save-dot saved';
+  document.getElementById('saveText').textContent = 'saved';
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+loadEntry();
+</script>
+</body>
+</html>

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Apply saved settings on every page load -->
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    var root = document.documentElement;
+    // Accent color
+    if(s.accent){ root.style.setProperty('--sage', s.accent); }
+    if(s.accentPale){ root.style.setProperty('--sage-pale', s.accentPale); }
+    // Sage light derived from accent
+    if(s.accentLight){ root.style.setProperty('--sage-light', s.accentLight); }
+    // Dark mode
+    if(s.dark){
+      document.documentElement.setAttribute('data-theme','dark');
+      document.body && (document.body.style.background = '#1A1A2E');
+    }
+    // Font
+    if(s.font){
+      var fontMap = {
+        'Lora': "'Lora', serif",
+        'DM Serif': "'DM Serif Display', serif",
+        'Sans': "'Instrument Sans', sans-serif"
+      };
+      var f = fontMap[s.font];
+      if(f) root.style.setProperty('--body-font', f);
+    }
+  } catch(e) {}
+})();
+</script>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — Welcome Back</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --sage:#6B8F6B;
+  --sage-light:#A8C5A0;
+  --sage-pale:#D4E8CC;
+  --pink:#C4717A;
+  --pink-pale:#F5D8DC;
+  --cream:#FAF6EE;
+  --cream-dark:#F0EAD8;
+  --gold:#B8962E;
+  --gold-light:#D4B060;
+  --text:#2C2418;
+  --text-mid:#6B5840;
+  --text-light:#A89880;
+}
+html{scroll-behavior:smooth;}
+body{
+  min-height:100vh;background:var(--cream);
+  font-family:'Instrument Sans',sans-serif;font-weight:300;
+  overflow-x:hidden;display:flex;flex-direction:column;
+}
+
+/* ── BACKGROUND ── */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 90% 20%,rgba(168,197,160,0.25) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 50% at 10% 80%,rgba(196,113,122,0.18) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 95%,rgba(184,150,46,0.1) 0%,transparent 55%);
+  background-color:var(--cream);
+}
+.bg-canvas{position:fixed;inset:0;z-index:0;opacity:0.11;pointer-events:none;}
+
+/* ── FLOATING PETALS ── */
+.float-el{position:fixed;pointer-events:none;z-index:1;animation:gentleFloat ease-in-out infinite;}
+@keyframes gentleFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  33%{transform:translateY(-14px) rotate(4deg);}
+  66%{transform:translateY(-7px) rotate(-3deg);}
+}
+
+/* ── NAV ── */
+nav{
+  position:relative;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 5vw;
+}
+.logo{
+  font-family:'DM Serif Display',serif;font-size:1.5rem;font-style:italic;
+  color:var(--sage);letter-spacing:-0.01em;text-decoration:none;
+}
+.logo span{color:var(--pink);}
+.nav-right{display:flex;align-items:center;gap:1.5rem;}
+.nav-link{
+  font-size:0.76rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text-mid);text-decoration:none;transition:color 0.2s;
+}
+.nav-link:hover{color:var(--sage);}
+.nav-btn{
+  background:var(--sage);color:white;padding:0.55rem 1.2rem;border-radius:6px;
+  font-size:0.74rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;transition:background 0.2s,transform 0.2s;
+}
+.nav-btn:hover{background:var(--pink);transform:translateY(-1px);}
+
+/* ── MAIN ── */
+main{
+  position:relative;z-index:2;flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem 5vw 4rem;
+}
+
+/* ── CARD ── */
+.card{
+  background:rgba(255,255,255,0.84);backdrop-filter:blur(16px);
+  border:1px solid rgba(168,197,160,0.22);border-radius:24px;
+  padding:3rem 2.8rem;width:100%;max-width:460px;
+  box-shadow:0 4px 28px rgba(107,143,107,0.08),0 1px 0 rgba(255,255,255,0.9) inset;
+  animation:cardIn 0.6s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+/* card top */
+.card-top{text-align:center;margin-bottom:2rem;}
+.card-flower{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:50px;height:50px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sage-pale),var(--pink-pale));
+  margin-bottom:1rem;
+}
+.card-flower svg{width:24px;height:24px;}
+.card-title{
+  font-family:'DM Serif Display',serif;font-size:1.85rem;font-style:italic;
+  color:var(--text);margin-bottom:0.3rem;line-height:1.15;
+}
+.card-title em{color:var(--sage);}
+.card-sub{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.9rem;color:var(--text-mid);line-height:1.6;
+}
+
+/* ── TABS ── */
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--cream-dark);border-radius:10px;padding:4px;
+  margin-bottom:1.8rem;gap:4px;
+}
+.tab{
+  padding:0.6rem 1rem;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;font-size:0.76rem;
+  letter-spacing:0.1em;text-transform:uppercase;font-weight:400;
+  color:var(--text-light);background:transparent;
+  transition:all 0.25s;
+}
+.tab.active{
+  background:white;color:var(--text);
+  box-shadow:0 2px 8px rgba(44,36,24,0.08);
+}
+
+/* ── FORM ── */
+.form{display:flex;flex-direction:column;gap:1rem;}
+.field{display:flex;flex-direction:column;gap:0.38rem;}
+.field label{
+  font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--text-mid);font-weight:400;
+}
+.field input{
+  background:rgba(250,246,238,0.8);
+  border:1.5px solid rgba(168,197,160,0.28);border-radius:10px;
+  padding:0.82rem 1rem;font-size:0.88rem;
+  font-family:'Instrument Sans',sans-serif;font-weight:300;
+  color:var(--text);transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;
+  outline:none;width:100%;
+}
+.field input::placeholder{color:var(--text-light);font-style:italic;}
+.field input:focus{border-color:var(--sage);background:white;box-shadow:0 0 0 3px rgba(107,143,107,0.1);}
+.field input.error{border-color:var(--pink);}
+.field-error{font-size:0.7rem;color:var(--pink);display:none;margin-top:0.1rem;}
+
+/* pw wrap */
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:2.8rem;}
+.pw-toggle{
+  position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--text-light);padding:0.2rem;transition:color 0.2s;
+}
+.pw-toggle:hover{color:var(--text-mid);}
+.pw-toggle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* forgot */
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-0.3rem;}
+.forgot-link{
+  font-size:0.72rem;color:var(--text-light);text-decoration:none;
+  border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;
+}
+.forgot-link:hover{color:var(--sage);border-color:var(--sage-light);}
+
+/* submit */
+.btn-submit{
+  background:var(--text);color:white;padding:0.95rem 2rem;border-radius:10px;
+  font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;
+  font-family:'Instrument Sans',sans-serif;font-weight:400;
+  border:none;cursor:pointer;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  transition:all 0.25s;margin-top:0.3rem;
+}
+.btn-submit:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,143,107,0.25);}
+.btn-arrow{transition:transform 0.2s;}
+.btn-submit:hover .btn-arrow{transform:translateX(4px);}
+
+/* divider */
+.or-divider{
+  display:flex;align-items:center;gap:1rem;
+  font-size:0.68rem;color:var(--text-light);letter-spacing:0.1em;text-transform:uppercase;
+  margin:0.4rem 0;
+}
+.or-divider::before,.or-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,transparent,rgba(168,197,160,0.3),transparent);
+}
+
+/* ── GUEST CARD ── */
+.guest-card{
+  background:linear-gradient(135deg,rgba(212,232,204,0.35),rgba(245,216,220,0.25));
+  border:1.5px dashed rgba(168,197,160,0.45);
+  border-radius:14px;padding:1.4rem 1.3rem;
+  transition:all 0.3s;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.guest-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,197,160,0.08),rgba(196,113,122,0.05));
+  opacity:0;transition:opacity 0.3s;border-radius:inherit;
+}
+.guest-card:hover{border-color:rgba(107,143,107,0.5);transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,143,107,0.1);}
+.guest-card:hover::before{opacity:1;}
+.guest-top{display:flex;align-items:center;gap:0.9rem;margin-bottom:0.7rem;}
+.guest-icon{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--sage-pale),var(--pink-pale));
+  display:flex;align-items:center;justify-content:center;
+}
+.guest-icon svg{width:20px;height:20px;stroke:var(--sage);fill:none;stroke-width:1.5;}
+.guest-title{
+  font-family:'DM Serif Display',serif;font-size:1.05rem;
+  color:var(--text);font-style:italic;
+}
+.guest-title em{color:var(--sage);}
+.guest-desc{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.82rem;color:var(--text-mid);line-height:1.65;margin-bottom:1rem;
+}
+.guest-features{
+  display:flex;flex-direction:column;gap:0.35rem;margin-bottom:1rem;
+}
+.guest-feature{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.75rem;color:var(--text-mid);
+}
+.guest-feature-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--sage-light);flex-shrink:0;
+}
+.guest-feature.limited .guest-feature-dot{background:var(--gold-light);}
+.btn-guest{
+  width:100%;padding:0.78rem;border-radius:9px;
+  background:white;border:1.5px solid rgba(168,197,160,0.4);
+  font-family:'Instrument Sans',sans-serif;font-size:0.78rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--sage);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  transition:all 0.25s;font-weight:400;
+}
+.btn-guest:hover{background:var(--sage);color:white;border-color:var(--sage);}
+
+/* guest note */
+.guest-note{
+  font-size:0.7rem;color:var(--text-light);text-align:center;
+  font-family:'Lora',serif;font-style:italic;
+  display:flex;align-items:center;justify-content:center;gap:0.4rem;
+  margin-top:0.6rem;
+}
+.guest-note svg{width:11px;height:11px;stroke:var(--gold-light);fill:none;stroke-width:1.5;}
+
+/* signup link */
+.signup-link{text-align:center;font-size:0.8rem;color:var(--text-mid);margin-top:0.5rem;}
+.signup-link a{
+  color:var(--sage);text-decoration:none;
+  border-bottom:1px solid rgba(107,143,107,0.3);padding-bottom:1px;
+  transition:color 0.2s,border-color 0.2s;
+}
+.signup-link a:hover{color:var(--pink);border-color:var(--pink);}
+
+/* ── GUEST WRITING MODE ── */
+.guest-mode{display:none;animation:cardIn 0.5s ease both;}
+.guest-mode-header{text-align:center;margin-bottom:1.8rem;}
+.guest-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--sage-pale);border-radius:6px;
+  padding:0.3rem 0.8rem;font-size:0.68rem;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);
+  margin-bottom:0.9rem;
+}
+.guest-mode h2{
+  font-family:'DM Serif Display',serif;font-size:1.6rem;font-style:italic;
+  color:var(--text);margin-bottom:0.3rem;
+}
+.guest-mode h2 em{color:var(--pink);}
+.guest-mode-sub{font-family:'Lora',serif;font-style:italic;font-size:0.85rem;color:var(--text-mid);}
+
+/* journal entry form */
+.entry-field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
+.entry-field label{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-mid);}
+.entry-title-input{
+  background:rgba(250,246,238,0.8);border:1.5px solid rgba(168,197,160,0.28);
+  border-radius:10px;padding:0.75rem 1rem;font-size:0.95rem;
+  font-family:'DM Serif Display',serif;font-style:italic;
+  color:var(--text);outline:none;width:100%;transition:border-color 0.2s,box-shadow 0.2s;
+}
+.entry-title-input:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(107,143,107,0.1);}
+.entry-title-input::placeholder{color:var(--text-light);}
+.entry-textarea{
+  background:rgba(250,246,238,0.8);border:1.5px solid rgba(168,197,160,0.28);
+  border-radius:10px;padding:1rem;font-size:0.88rem;
+  font-family:'Lora',serif;font-style:italic;
+  color:var(--text);outline:none;width:100%;resize:none;height:160px;
+  line-height:1.8;transition:border-color 0.2s,box-shadow 0.2s;
+}
+.entry-textarea:focus{border-color:var(--sage);background:white;box-shadow:0 0 0 3px rgba(107,143,107,0.1);}
+.entry-textarea::placeholder{color:var(--text-light);}
+
+/* char counter */
+.char-counter{font-size:0.68rem;color:var(--text-light);text-align:right;margin-top:0.25rem;}
+
+/* mood selector */
+.mood-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.mood-btn{
+  padding:0.35rem 0.8rem;border-radius:999px;
+  border:1.5px solid rgba(168,197,160,0.3);
+  background:transparent;cursor:pointer;font-size:0.75rem;
+  color:var(--text-mid);font-family:'Instrument Sans',sans-serif;
+  transition:all 0.2s;
+}
+.mood-btn:hover,.mood-btn.selected{
+  background:var(--sage-pale);border-color:var(--sage-light);color:var(--sage);
+}
+
+/* entry actions */
+.entry-actions{display:flex;gap:0.8rem;margin-top:0.5rem;}
+.btn-save{
+  flex:1;background:var(--text);color:white;padding:0.88rem;
+  border-radius:10px;border:none;cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;font-size:0.78rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  transition:all 0.25s;
+}
+.btn-save:hover{background:var(--sage);transform:translateY(-2px);}
+.btn-save-exit{
+  background:white;color:var(--text-mid);padding:0.88rem 1.2rem;
+  border-radius:10px;border:1.5px solid rgba(168,197,160,0.3);cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;font-size:0.78rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.25s;
+}
+.btn-save-exit:hover{border-color:var(--sage);color:var(--sage);}
+
+/* sync note */
+.sync-note{
+  background:linear-gradient(135deg,rgba(212,232,204,0.3),rgba(245,216,220,0.2));
+  border:1px solid rgba(168,197,160,0.25);border-radius:10px;
+  padding:0.9rem 1rem;margin-top:0.8rem;
+  display:flex;gap:0.7rem;align-items:flex-start;
+}
+.sync-note svg{width:15px;height:15px;stroke:var(--sage);fill:none;stroke-width:1.5;flex-shrink:0;margin-top:2px;}
+.sync-note p{font-size:0.75rem;color:var(--text-mid);line-height:1.6;}
+.sync-note strong{color:var(--sage);font-weight:500;}
+.sync-note a{color:var(--pink);text-decoration:none;border-bottom:1px solid rgba(196,113,122,0.3);}
+.sync-note a:hover{border-color:var(--pink);}
+
+/* saved entries list */
+.saved-entries{margin-top:1.2rem;}
+.saved-entries-label{
+  font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:0.7rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.saved-entries-label::after{content:'';flex:1;height:1px;background:rgba(168,197,160,0.2);}
+.entry-chip{
+  display:flex;align-items:center;justify-content:space-between;
+  background:white;border:1px solid rgba(168,197,160,0.18);
+  border-radius:8px;padding:0.65rem 0.9rem;margin-bottom:0.5rem;
+  cursor:pointer;transition:all 0.2s;
+}
+.entry-chip:hover{border-color:rgba(107,143,107,0.35);transform:translateX(2px);}
+.entry-chip-title{font-size:0.82rem;color:var(--text);font-family:'DM Serif Display',serif;font-style:italic;}
+.entry-chip-date{font-size:0.68rem;color:var(--text-light);}
+.entry-chip-del{
+  background:none;border:none;cursor:pointer;color:var(--text-light);
+  font-size:0.75rem;padding:0.2rem;transition:color 0.2s;
+}
+.entry-chip-del:hover{color:var(--pink);}
+.no-entries{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.82rem;color:var(--text-light);text-align:center;
+  padding:1rem;
+}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:2;text-align:center;
+  padding:1.5rem;font-size:0.72rem;color:var(--text-light);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .card{padding:2rem 1.4rem;border-radius:16px;}
+  .card-title{font-size:1.5rem;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+/* forgot password modal */
+.forgot-modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(44,36,24,0.4);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.forgot-modal-backdrop.open{opacity:1;pointer-events:all;}
+.forgot-modal{background:white;border-radius:18px;padding:2rem;max-width:400px;width:100%;transform:scale(0.95);transition:transform 0.3s;border:1px solid rgba(168,197,160,0.2);}
+.forgot-modal-backdrop.open .forgot-modal{transform:scale(1);}
+.forgot-modal h3{font-family:'DM Serif Display',serif;font-size:1.4rem;font-style:italic;color:var(--text);margin-bottom:0.3rem;}
+.forgot-modal h3 em{color:var(--sage);}
+.forgot-modal p{font-family:'Lora',serif;font-style:italic;font-size:0.85rem;color:var(--text-mid);margin-bottom:1.2rem;line-height:1.6;}
+.forgot-note{background:rgba(184,150,46,0.08);border:1px solid rgba(184,150,46,0.2);border-radius:10px;padding:0.9rem 1rem;font-size:0.78rem;color:var(--text-mid);line-height:1.65;margin-top:1rem;}
+.forgot-note strong{color:var(--gold);}
+.forgot-modal-close{width:100%;margin-top:1rem;padding:0.75rem;border-radius:10px;background:var(--text);color:white;border:none;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:background 0.2s;}
+.forgot-modal-close:hover{background:var(--sage);}
+
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<canvas class="bg-canvas" id="bgCanvas"></canvas>
+
+<!-- floating petals -->
+<div class="float-el" style="top:10%;left:5%;animation-duration:6s;animation-delay:0s;">
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#A8C5A0" opacity="0.45" transform="rotate(0 16 16)"/>
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#C4717A" opacity="0.38" transform="rotate(60 16 16)"/>
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#D4B060" opacity="0.38" transform="rotate(120 16 16)"/>
+    <circle cx="16" cy="16" r="3" fill="#FAF6EE" opacity="0.9"/>
+  </svg>
+</div>
+<div class="float-el" style="top:22%;right:7%;animation-duration:8s;animation-delay:1.5s;">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M10 2 C10 2,14 6,14 10 C14 14,10 18,10 18 C10 18,6 14,6 10 C6 6,10 2,10 2Z" fill="#A8C5A0" opacity="0.5"/>
+  </svg>
+</div>
+<div class="float-el" style="bottom:22%;left:8%;animation-duration:9s;animation-delay:3s;">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M8 1 L9.5 5.5 L14 5.5 L10.5 8.5 L11.5 13 L8 10.5 L4.5 13 L5.5 8.5 L2 5.5 L6.5 5.5 Z" fill="#D4B060" opacity="0.45"/>
+  </svg>
+</div>
+<div class="float-el" style="bottom:30%;right:6%;animation-duration:7s;animation-delay:2s;">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <ellipse cx="12" cy="12" rx="4" ry="10" fill="#E8A0A8" opacity="0.38" transform="rotate(45 12 12)"/>
+    <ellipse cx="12" cy="12" rx="4" ry="10" fill="#6B8F6B" opacity="0.33" transform="rotate(135 12 12)"/>
+    <circle cx="12" cy="12" r="2.5" fill="#FAF6EE" opacity="0.88"/>
+  </svg>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Petal<span>Pages</span></a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="register.html" class="nav-btn">Create account</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <div class="card" id="mainCard">
+
+    <!-- ═══ LOGIN / REGISTER TABS ═══ -->
+    <div id="authState">
+      <div class="card-top">
+        <div class="card-flower">
+          <svg viewBox="0 0 26 26" fill="none">
+            <ellipse cx="13" cy="13" rx="4" ry="9" fill="#A8C5A0" opacity="0.7" transform="rotate(0 13 13)"/>
+            <ellipse cx="13" cy="13" rx="4" ry="9" fill="#C4717A" opacity="0.6" transform="rotate(60 13 13)"/>
+            <ellipse cx="13" cy="13" rx="4" ry="9" fill="#D4B060" opacity="0.6" transform="rotate(120 13 13)"/>
+            <circle cx="13" cy="13" r="4" fill="#FAF6EE"/>
+            <circle cx="13" cy="13" r="2" fill="#D4B060" opacity="0.6"/>
+          </svg>
+        </div>
+        <h1 class="card-title">welcome <em>back</em></h1>
+        <p class="card-sub">your garden missed you.</p>
+      </div>
+
+      <!-- tabs -->
+      <div class="tabs">
+        <button class="tab active" id="loginTab" onclick="switchTab('login')">Sign in</button>
+        <button class="tab" id="guestTab" onclick="switchTab('guest')">Continue as guest</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginPanel">
+        <form class="form" id="loginForm" novalidate>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="your@email.com" autocomplete="email"/>
+            <span class="field-error">please enter a valid email</span>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="password" placeholder="your secret key"/>
+              <button type="button" class="pw-toggle" id="pwToggle">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <span class="field-error">please enter your password</span>
+          </div>
+
+          <div class="forgot-row">
+            <a href="#" class="forgot-link" onclick="openForgotModal();return false;">forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-submit" id="loginBtn">
+            open my garden
+            <span class="btn-arrow">→</span>
+          </button>
+
+          <p class="signup-link">new here? <a href="register.html">plant your first seed →</a></p>
+        </form>
+      </div>
+
+      <!-- GUEST PANEL -->
+      <div id="guestPanel" style="display:none;">
+        <div class="guest-card" onclick="startGuestMode()">
+          <div class="guest-top">
+            <div class="guest-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div>
+              <p class="guest-title">write as a <em>guest</em></p>
+            </div>
+          </div>
+          <p class="guest-desc">no account needed — just open the page and start writing. your entries are saved right here on your device.</p>
+          <div class="guest-features">
+            <div class="guest-feature">
+              <div class="guest-feature-dot"></div>
+              <span>write unlimited entries — saved on this device</span>
+            </div>
+            <div class="guest-feature">
+              <div class="guest-feature-dot"></div>
+              <span>your entries stay even after closing the tab</span>
+            </div>
+            <div class="guest-feature">
+              <div class="guest-feature-dot"></div>
+              <span>no login, no email, no questions asked</span>
+            </div>
+            <div class="guest-feature limited">
+              <div class="guest-feature-dot"></div>
+              <span>entries won't sync across devices — upgrade anytime</span>
+            </div>
+          </div>
+          <button class="btn-guest" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            start writing now
+          </button>
+        </div>
+        <p class="guest-note">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          entries are saved in your browser's local storage — they stay safe on this device.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ GUEST WRITING MODE ═══ -->
+    <div class="guest-mode" id="guestWriteState">
+      <div class="guest-mode-header">
+        <div class="guest-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          guest mode
+        </div>
+        <h2>your <em>private page</em></h2>
+        <p class="guest-mode-sub">write freely — nobody is watching.</p>
+      </div>
+
+      <!-- new entry form -->
+      <div class="entry-field">
+        <label>entry title</label>
+        <input type="text" class="entry-title-input" id="guestTitle" placeholder="give this moment a name..."/>
+      </div>
+
+      <div class="entry-field">
+        <label>how are you feeling?</label>
+        <div class="mood-row" id="moodRow">
+          <button class="mood-btn" type="button" onclick="selectMood(this)">🌸 blooming</button>
+          <button class="mood-btn" type="button" onclick="selectMood(this)">🌧 heavy</button>
+          <button class="mood-btn" type="button" onclick="selectMood(this)">✨ grateful</button>
+          <button class="mood-btn" type="button" onclick="selectMood(this)">🌙 reflective</button>
+          <button class="mood-btn" type="button" onclick="selectMood(this)">🔥 fired up</button>
+        </div>
+      </div>
+
+      <div class="entry-field">
+        <label>your words</label>
+        <textarea class="entry-textarea" id="guestContent" placeholder="pour your heart out here — this page is completely yours..."></textarea>
+        <div class="char-counter"><span id="charCount">0</span> words</div>
+      </div>
+
+      <div class="entry-actions">
+        <button class="btn-save" id="saveEntryBtn" onclick="saveGuestEntry()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          save entry
+        </button>
+        <button class="btn-save-exit" onclick="clearGuestForm()">clear</button>
+      </div>
+
+      <!-- sync note -->
+      <div class="sync-note">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <p><strong>your entries are synced to this device.</strong> they'll be here every time you open this browser. <a href="register.html">create a free account</a> to access them everywhere.</p>
+      </div>
+
+      <!-- saved entries -->
+      <div class="saved-entries" id="savedEntriesSection" style="display:none;">
+        <p class="saved-entries-label">your entries</p>
+        <div id="entriesList"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 PetalPages · <a href="#" style="color:var(--sage-light);text-decoration:none;">privacy policy</a> · your words are always yours</p>
+</footer>
+
+<script>
+// ── CANVAS BG ──
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { canvas.width=window.innerWidth; canvas.height=window.innerHeight; drawBg(); });
+function drawBg() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width/2, cy=canvas.height/2;
+  const colors=['rgba(168,197,160,0.32)','rgba(196,113,122,0.22)','rgba(212,176,96,0.22)','rgba(255,255,255,0.38)'];
+  for(let ring=1;ring<=10;ring++){
+    const r=ring*68, dots=Math.floor(ring*9);
+    for(let d=0;d<dots;d++){
+      const angle=(d/dots)*Math.PI*2;
+      ctx.beginPath();
+      ctx.arc(cx+Math.cos(angle)*r+(Math.random()*8-4), cy+Math.sin(angle)*r+(Math.random()*8-4), Math.random()*2.2+0.5, 0, Math.PI*2);
+      ctx.fillStyle=colors[Math.floor(Math.random()*colors.length)]; ctx.fill();
+    }
+  }
+}
+drawBg();
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+  document.getElementById('guestTab').classList.toggle('active', tab === 'guest');
+  document.getElementById('loginPanel').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('guestPanel').style.display = tab === 'guest' ? 'block' : 'none';
+}
+
+// ── PASSWORD TOGGLE ──
+const pwBtn = document.getElementById('pwToggle');
+const pwInput = document.getElementById('password');
+pwBtn.addEventListener('click', () => {
+  const show = pwInput.type === 'password';
+  pwInput.type = show ? 'text' : 'password';
+  pwBtn.querySelector('svg').style.opacity = show ? '0.5' : '1';
+});
+
+// ── LOGIN FORM ──
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('email');
+  const pw = document.getElementById('password');
+  let valid = true;
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    email.classList.add('error');
+    email.nextElementSibling.style.display = 'block';
+    valid = false;
+  } else {
+    email.classList.remove('error');
+    email.nextElementSibling.style.display = 'none';
+  }
+  if (!pw.value) {
+    pw.closest('.pw-wrap').nextElementSibling.style.display = 'block';
+    valid = false;
+  } else {
+    pw.closest('.pw-wrap').nextElementSibling.style.display = 'none';
+  }
+  if (!valid) return;
+
+  const btn = document.getElementById('loginBtn');
+  btn.textContent = 'opening your garden...';
+  btn.style.background = 'var(--sage-light)';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('http://localhost:8080/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.value.trim(),
+        password: pw.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error || 'Invalid email or password');
+      btn.textContent = 'open my garden';
+      btn.style.background = 'var(--text)';
+      btn.disabled = false;
+      return;
+    }
+
+   localStorage.setItem('pp_user_id', data.userId);
+localStorage.setItem('pp_user_name', data.name);
+localStorage.setItem('pp_token', data.token);
+
+    window.location.href = 'dashboard.html';
+
+  } catch (err) {
+    alert('Could not connect to the server. Make sure the backend is running.');
+    btn.textContent = 'open my garden';
+    btn.style.background = 'var(--text)';
+    btn.disabled = false;
+  }
+});
+
+// ── GUEST MODE ──
+function startGuestMode() {
+  document.getElementById('authState').style.display = 'none';
+  const guestWrite = document.getElementById('guestWriteState');
+  guestWrite.style.display = 'block';
+  loadGuestEntries();
+}
+
+// mood selector
+function selectMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// word counter
+document.getElementById('guestContent').addEventListener('input', function() {
+  const words = this.value.trim() ? this.value.trim().split(/\s+/).length : 0;
+  document.getElementById('charCount').textContent = words;
+});
+
+// ── LOCAL STORAGE ──
+const STORAGE_KEY = 'petalpages_guest_entries';
+
+function getEntries() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function saveEntries(entries) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+function saveGuestEntry() {
+  const title = document.getElementById('guestTitle').value.trim();
+  const content = document.getElementById('guestContent').value.trim();
+  const mood = document.querySelector('.mood-btn.selected')?.textContent || '';
+
+  if (!content) {
+    document.getElementById('guestContent').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('guestContent').style.borderColor = '', 2000);
+    return;
+  }
+
+  const entry = {
+    id: Date.now(),
+    title: title || 'untitled entry',
+    content,
+    mood,
+    date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }),
+    time: new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })
+  };
+
+  const entries = getEntries();
+  entries.unshift(entry);
+  saveEntries(entries);
+
+  // success feedback
+  const btn = document.getElementById('saveEntryBtn');
+  btn.innerHTML = '✦ saved!';
+  btn.style.background = 'var(--sage)';
+  setTimeout(() => {
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> save entry`;
+    btn.style.background = 'var(--text)';
+  }, 2000);
+
+  clearGuestForm();
+  loadGuestEntries();
+}
+
+function clearGuestForm() {
+  document.getElementById('guestTitle').value = '';
+  document.getElementById('guestContent').value = '';
+  document.getElementById('charCount').textContent = '0';
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function loadGuestEntries() {
+  const entries = getEntries();
+  const section = document.getElementById('savedEntriesSection');
+  const list = document.getElementById('entriesList');
+
+  if (entries.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  list.innerHTML = entries.map(e => `
+    <div class="entry-chip" onclick="viewEntry(${e.id})">
+      <div>
+        <p class="entry-chip-title">${e.title}</p>
+        <p class="entry-chip-date">${e.date} · ${e.time}${e.mood ? ' · ' + e.mood : ''}</p>
+      </div>
+      <button class="entry-chip-del" onclick="deleteEntry(event,${e.id})" title="delete">✕</button>
+    </div>
+  `).join('');
+}
+
+function deleteEntry(e, id) {
+  e.stopPropagation();
+  const entries = getEntries().filter(en => en.id !== id);
+  saveEntries(entries);
+  loadGuestEntries();
+}
+
+function viewEntry(id) {
+  const entry = getEntries().find(e => e.id === id);
+  if (!entry) return;
+  document.getElementById('guestTitle').value = entry.title;
+  document.getElementById('guestContent').value = entry.content;
+  document.getElementById('charCount').textContent = entry.content.trim().split(/\s+/).length;
+  document.getElementById('guestContent').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+// ── CHECK IF GUEST HAD ENTRIES — auto show guest mode ──
+window.addEventListener('load', () => {
+  const entries = getEntries();
+  if (entries.length > 0 && !window.location.search.includes('fresh')) {
+    // returning guest — ask them
+    const guestTabEl = document.getElementById('guestTab');
+    guestTabEl.style.position = 'relative';
+    const dot = document.createElement('span');
+    dot.style.cssText = 'position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--pink);border:2px solid white;';
+    guestTabEl.appendChild(dot);
+  }
+});
+
+function openForgotModal(){ document.getElementById('forgotModalBackdrop').classList.add('open'); }
+function closeForgotModal(){ document.getElementById('forgotModalBackdrop').classList.remove('open'); }
+
+</script>
+
+<!-- Forgot Password Modal -->
+<div class="forgot-modal-backdrop" id="forgotModalBackdrop" onclick="if(event.target===this)closeForgotModal()">
+  <div class="forgot-modal">
+    <h3>reset your <em>password</em></h3>
+    <p>since PetalPages currently stores your data locally on your device, there is no server-side password reset.</p>
+    <div class="forgot-note">
+      <strong>💡 Prototype note:</strong> In the full version with a real backend, you would receive a reset link by email. For now, if you have forgotten your password, you can clear your data from Settings and start fresh — your privacy is always protected.
+    </div>
+    <button class="forgot-modal-close" onclick="closeForgotModal()">got it</button>
+  </div>
+</div>
+
+</body>
+</html>

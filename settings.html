@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --sage:#6B8F6B;--sage-light:#A8C5A0;--sage-pale:#D4E8CC;
+  --pink:#C4717A;--pink-pale:#F5D8DC;
+  --cream:#FAF6EE;--cream-dark:#F0EAD8;
+  --gold:#B8962E;--gold-light:#D4B060;
+  --text:#2C2418;--text-mid:#6B5840;--text-light:#A89880;
+}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;background:var(--cream);font-family:'Instrument Sans',sans-serif;font-weight:300;display:flex;}
+
+/* sidebar */
+.sidebar{width:240px;flex-shrink:0;background:white;border-right:1px solid rgba(168,197,160,0.18);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;}
+.sidebar-top{padding:1.8rem 1.6rem;}
+.logo{font-family:'DM Serif Display',serif;font-size:1.4rem;font-style:italic;color:var(--sage);text-decoration:none;display:block;margin-bottom:1.5rem;}
+.logo span{color:var(--pink);}
+.nav-item{display:flex;align-items:center;gap:0.7rem;padding:0.62rem 0.8rem;border-radius:9px;font-size:0.82rem;color:var(--text-mid);text-decoration:none;transition:all 0.2s;cursor:pointer;border:none;background:none;width:100%;font-family:'Instrument Sans',sans-serif;}
+.nav-item:hover{background:var(--cream);color:var(--text);}
+.nav-item.active{background:var(--sage-pale);color:var(--sage);font-weight:400;}
+.nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0;}
+.sidebar-bottom{margin-top:auto;padding:1.2rem 1.6rem;border-top:1px solid rgba(168,197,160,0.1);}
+
+/* main */
+.main{margin-left:240px;flex:1;min-height:100vh;}
+.topbar{display:flex;align-items:center;padding:1.4rem 2.5rem;border-bottom:1px solid rgba(168,197,160,0.12);background:rgba(250,246,238,0.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:40;}
+.topbar h1{font-family:'DM Serif Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
+.topbar p{font-size:0.78rem;color:var(--text-light);margin-top:0.1rem;}
+
+.content{padding:2rem 2.5rem;max-width:720px;}
+
+/* settings card */
+.settings-section{margin-bottom:2rem;}
+.settings-section-title{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem;}
+.settings-section-title::after{content:'';flex:1;height:1px;background:rgba(168,197,160,0.2);}
+.settings-card{background:white;border:1px solid rgba(168,197,160,0.15);border-radius:14px;overflow:hidden;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid rgba(168,197,160,0.1);transition:background 0.2s;}
+.settings-row:last-child{border-bottom:none;}
+.settings-row:hover{background:rgba(250,246,238,0.6);}
+.settings-row-left{display:flex;align-items:center;gap:0.9rem;}
+.settings-row-icon{width:36px;height:36px;border-radius:9px;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.settings-row-icon svg{width:16px;height:16px;stroke:var(--sage);fill:none;stroke-width:1.5;}
+.settings-row-icon.pink{background:var(--pink-pale);}
+.settings-row-icon.pink svg{stroke:var(--pink);}
+.settings-row-icon.gold{background:rgba(184,150,46,0.12);}
+.settings-row-icon.gold svg{stroke:var(--gold);}
+.row-title{font-size:0.88rem;color:var(--text);font-weight:400;}
+.row-sub{font-size:0.72rem;color:var(--text-light);margin-top:0.15rem;}
+
+/* toggle switch */
+.toggle{width:42px;height:24px;border-radius:999px;background:rgba(168,197,160,0.3);position:relative;cursor:pointer;transition:background 0.3s;flex-shrink:0;border:none;}
+.toggle.on{background:var(--sage);}
+.toggle-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transition:transform 0.3s;}
+.toggle.on .toggle-knob{transform:translateX(18px);}
+
+/* select */
+.settings-select{background:var(--cream);border:1.5px solid rgba(168,197,160,0.25);border-radius:8px;padding:0.45rem 0.8rem;font-size:0.82rem;font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;cursor:pointer;transition:border-color 0.2s;}
+.settings-select:focus{border-color:var(--sage);}
+
+/* color picker row */
+.color-dots{display:flex;gap:0.5rem;align-items:center;}
+.color-dot{width:24px;height:24px;border-radius:50%;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;border:2px solid transparent;}
+.color-dot:hover{transform:scale(1.2);}
+.color-dot.active{border-color:var(--text);box-shadow:0 0 0 2px var(--cream),0 0 0 4px var(--text);}
+
+/* font preview */
+.font-pills{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.font-pill{padding:0.35rem 0.8rem;border-radius:999px;border:1.5px solid rgba(168,197,160,0.25);background:transparent;cursor:pointer;font-size:0.82rem;color:var(--text-mid);transition:all 0.2s;}
+.font-pill:hover,.font-pill.active{background:var(--sage-pale);border-color:var(--sage-light);color:var(--sage);}
+
+/* profile section */
+.profile-card{background:white;border:1px solid rgba(168,197,160,0.15);border-radius:14px;padding:1.8rem;display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sage-pale),var(--pink-pale));display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-style:italic;font-size:1.6rem;color:var(--sage);flex-shrink:0;cursor:pointer;position:relative;overflow:hidden;}
+.avatar-img{width:100%;height:100%;object-fit:cover;display:none;border-radius:50%;}
+.profile-info h3{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:var(--text);}
+.profile-info p{font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;}
+.btn-edit-profile{margin-top:0.8rem;padding:0.45rem 1rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.3);background:transparent;color:var(--text-mid);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.2s;}
+.btn-edit-profile:hover{border-color:var(--sage);color:var(--sage);}
+
+/* input field */
+.settings-input{background:var(--cream);border:1.5px solid rgba(168,197,160,0.25);border-radius:8px;padding:0.55rem 0.9rem;font-size:0.85rem;font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;width:100%;transition:border-color 0.2s;}
+.settings-input:focus{border-color:var(--sage);}
+.settings-input::placeholder{color:var(--text-light);font-style:italic;}
+.input-group{display:flex;gap:0.8rem;align-items:center;}
+.btn-save-small{padding:0.52rem 1.1rem;border-radius:8px;background:var(--text);color:white;border:none;font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;white-space:nowrap;transition:background 0.2s;}
+.btn-save-small:hover{background:var(--sage);}
+
+/* danger zone */
+.danger-card{background:white;border:1px solid rgba(196,113,122,0.2);border-radius:14px;overflow:hidden;}
+.danger-row{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid rgba(196,113,122,0.1);}
+.danger-row:last-child{border-bottom:none;}
+.danger-title{font-size:0.88rem;color:var(--text);}
+.danger-sub{font-size:0.72rem;color:var(--text-light);margin-top:0.15rem;}
+.btn-danger{padding:0.45rem 1rem;border-radius:8px;border:1.5px solid rgba(196,113,122,0.3);background:transparent;color:var(--pink);font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.2s;}
+.btn-danger:hover{background:var(--pink);color:white;}
+
+/* toast */
+.pp-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--text);color:white;padding:0.6rem 1.5rem;border-radius:999px;font-size:0.72rem;letter-spacing:0.09em;text-transform:uppercase;z-index:400;opacity:0;transition:all 0.3s ease;pointer-events:none;white-space:nowrap;font-family:'Instrument Sans',sans-serif;}
+.pp-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* export btn */
+.btn-export{display:inline-flex;align-items:center;gap:0.5rem;padding:0.52rem 1.1rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.3);background:transparent;color:var(--text-mid);font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.2s;}
+.btn-export:hover{border-color:var(--sage);color:var(--sage);}
+.btn-export svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+@media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;}.content{padding:1.5rem;}}
+</style>
+</head>
+<body>
+
+<div class="pp-toast" id="ppToast"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="logo">Petal<span>Pages</span></a>
+    <a href="dashboard.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Journal
+    </a>
+    <a href="notes.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Notes
+    </a>
+    <a href="period-tracker.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Period Tracker
+    </a>
+    <a href="settings.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Back to home
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1>Settings</h1>
+      <p>manage your account and preferences</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Profile -->
+    <div class="settings-section">
+      <p class="settings-section-title">profile</p>
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar" onclick="document.getElementById('avatarInput').click()">
+          <span id="avatarInitial">✦</span>
+          <img id="avatarImg" class="avatar-img" alt="avatar"/>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="updateAvatar(event)"/>
+        <div class="profile-info">
+          <h3 id="displayName">Guest Writer</h3>
+          <p id="displayEmail">exploring as guest</p>
+          <button class="btn-edit-profile" onclick="toggleEditProfile()">edit profile</button>
+        </div>
+      </div>
+
+      <div class="settings-card" id="editProfileCard" style="display:none;padding:1.5rem;margin-bottom:1rem;">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div>
+            <label style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:0.4rem;">display name</label>
+            <div class="input-group">
+              <input type="text" class="settings-input" id="nameInput" placeholder="what shall we call you?"/>
+              <button class="btn-save-small" onclick="saveName()">save</button>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:0.4rem;">email (optional)</label>
+            <div class="input-group">
+              <input type="email" class="settings-input" id="emailInput" placeholder="your@email.com"/>
+              <button class="btn-save-small" onclick="saveEmail()">save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="settings-section">
+      <p class="settings-section-title">appearance</p>
+      <div style="background:rgba(107,143,107,0.08);border:1px solid rgba(107,143,107,0.2);border-radius:10px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.6rem;font-size:0.76rem;color:var(--text-mid);margin-bottom:0.9rem;line-height:1.5;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.5" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Changes apply <strong>instantly across all pages</strong> — color and font.</span>
+      </div>
+      <div class="settings-card">
+  
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon gold">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Accent color</p>
+              <p class="row-sub">your garden's color palette</p>
+            </div>
+          </div>
+          <div class="color-dots">
+            <div class="color-dot active" style="background:#6B8F6B;" data-color="sage" onclick="setAccent(this,'#6B8F6B','#D4E8CC')"></div>
+            <div class="color-dot" style="background:#C4717A;" data-color="pink" onclick="setAccent(this,'#C4717A','#F5D8DC')"></div>
+            <div class="color-dot" style="background:#7B6B8B;" data-color="lavender" onclick="setAccent(this,'#7B6B8B','#EDE0F5')"></div>
+            <div class="color-dot" style="background:#B8962E;" data-color="gold" onclick="setAccent(this,'#B8962E','#F5ECC8')"></div>
+            <div class="color-dot" style="background:#5A8A9F;" data-color="ocean" onclick="setAccent(this,'#5A8A9F','#D0E8F0')"></div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon">
+              <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Writing font</p>
+              <p class="row-sub">your journal's typeface</p>
+            </div>
+          </div>
+          <div class="font-pills">
+            <button class="font-pill active" style="font-family:'Lora',serif;font-style:italic;" onclick="setGlobalFont(this,'Lora')">Lora</button>
+            <button class="font-pill" style="font-family:'DM Serif Display',serif;font-style:italic;" onclick="setGlobalFont(this,'DM Serif')">DM Serif</button>
+            <button class="font-pill" style="font-family:'Instrument Sans',sans-serif;" onclick="setGlobalFont(this,'Sans')">Sans</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon pink">
+              <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Ruled lines</p>
+              <p class="row-sub">show lines in journal editor</p>
+            </div>
+          </div>
+          <button class="toggle on" id="ruledToggle" onclick="toggleRuled()"><div class="toggle-knob"></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy -->
+    <div class="settings-section">
+      <p class="settings-section-title">privacy & security</p>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div>
+              <p class="row-title">App password</p>
+              <p class="row-sub">require password on app open</p>
+            </div>
+          </div>
+          <button class="toggle" id="appPwToggle" onclick="toggleAppPw()"><div class="toggle-knob"></div></button>
+        </div>
+              <div class="settings-row" id="appPwRow" style="display:none;">
+          <div class="settings-row-left" style="flex:1;">
+            <div class="settings-row-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div class="input-group">
+                <input type="password" class="settings-input" id="appPwInput" placeholder="set app password..."/>
+                <button class="btn-save-small" onclick="saveAppPw()">set</button>
+                <button class="btn-save-small" id="removePwBtn" style="display:none;background:var(--pink);" onclick="removeAppPw()">remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon pink">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Hide entry previews</p>
+              <p class="row-sub">blur content on dashboard</p>
+            </div>
+          </div>
+          <button class="toggle" id="blurToggle" onclick="toggleBlur()"><div class="toggle-knob"></div></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div class="settings-section">
+      <p class="settings-section-title">data & export</p>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon gold">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Export all entries</p>
+              <p class="row-sub">download as JSON file</p>
+            </div>
+          </div>
+          <button class="btn-export" onclick="exportData()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            export
+          </button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="settings-row-icon">
+              <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </div>
+            <div>
+              <p class="row-title">Entry count</p>
+              <p class="row-sub" id="entryCountSub">loading...</p>
+            </div>
+          </div>
+          <span style="font-family:'DM Serif Display',serif;font-size:1.8rem;font-style:italic;color:var(--sage);" id="entryCountNum">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger -->
+    <div class="settings-section">
+      <p class="settings-section-title">danger zone</p>
+      <div class="danger-card">
+        <div class="danger-row">
+          <div>
+            <p class="danger-title">Clear all entries</p>
+            <p class="danger-sub">permanently delete all journal entries</p>
+          </div>
+          <button class="btn-danger" onclick="clearAllEntries()">clear all</button>
+        </div>
+        <div class="danger-row">
+          <div>
+            <p class="danger-title">Reset settings</p>
+            <p class="danger-sub">restore all settings to default</p>
+          </div>
+          <button class="btn-danger" onclick="resetSettings()">reset</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── APP LOCK CHECK ──
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    if(s.appPw){
+      var entered = sessionStorage.getItem('pp_session_auth');
+      if(entered !== s.appPw){
+        var input = prompt('🔒 Enter your PetalPages password:');
+        if(input !== s.appPw){
+          alert('Incorrect password.');
+          document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#6B5840;">Access denied.</div>';
+          throw new Error('locked');
+        }
+        sessionStorage.setItem('pp_session_auth', s.appPw);
+      }
+    }
+  } catch(e) {}
+})();
+const STORAGE_KEY = 'petalpages_guest_entries';
+const SETTINGS_KEY = 'pp_settings';
+
+function loadSettings(){
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch(e){ return {}; }
+}
+
+function saveSettings(s){
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  const userId = localStorage.getItem('pp_user_id');
+  if(userId) syncSettingsToBackend(s);
+}
+
+async function syncSettingsToBackend(s){
+  const userId = localStorage.getItem('pp_user_id');
+  if(!userId) return;
+  try{
+    await fetch('http://localhost:8080/api/settings/' + userId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('pp_token')
+      },
+      body: JSON.stringify({
+        displayName: s.name || '',
+        avatarUrl: s.avatar || '',
+        darkMode: !!s.dark,
+        accentColor: s.accent || '',
+        font: s.font || '',
+        ruledLines: s.ruled !== false,
+        appPasswordEnabled: !!s.appPw,
+        appPassword: s.appPw || '',
+        hidePreviews: !!s.blur
+      })
+    });
+  }catch(err){ console.warn('Could not sync settings to backend:', err); }
+}
+
+async function loadSettingsFromBackend(){
+  const userId = localStorage.getItem('pp_user_id');
+  if(!userId) return;
+  try{
+    const response = await fetch('http://localhost:8080/api/settings/' + userId, {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
+    });
+    if(!response.ok) return;
+    const remote = await response.json();
+    const local = loadSettings();
+    // merge: backend is source of truth for a logged-in user
+    const merged = {
+      name: remote.displayName || local.name,
+      email: local.email, // email not stored server-side settings; stays local
+      avatar: remote.avatarUrl || local.avatar,
+      dark: remote.darkMode,
+      accent: remote.accentColor || local.accent,
+      accentPale: local.accentPale,
+      accentLight: local.accentLight,
+      font: remote.font || local.font,
+      ruled: remote.ruledLines,
+      blur: remote.hidePreviews,
+      appPw: remote.appPassword || ''
+    };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
+  }catch(err){ console.warn('Could not load settings from backend:', err); }
+}
+// ── INIT ──
+async function init(){
+  await loadSettingsFromBackend();
+  const s = loadSettings();
+
+  // name
+  if(s.name){ document.getElementById('displayName').textContent = s.name; document.getElementById('nameInput').value = s.name; document.getElementById('avatarInitial').textContent = s.name[0].toUpperCase(); }
+  if(s.email){ document.getElementById('displayEmail').textContent = s.email; document.getElementById('emailInput').value = s.email; }
+  if(s.avatar){ document.getElementById('avatarImg').src = s.avatar; document.getElementById('avatarImg').style.display='block'; document.getElementById('avatarInitial').style.display='none'; }
+  
+  if(s.ruled === false){ document.getElementById('ruledToggle').classList.remove('on'); }
+  if(s.blur){ document.getElementById('blurToggle').classList.add('on'); }
+  if(s.appPw){
+    document.getElementById('appPwToggle').classList.add('on');
+    document.getElementById('appPwRow').style.display='flex';
+    document.getElementById('appPwInput').placeholder = 'password set ✦ (enter new one to change)';
+    document.getElementById('removePwBtn').style.display = 'inline-block';
+  }
+  // restore accent color dots UI
+  if(s.accent){
+    document.querySelectorAll('.color-dot').forEach(d => {
+      if(d.style.background === s.accent || d.getAttribute('onclick') && d.getAttribute('onclick').includes(s.accent)){
+        d.classList.add('active');
+      }
+    });
+    document.documentElement.style.setProperty('--sage', s.accent);
+    if(s.accentPale) document.documentElement.style.setProperty('--sage-pale', s.accentPale);
+  }
+  // restore font pill UI
+  if(s.font){
+    document.querySelectorAll('.font-pill').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+s.font+"'"));
+    });
+  }
+  // entry count
+  const entries = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  document.getElementById('entryCountNum').textContent = entries.length;
+  document.getElementById('entryCountSub').textContent = entries.length + ' entries in your garden';
+}
+
+function showToast(msg){ const t=document.getElementById('ppToast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+
+// ── PROFILE ──
+function toggleEditProfile(){
+  const c = document.getElementById('editProfileCard');
+  c.style.display = c.style.display === 'none' ? 'block' : 'none';
+}
+function saveName(){
+  const n = document.getElementById('nameInput').value.trim();
+  if(!n) return;
+  document.getElementById('displayName').textContent = n;
+  document.getElementById('avatarInitial').textContent = n[0].toUpperCase();
+  const s = loadSettings(); s.name = n; saveSettings(s);
+  localStorage.setItem('pp_user_name', n);
+  showToast('✦ name saved — updated everywhere');
+}
+function saveEmail(){
+  const e = document.getElementById('emailInput').value.trim();
+  if(!e) return;
+  document.getElementById('displayEmail').textContent = e;
+  const s = loadSettings(); s.email = e; saveSettings(s);
+  showToast('✦ email saved');
+}
+function updateAvatar(event){
+  const file = event.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('avatarImg').src = e.target.result;
+    document.getElementById('avatarImg').style.display = 'block';
+    document.getElementById('avatarInitial').style.display = 'none';
+    const s = loadSettings(); s.avatar = e.target.result; saveSettings(s);
+    showToast('✦ photo updated');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── APPEARANCE ──
+function toggleDark(){
+  const t = document.getElementById('darkToggle');
+  t.classList.toggle('on');
+  const isDark = t.classList.contains('on');
+  applyDark(isDark);
+  const s = loadSettings(); s.dark = isDark; saveSettings(s);
+  showToast(isDark ? '🌙 dark mode on — applies everywhere!' : '☀️ light mode on');
+}
+function applyDark(on){
+  document.body.style.background = on ? '#1A1A2E' : '';
+  document.body.style.color = on ? '#E8E0F0' : '';
+  document.documentElement.setAttribute('data-theme', on ? 'dark' : 'light');
+
+  const darkOverrides = document.getElementById('darkModeOverrides');
+  if(on){
+    if(!darkOverrides){
+      const style = document.createElement('style');
+      style.id = 'darkModeOverrides';
+      style.textContent = `
+        [data-theme="dark"] .sidebar,
+        [data-theme="dark"] .topbar,
+        [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .profile-card,
+        [data-theme="dark"] .danger-card,
+        [data-theme="dark"] .editProfileCard,
+        [data-theme="dark"] #editProfileCard {
+          background: #24243A !important;
+          color: #E8E0F0 !important;
+        }
+        [data-theme="dark"] .row-title,
+        [data-theme="dark"] .nav-item,
+        [data-theme="dark"] .topbar h1,
+        [data-theme="dark"] .profile-info h3 { color: #E8E0F0 !important; }
+        [data-theme="dark"] .row-sub,
+        [data-theme="dark"] .topbar p,
+        [data-theme="dark"] .profile-info p,
+        [data-theme="dark"] .settings-section-title { color: #A89880 !important; }
+        [data-theme="dark"] .settings-input,
+        [data-theme="dark"] .settings-select { background: #1A1A2E !important; color: #E8E0F0 !important; }
+      `;
+      document.head.appendChild(style);
+    }
+  } else if(darkOverrides){
+    darkOverrides.remove();
+  }
+}
+
+function setAccent(dot, color, pale){
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  dot.classList.add('active');
+  document.documentElement.style.setProperty('--sage', color);
+  document.documentElement.style.setProperty('--sage-pale', pale);
+  // derive a light version (midpoint)
+  var light = pale;
+  document.documentElement.style.setProperty('--sage-light', light);
+  const s = loadSettings();
+  s.accent = color;
+  s.accentPale = pale;
+  s.accentLight = light;
+  saveSettings(s);
+  // immediately apply so preview is visible
+  showToast('✦ color updated — applies to all pages!');
+}
+
+function setGlobalFont(btn, font){
+  document.querySelectorAll('.font-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const s = loadSettings(); s.font = font; saveSettings(s);
+  showToast('✦ font saved — applies to all pages!');
+}
+
+function toggleRuled(){
+  const t = document.getElementById('ruledToggle');
+  t.classList.toggle('on');
+  const s = loadSettings(); s.ruled = t.classList.contains('on'); saveSettings(s);
+  showToast('✦ saved');
+}
+
+function toggleBlur(){
+  const t = document.getElementById('blurToggle');
+  t.classList.toggle('on');
+  const s = loadSettings(); s.blur = t.classList.contains('on'); saveSettings(s);
+  showToast('✦ saved');
+}
+
+// ── SECURITY ──
+function toggleAppPw(){
+  const t = document.getElementById('appPwToggle');
+  const turningOn = !t.classList.contains('on');
+  t.classList.toggle('on');
+  document.getElementById('appPwRow').style.display = turningOn ? 'flex' : 'none';
+
+  if(!turningOn){
+    // toggled off entirely — clear the password completely
+    const s = loadSettings();
+    s.appPw = '';
+    saveSettings(s);
+    sessionStorage.removeItem('pp_session_auth');
+    document.getElementById('appPwInput').value = '';
+    document.getElementById('appPwInput').placeholder = 'set app password...';
+    document.getElementById('removePwBtn').style.display = 'none';
+    showToast('✦ app password removed');
+  }
+}
+function saveAppPw(){
+  const pw = document.getElementById('appPwInput').value;
+  if(!pw){ showToast('enter a password first'); return; }
+  const s = loadSettings(); s.appPw = pw; saveSettings(s);
+  sessionStorage.removeItem('pp_session_auth');
+  document.getElementById('appPwInput').value = '';
+  document.getElementById('appPwInput').placeholder = 'password set ✦ (enter new one to change)';
+  document.getElementById('removePwBtn').style.display = 'inline-block';
+  showToast('✦ app password set — note: stored locally, not encrypted');
+}
+function removeAppPw(){
+  const s = loadSettings(); s.appPw = ''; saveSettings(s);
+  sessionStorage.removeItem('pp_session_auth');
+  document.getElementById('appPwToggle').classList.remove('on');
+  document.getElementById('appPwRow').style.display = 'none';
+  document.getElementById('appPwInput').value = '';
+  document.getElementById('appPwInput').placeholder = 'set app password...';
+  document.getElementById('removePwBtn').style.display = 'none';
+  showToast('✦ app password removed');
+}
+
+// ── DATA ──
+function exportData(){
+  const entries = localStorage.getItem(STORAGE_KEY) || '[]';
+  const blob = new Blob([entries], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'petalpages-entries.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('✦ exported!');
+}
+
+function clearAllEntries(){
+  if(!confirm('delete ALL entries forever? this cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('entryCountNum').textContent = '0';
+  document.getElementById('entryCountSub').textContent = '0 entries in your garden';
+  showToast('all entries cleared');
+}
+
+function resetSettings(){
+  if(!confirm('reset all settings to default?')) return;
+  localStorage.removeItem(SETTINGS_KEY);
+  location.reload();
+}
+
+init();
+</script>
+</body>
+</html>

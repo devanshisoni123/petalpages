@@ -994,7 +994,7 @@
       const userId = localStorage.getItem('pp_user_id');
       if (userId) {
         try {
-          const response = await fetch('http://localhost:8080/api/notes/' + userId, {
+          const response = await fetch('https://petalpages-production.up.railway.app/api/notes/' + userId, {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
           });
           const data = await response.json();
@@ -1032,8 +1032,8 @@
 
       const isNew = typeof note.id !== 'number' || note.id > 1000000000000; // Date.now()-style temp id
       const url = isNew
-        ? 'http://localhost:8080/api/notes/' + userId
-        : 'http://localhost:8080/api/notes/single/' + note.id;
+        ? 'https://petalpages-production.up.railway.app/api/notes/' + userId
+        : 'https://petalpages-production.up.railway.app/api/notes/single/' + note.id;
       const method = isNew ? 'POST' : 'PUT';
 
       try {
@@ -1064,7 +1064,7 @@
       const userId = localStorage.getItem('pp_user_id');
       if (!userId) return;
       try {
-        await fetch('http://localhost:8080/api/notes/single/' + noteId, {
+        await fetch('https://petalpages-production.up.railway.app/api/notes/single/' + noteId, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
         });

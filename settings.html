@@ -390,7 +390,7 @@ async function syncSettingsToBackend(s){
   const userId = localStorage.getItem('pp_user_id');
   if(!userId) return;
   try{
-    await fetch('http://localhost:8080/api/settings/' + userId, {
+    await fetch('https://petalpages-production.up.railway.app/api/settings/' + userId, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -415,7 +415,7 @@ async function loadSettingsFromBackend(){
   const userId = localStorage.getItem('pp_user_id');
   if(!userId) return;
   try{
-    const response = await fetch('http://localhost:8080/api/settings/' + userId, {
+    const response = await fetch('https://petalpages-production.up.railway.app/api/settings/' + userId, {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
     });
     if(!response.ok) return;

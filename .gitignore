@@ -1,7 +1,7 @@
 # Backend
 backend/target/
 backend/.mvn/wrapper/maven-wrapper.jar
-backend/src/main/resources/application.properties
+
 
 # OS files
 .DS_Store

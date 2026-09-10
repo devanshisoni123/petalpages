@@ -2548,7 +2548,7 @@
       const userId = localStorage.getItem('pp_user_id');
       if (!userId) return;
       try {
-        const response = await fetch('http://localhost:8080/api/entries/single/' + editingId, {
+        const response = await fetch('https://petalpages-production.up.railway.app/api/entries/single/' + editingId, {
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
         });
         if (!response.ok) return;
@@ -2780,8 +2780,8 @@
       if (userId) {
         try {
           const url = editingId
-            ? 'http://localhost:8080/api/entries/single/' + editingId
-            : 'http://localhost:8080/api/entries/' + userId;
+            ? 'https://petalpages-production.up.railway.app/api/entries/single/' + editingId
+            : 'https://petalpages-production.up.railway.app/api/entries/' + userId;
           const method = editingId ? 'PUT' : 'POST';
           const response = await fetch(url, {
             method: method,

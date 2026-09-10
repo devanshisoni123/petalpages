@@ -734,7 +734,7 @@ async function getData(){
   if(userId){
     if(_cachedPeriodData) return _cachedPeriodData;
     try{
-      const response = await fetch('http://localhost:8080/api/period/logs/' + userId, {
+      const response = await fetch('https://petalpages-production.up.railway.app/api/period/logs/' + userId, {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
       });
       const logs = await response.json();
@@ -783,8 +783,8 @@ async function saveData(d){
     try{
       const isNew = !latest.id;
       const url = isNew
-        ? 'http://localhost:8080/api/period/logs/' + userId
-        : 'http://localhost:8080/api/period/logs/single/' + latest.id;
+        ? 'https://petalpages-production.up.railway.app/api/period/logs/' + userId
+        : 'https://petalpages-production.up.railway.app/api/period/logs/single/' + latest.id;
       // (update endpoint not built — so new logs only; edits still update locally/UI)
       if(isNew){
         const response = await fetch(url, {
@@ -1232,7 +1232,7 @@ async function deleteHistory(idx){
 
   if(userId && removed && removed.id){
     try{
-      await fetch('http://localhost:8080/api/period/logs/single/' + removed.id, {
+      await fetch('https://petalpages-production.up.railway.app/api/period/logs/single/' + removed.id, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
       });
@@ -1326,7 +1326,7 @@ async function getMoods(){
   if(userId){
     if(_cachedMoods) return _cachedMoods;
     try{
-      const response = await fetch('http://localhost:8080/api/period/moods/' + userId, {
+      const response = await fetch('https://petalpages-production.up.railway.app/api/period/moods/' + userId, {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
       });
       const data = await response.json();
@@ -1346,7 +1346,7 @@ async function saveMoodEntry(dateKey, entry){
   const userId = localStorage.getItem('pp_user_id');
   if(userId){
     try{
-      await fetch('http://localhost:8080/api/period/moods/' + userId, {
+      await fetch('https://petalpages-production.up.railway.app/api/period/moods/' + userId, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

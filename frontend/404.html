@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Apply saved settings -->
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    var root = document.documentElement;
+    if(s.accent){ root.style.setProperty('--sage', s.accent); }
+    if(s.accentPale){ root.style.setProperty('--sage-pale', s.accentPale); }
+    if(s.accentLight){ root.style.setProperty('--sage-light', s.accentLight); }
+    if(s.dark){ document.documentElement.setAttribute('data-theme','dark'); }
+  } catch(e) {}
+})();
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — Page Not Found</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --sage:#6B8F6B;--sage-light:#A8C5A0;--sage-pale:#D4E8CC;
+  --pink:#C4717A;--pink-pale:#F5D8DC;--pink-light:#E8A0A8;
+  --cream:#FAF6EE;--cream-dark:#F0EAD8;
+  --gold:#B8962E;--gold-light:#D4B060;
+  --text:#2C2418;--text-mid:#6B5840;--text-light:#A89880;
+}
+html{scroll-behavior:smooth;}
+body{
+  min-height:100vh;
+  background:var(--cream);
+  font-family:'Instrument Sans',sans-serif;
+  font-weight:300;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ── BACKGROUND SPIRAL DOTS ── */
+.bg-canvas{position:fixed;inset:0;z-index:0;opacity:0.1;pointer-events:none;}
+
+/* ── FLOATING PETALS ── */
+.float-el{position:fixed;pointer-events:none;z-index:1;animation:gentleFloat ease-in-out infinite;}
+@keyframes gentleFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  33%{transform:translateY(-14px) rotate(4deg);}
+  66%{transform:translateY(-7px) rotate(-3deg);}
+}
+
+/* ── MAIN CONTENT ── */
+.content{
+  position:relative;z-index:2;
+  text-align:center;
+  max-width:520px;
+  padding:2rem;
+  animation:fadeUp 0.7s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* big 404 */
+.num-wrap{position:relative;display:inline-block;margin-bottom:0.5rem;}
+.num{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(6rem,18vw,11rem);
+  font-style:italic;
+  line-height:1;
+  background:linear-gradient(135deg,var(--sage) 0%,var(--pink) 50%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+  animation:shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(1.15);}
+}
+
+/* flower inside 0 */
+.flower-in-zero{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  pointer-events:none;
+}
+
+.tag{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--pink-pale);border:1px solid rgba(196,113,122,0.2);
+  border-radius:6px;padding:0.3rem 0.9rem;
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:1.5rem;
+}
+
+.title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.6rem,4vw,2.5rem);
+  font-style:italic;color:var(--text);
+  margin-bottom:0.6rem;line-height:1.15;
+}
+.title em{color:var(--sage);}
+
+.subtitle{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:1rem;color:var(--text-mid);
+  line-height:1.75;margin-bottom:2.2rem;
+  max-width:400px;margin-left:auto;margin-right:auto;
+}
+
+/* buttons */
+.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:0.55rem;
+  background:var(--text);color:white;
+  padding:0.9rem 2rem;border-radius:10px;
+  font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;font-weight:400;transition:all 0.25s;
+  border:none;cursor:pointer;font-family:'Instrument Sans',sans-serif;
+}
+.btn-primary:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,143,107,0.25);}
+.btn-primary svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:0.55rem;
+  border:1.5px solid rgba(168,197,160,0.4);color:var(--text-mid);
+  padding:0.9rem 2rem;border-radius:10px;
+  font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;font-weight:400;transition:all 0.25s;
+}
+.btn-ghost:hover{background:var(--sage-pale);border-color:var(--sage-light);color:var(--sage);transform:translateY(-2px);}
+.btn-ghost svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* quick links */
+.quick-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;}
+.quick-link{
+  font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-light);text-decoration:none;
+  display:flex;align-items:center;gap:0.35rem;
+  transition:color 0.2s;border-bottom:1px solid transparent;
+  padding-bottom:1px;
+}
+.quick-link:hover{color:var(--sage);border-color:var(--sage-light);}
+
+/* logo top */
+.top-logo{
+  position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);
+  z-index:10;
+  font-family:'DM Serif Display',serif;font-size:1.35rem;font-style:italic;
+  color:var(--sage);text-decoration:none;
+}
+.top-logo span{color:var(--pink);}
+
+/* divider ornament */
+.ornament{
+  font-size:0.7rem;color:var(--text-light);
+  letter-spacing:0.6rem;margin:0 auto 1.5rem;
+  opacity:0.5;display:block;
+}
+
+@media(max-width:600px){
+  .num { font-size: 5rem !important; }
+  .title { font-size: 1.4rem !important; }
+  .subtitle { font-size: 0.88rem !important; }
+  .btn-row { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+  .quick-links { gap: 1rem; }
+  .content { padding: 1.5rem 1rem; }
+  .float-el { display: none; }
+}
+@media(max-width:400px){
+  .num { font-size: 4rem !important; }
+  .flower-in-zero { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Canvas bg -->
+<canvas class="bg-canvas" id="bgCanvas"></canvas>
+
+<!-- Floating petals -->
+<div class="float-el" style="top:10%;left:6%;animation-duration:6.5s;animation-delay:0s;">
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#A8C5A0" opacity="0.5" transform="rotate(0 16 16)"/>
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#C4717A" opacity="0.4" transform="rotate(60 16 16)"/>
+    <ellipse cx="16" cy="16" rx="6" ry="12" fill="#D4B060" opacity="0.4" transform="rotate(120 16 16)"/>
+    <circle cx="16" cy="16" r="3" fill="#FAF6EE" opacity="0.9"/>
+  </svg>
+</div>
+<div class="float-el" style="top:20%;right:8%;animation-duration:8s;animation-delay:1.5s;">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <path d="M11 1 L12.5 7 L18 7 L13.5 11 L15 17 L11 13.5 L7 17 L8.5 11 L4 7 L9.5 7 Z" fill="#D4B060" opacity="0.45"/>
+  </svg>
+</div>
+<div class="float-el" style="bottom:18%;left:9%;animation-duration:9s;animation-delay:3s;">
+  <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+    <ellipse cx="13" cy="13" rx="5" ry="11" fill="#E8A0A8" opacity="0.4" transform="rotate(45 13 13)"/>
+    <ellipse cx="13" cy="13" rx="5" ry="11" fill="#6B8F6B" opacity="0.35" transform="rotate(135 13 13)"/>
+    <circle cx="13" cy="13" r="2.5" fill="#FAF6EE" opacity="0.88"/>
+  </svg>
+</div>
+<div class="float-el" style="bottom:25%;right:7%;animation-duration:7s;animation-delay:2s;">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <path d="M9 1 C9 1,13 5,13 9 C13 13,9 17,9 17 C9 17,5 13,5 9 C5 5,9 1,9 1Z" fill="#A8C5A0" opacity="0.5"/>
+  </svg>
+</div>
+<div class="float-el" style="top:50%;left:3%;animation-duration:10s;animation-delay:4s;">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="7" r="6" stroke="#B8962E" stroke-width="1" fill="none" opacity="0.4"/>
+    <circle cx="7" cy="7" r="2.5" fill="#D4B060" opacity="0.45"/>
+  </svg>
+</div>
+<div class="float-el" style="top:65%;right:5%;animation-duration:6s;animation-delay:0.8s;">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <ellipse cx="10" cy="10" rx="4" ry="9" fill="#C4717A" opacity="0.38" transform="rotate(30 10 10)"/>
+    <ellipse cx="10" cy="10" rx="4" ry="9" fill="#A8C5A0" opacity="0.33" transform="rotate(90 10 10)"/>
+    <ellipse cx="10" cy="10" rx="4" ry="9" fill="#D4B060" opacity="0.33" transform="rotate(150 10 10)"/>
+    <circle cx="10" cy="10" r="2" fill="#FAF6EE" opacity="0.85"/>
+  </svg>
+</div>
+
+<!-- Logo -->
+<a href="index.html" class="top-logo">Petal<span>Pages</span></a>
+
+<!-- Main -->
+<div class="content">
+
+  <!-- 404 number with CSS flower -->
+  <div class="num-wrap">
+    <span class="num">404</span>
+    <!-- tiny SVG flower floating over the zero -->
+    <div class="flower-in-zero">
+      <svg width="55" height="55" viewBox="0 0 55 55" fill="none" opacity="0.7">
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#A8C5A0" opacity="0.65" transform="rotate(0 27.5 27.5)"/>
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#C4717A" opacity="0.55" transform="rotate(60 27.5 27.5)"/>
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#D4B060" opacity="0.55" transform="rotate(120 27.5 27.5)"/>
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#A8C5A0" opacity="0.55" transform="rotate(180 27.5 27.5)"/>
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#E8A0A8" opacity="0.55" transform="rotate(240 27.5 27.5)"/>
+        <ellipse cx="27.5" cy="27.5" rx="5" ry="11" fill="#C4A8D4" opacity="0.55" transform="rotate(300 27.5 27.5)"/>
+        <circle cx="27.5" cy="27.5" r="6" fill="#FAF6EE"/>
+        <circle cx="27.5" cy="27.5" r="3" fill="#D4B060" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="tag">page not found</div>
+
+  <h1 class="title">
+    this petal got <em>lost</em>
+  </h1>
+
+  <p class="subtitle">
+    the page you're looking for wandered off into the garden and couldn't be found.
+    don't worry — your entries are safe and your garden is waiting.
+  </p>
+
+  <div class="btn-row">
+    <a href="index.html" class="btn-primary">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      back to home
+    </a>
+    <a href="dashboard.html" class="btn-ghost">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      open my garden
+    </a>
+  </div>
+
+  <span class="ornament">✦ ✦ ✦</span>
+
+  <div class="quick-links">
+    <a href="new-entry.html" class="quick-link">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      write an entry
+    </a>
+    <a href="notes.html" class="quick-link">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      notes
+    </a>
+    <a href="period-tracker.html" class="quick-link">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      cycle tracker
+    </a>
+    <a href="settings.html" class="quick-link">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      settings
+    </a>
+  </div>
+
+</div>
+
+<script>
+// ── CANVAS SPIRAL BG ──
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', function(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drawBg();
+});
+
+function drawBg(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width/2, cy = canvas.height/2;
+  const colors = ['rgba(168,197,160,0.4)','rgba(196,113,122,0.3)','rgba(212,176,96,0.3)','rgba(255,255,255,0.5)'];
+  for(let ring=1; ring<=10; ring++){
+    const r = ring*65, dots = Math.floor(ring*9);
+    for(let d=0; d<dots; d++){
+      const angle = (d/dots)*Math.PI*2;
+      ctx.beginPath();
+      ctx.arc(
+        cx + Math.cos(angle)*r + (Math.random()*8-4),
+        cy + Math.sin(angle)*r + (Math.random()*8-4),
+        Math.random()*2.2+0.5, 0, Math.PI*2
+      );
+      ctx.fillStyle = colors[Math.floor(Math.random()*colors.length)];
+      ctx.fill();
+    }
+  }
+  // scattered mini flowers
+  [[0.1,0.15],[0.9,0.12],[0.05,0.8],[0.92,0.75],[0.5,0.05],[0.15,0.5],[0.85,0.5],[0.5,0.95]].forEach(function(pos){
+    const x = canvas.width*pos[0], y = canvas.height*pos[1];
+    const fc = colors[Math.floor(Math.random()*colors.length)];
+    for(let p=0; p<5; p++){
+      const pa = (p/5)*Math.PI*2;
+      ctx.beginPath();
+      ctx.ellipse(x+Math.cos(pa)*9, y+Math.sin(pa)*9, 3, 7, pa, 0, Math.PI*2);
+      ctx.fillStyle = fc; ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(250,246,238,0.85)'; ctx.fill();
+  });
+}
+drawBg();
+
+// ── AUTO REDIRECT after 30 seconds ──
+let countdown = 30;
+const interval = setInterval(function(){
+  countdown--;
+  if(countdown <= 0){
+    clearInterval(interval);
+    window.location.href = 'index.html';
+  }
+}, 1000);
+</script>
+</body>
+</html>

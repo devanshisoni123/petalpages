@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Apply saved settings -->
+<script>
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    var root = document.documentElement;
+    if(s.accent){ root.style.setProperty('--sage', s.accent); }
+    if(s.accentPale){ root.style.setProperty('--sage-pale', s.accentPale); }
+    if(s.accentLight){ root.style.setProperty('--sage-light', s.accentLight); }
+    if(s.dark){ document.documentElement.setAttribute('data-theme','dark'); }
+  } catch(e) {}
+})();
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PetalPages — a place to be yourself</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --sage:#6B8F6B;
+  --sage-light:#A8C5A0;
+  --sage-pale:#D4E8CC;
+  --pink:#C4717A;
+  --pink-light:#E8A0A8;
+  --pink-pale:#F5D8DC;
+  --cream:#FAF6EE;
+  --cream-dark:#F0EAD8;
+  --gold:#B8962E;
+  --gold-light:#D4B060;
+  --brown:#7A5C3C;
+  --text:#2C2418;
+  --text-mid:#6B5840;
+  --text-light:#A89880;
+  --white:#FFFFFF;
+}
+
+html{scroll-behavior:smooth;}
+body{
+  background:var(--cream);
+  color:var(--text);
+  font-family:'Instrument Sans',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 5vw;
+  background:transparent;
+  transition:background 0.4s,backdrop-filter 0.4s;
+}
+nav.scrolled{
+  background:rgba(250,246,238,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(107,143,107,0.12);
+}
+.logo{
+  font-family:'DM Serif Display',serif;
+  font-size:1.5rem;font-style:italic;
+  color:var(--sage);letter-spacing:-0.01em;
+}
+.logo span{color:var(--pink);}
+.nav-right{display:flex;align-items:center;gap:2.5rem;}
+.nav-link{
+  font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text-mid);text-decoration:none;transition:color 0.2s;
+  font-weight:400;
+}
+.nav-link:hover{color:var(--sage);}
+.nav-btn{
+  background:var(--sage);color:white;
+  padding:0.6rem 1.4rem;border-radius:6px;
+  font-size:0.76rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;font-weight:400;
+  transition:background 0.2s,transform 0.2s;
+}
+.nav-btn:hover{background:var(--pink);transform:translateY(-1px);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:8rem 5vw 5rem;
+  position:relative;overflow:hidden;
+}
+.hero-swirl{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 30%,rgba(168,197,160,0.22) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 70%,rgba(196,113,122,0.15) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 60% 20%,rgba(184,150,46,0.1) 0%,transparent 60%);
+}
+.spiral-canvas{
+  position:absolute;inset:0;z-index:0;opacity:0.18;pointer-events:none;
+}
+.hero-content{position:relative;z-index:1;max-width:720px;margin:0 auto;}
+.hero-tag{
+  display:inline-block;
+  font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:2rem;
+  font-family:'Instrument Sans',sans-serif;font-weight:400;
+}
+.hero-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(3.2rem,8vw,7rem);
+  line-height:1.02;color:var(--text);
+  margin-bottom:1.2rem;
+  letter-spacing:-0.02em;
+}
+.hero-title em{font-style:italic;color:var(--sage);display:block;}
+.hero-title .pink{color:var(--pink);}
+.hero-sub{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:clamp(1rem,2.2vw,1.25rem);
+  color:var(--text-mid);line-height:1.8;
+  max-width:480px;margin:0 auto 2.8rem;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:0.7rem;
+  background:var(--text);color:white;
+  padding:1.05rem 2.4rem;border-radius:8px;
+  font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;font-weight:400;transition:all 0.25s;
+}
+.hero-cta:hover{background:var(--sage);transform:translateY(-2px);}
+.hero-cta-arrow{font-size:1.1rem;transition:transform 0.2s;}
+.hero-cta:hover .hero-cta-arrow{transform:translateX(4px);}
+.hero-note{margin-top:1.2rem;font-size:0.75rem;color:var(--text-light);letter-spacing:0.05em;}
+
+.float-el{
+  position:absolute;pointer-events:none;
+  animation:gentleFloat ease-in-out infinite;
+}
+@keyframes gentleFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  33%{transform:translateY(-12px) rotate(3deg);}
+  66%{transform:translateY(-6px) rotate(-2deg);}
+}
+
+/* ── DIVIDER ── */
+.divider{
+  height:1px;
+  background:linear-gradient(to right,transparent,rgba(107,143,107,0.25),rgba(196,113,122,0.2),transparent);
+}
+
+/* ── QUOTE CARDS SECTION ── */
+.quotes-section{padding:6rem 5vw;background:var(--cream-dark);}
+.quotes-label{
+  text-align:center;font-size:0.7rem;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--text-light);margin-bottom:0.6rem;
+}
+.quotes-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  text-align:center;color:var(--text);margin-bottom:0.5rem;
+}
+.quotes-title em{font-style:italic;color:var(--sage);}
+.quotes-sub{
+  font-family:'Lora',serif;font-style:italic;
+  text-align:center;color:var(--text-mid);
+  font-size:1rem;margin-bottom:3.5rem;
+}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.4rem;max-width:1100px;margin:0 auto;
+}
+
+/* ── QCARD BASE ── */
+.qcard{
+  border-radius:18px;
+  overflow:hidden;
+  aspect-ratio:3/4;
+  position:relative;
+  cursor:default;
+  transition:transform 0.35s ease, box-shadow 0.35s ease;
+  box-shadow:0 4px 20px rgba(44,36,24,0.08);
+}
+.qcard:hover{
+  transform:translateY(-8px) rotate(-0.4deg);
+  box-shadow:0 16px 48px rgba(44,36,24,0.15);
+}
+
+/* IMAGE fills the whole card */
+.qcard-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  transition:transform 0.5s ease;
+}
+.qcard:hover .qcard-img{transform:scale(1.04);}
+
+/* OVERLAY on top of image */
+.qcard-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:1.6rem 1.4rem;
+}
+
+/* ── INDIVIDUAL CARD OVERLAYS ── */
+
+/* card 1 — dark purple gradient bottom */
+.qcard-1 .qcard-overlay{
+  background:linear-gradient(to top,rgba(28,8,40,0.75) 35%,rgba(28,8,40,0.1) 70%,transparent 100%);
+}
+.qcard-1 .qcard-quote{
+  font-family:'DM Serif Display',serif;
+  font-style:italic;
+  font-size:1.15rem;
+  color:rgba(255,245,220,0.96);
+  line-height:1.4;
+  text-align:center;
+  text-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* card 2 — light pink bottom fade */
+.qcard-2 .qcard-overlay{
+  background:linear-gradient(to top,rgba(210,80,110,0.62) 30%,rgba(210,80,110,0.1) 65%,transparent 100%);
+  justify-content:flex-end;
+}
+.qcard-2 .qcard-quote{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1rem;
+  color:white;
+  line-height:1.5;
+  text-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* card 3 — warm orange fade */
+.qcard-3 .qcard-overlay{
+  background:linear-gradient(to top,rgba(120,45,15,0.65) 35%,rgba(120,45,15,0.1) 65%,transparent 100%);
+}
+.qcard-3 .qcard-quote{
+  font-family:'DM Serif Display',serif;
+  font-style:italic;
+  font-size:1rem;
+  color:rgba(255,235,190,0.95);
+  line-height:1.5;
+  text-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* card 4 — soft lavender fade, quote at top so it doesn't cover the text art */
+.qcard-4 .qcard-overlay{
+  background:linear-gradient(to bottom,rgba(80,60,120,0.0) 0%,transparent 100%);
+  justify-content:flex-end;
+  padding-bottom:1.2rem;
+}
+.qcard-4 .qcard-quote{
+  font-family:'Instrument Sans',sans-serif;
+  font-style:normal;
+  font-size:0.72rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.7);
+  text-align:center;
+  text-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* card 5 — white fade at bottom for grid paper card */
+.qcard-5 .qcard-overlay{
+  background:linear-gradient(to top,rgba(255,255,255,0.72) 28%,rgba(255,255,255,0.1) 60%,transparent 100%);
+}
+.qcard-5 .qcard-quote{
+  font-family:'Instrument Sans',sans-serif;
+  font-style:normal;
+  font-size:0.82rem;
+  color:var(--text);
+  line-height:1.55;
+  letter-spacing:0.02em;
+}
+
+/* card 6 — no overlay, image is already text+illustration */
+.qcard-6 .qcard-overlay{
+  background:linear-gradient(to top,rgba(200,90,70,0.45) 25%,transparent 70%);
+}
+.qcard-6 .qcard-quote{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:0.92rem;
+  color:white;
+  line-height:1.5;
+  text-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* ── FEATURES ── */
+.features-section{padding:6rem 5vw;background:white;}
+.features-inner{max-width:960px;margin:0 auto;}
+.features-header{text-align:center;margin-bottom:4rem;}
+.features-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);color:var(--text);
+}
+.features-title em{font-style:italic;color:var(--pink);}
+.features-subtitle{
+  font-family:'Lora',serif;font-style:italic;
+  color:var(--text-mid);font-size:1rem;margin-top:0.5rem;
+}
+.features-list{display:flex;flex-direction:column;gap:0;}
+.feature-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;border-top:1px solid rgba(107,143,107,0.12);
+  padding:2.5rem 0;align-items:start;
+}
+.feature-row:last-child{border-bottom:1px solid rgba(107,143,107,0.12);}
+.feature-num{
+  font-family:'DM Serif Display',serif;font-size:0.7rem;
+  letter-spacing:0.2em;color:var(--text-light);text-transform:uppercase;
+  padding-right:2rem;padding-top:0.2rem;font-style:normal;
+}
+.feature-num strong{
+  display:block;font-family:'DM Serif Display',serif;
+  font-size:1.5rem;color:var(--sage-light);
+  letter-spacing:0;margin-bottom:0.2rem;font-weight:400;
+}
+.feature-content h3{
+  font-family:'DM Serif Display',serif;font-size:1.3rem;
+  color:var(--text);margin-bottom:0.5rem;font-weight:400;
+}
+.feature-content h3 em{font-style:italic;color:var(--sage);}
+.feature-content p{font-size:0.87rem;color:var(--text-mid);line-height:1.78;}
+
+/* ── BIG QUOTE ── */
+.big-quote-section{
+  padding:7rem 5vw;background:var(--sage);
+  text-align:center;position:relative;overflow:hidden;
+}
+.big-quote-section::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 60% at 20% 50%,rgba(255,255,255,0.06) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 50%,rgba(184,150,46,0.12) 0%,transparent 60%);
+}
+.big-quote-inner{position:relative;max-width:680px;margin:0 auto;}
+.big-quote-mark{
+  font-family:'DM Serif Display',serif;font-size:8rem;
+  color:rgba(255,255,255,0.12);line-height:0.6;display:block;margin-bottom:1rem;
+}
+.big-quote-text{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.6rem,3.5vw,2.5rem);
+  font-style:italic;color:white;line-height:1.45;margin-bottom:1.5rem;
+}
+.big-quote-text em{color:var(--gold-light);font-style:inherit;}
+.big-quote-author{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:6rem 5vw;background:var(--cream);}
+.how-inner{max-width:900px;margin:0 auto;}
+.how-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:3rem;margin-top:1rem;}
+.how-step{padding:2rem;}
+.how-step-num{
+  font-family:'DM Serif Display',serif;font-size:3.5rem;
+  color:var(--sage-pale);line-height:1;margin-bottom:0.8rem;font-style:italic;
+}
+.how-step h3{
+  font-family:'DM Serif Display',serif;font-size:1.25rem;
+  color:var(--text);margin-bottom:0.6rem;font-weight:400;
+}
+.how-step h3 em{font-style:italic;color:var(--pink);}
+.how-step p{font-size:0.86rem;color:var(--text-mid);line-height:1.78;}
+
+/* ── TESTIMONIALS ── */
+.testi-section{padding:6rem 5vw;background:var(--cream-dark);}
+.testi-inner{max-width:1000px;margin:0 auto;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:1rem;}
+.testi-card{
+  background:white;border-radius:12px;padding:2rem 1.8rem;
+  border:1px solid rgba(107,143,107,0.12);transition:transform 0.25s;
+}
+.testi-card:hover{transform:translateY(-4px);}
+.testi-quote-mark{
+  font-family:'DM Serif Display',serif;font-size:3rem;
+  color:var(--sage-pale);line-height:0.8;display:block;margin-bottom:1rem;
+}
+.testi-text{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.95rem;color:var(--text);line-height:1.72;margin-bottom:1.4rem;
+}
+.testi-author{
+  font-size:0.76rem;color:var(--text-light);letter-spacing:0.1em;
+  text-transform:uppercase;display:flex;align-items:center;gap:0.6rem;
+}
+.testi-author::before{content:'';display:block;width:24px;height:1px;background:var(--sage-light);}
+
+/* ── PRIVACY ── */
+.privacy-section{padding:6rem 5vw;background:white;}
+.privacy-inner{max-width:900px;margin:0 auto;text-align:center;}
+.privacy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3.5rem;text-align:left;}
+.privacy-item h4{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:0.5rem;font-weight:400;}
+.privacy-item h4 em{font-style:italic;color:var(--sage);}
+.privacy-item p{font-size:0.8rem;color:var(--text-mid);line-height:1.7;}
+.privacy-icon{
+  width:40px;height:40px;border-radius:8px;background:var(--sage-pale);
+  margin-bottom:1rem;display:flex;align-items:center;justify-content:center;
+}
+.privacy-icon svg{width:18px;height:18px;stroke:var(--sage);fill:none;stroke-width:1.5;}
+
+/* ── CTA ── */
+.cta-section{
+  padding:8rem 5vw;text-align:center;
+  background:var(--cream-dark);position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 50% 70% at 30% 50%,rgba(168,197,160,0.18) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 60% at 70% 50%,rgba(196,113,122,0.12) 0%,transparent 65%);
+}
+.cta-inner{position:relative;max-width:580px;margin:0 auto;}
+.cta-tag{font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-light);margin-bottom:1.5rem;display:block;}
+.cta-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--text);margin-bottom:0.8rem;line-height:1.1;}
+.cta-title em{font-style:italic;color:var(--sage);}
+.cta-body{font-family:'Lora',serif;font-style:italic;font-size:1.05rem;color:var(--text-mid);line-height:1.75;max-width:440px;margin:0 auto 2.5rem;}
+.cta-checks{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:1.4rem;}
+.cta-check{font-size:0.75rem;color:var(--text-light);letter-spacing:0.05em;display:flex;align-items:center;gap:0.4rem;}
+.cta-check::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--sage-pale);display:block;flex-shrink:0;border:1.5px solid var(--sage-light);}
+
+/* ── FOOTER ── */
+footer{background:var(--text);color:rgba(255,255,255,0.5);padding:4rem 5vw 2.5rem;}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.08);max-width:1000px;}
+.footer-brand .logo{color:rgba(255,255,255,0.8);}
+.footer-brand p{font-size:0.82rem;line-height:1.7;margin-top:0.8rem;max-width:220px;}
+.footer-col h5{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1.2rem;font-weight:400;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.65rem;}
+.footer-col a{font-size:0.82rem;color:rgba(255,255,255,0.45);text-decoration:none;transition:color 0.2s;}
+.footer-col a:hover{color:white;}
+.footer-bottom{max-width:1000px;padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-bottom p{font-size:0.75rem;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-right .nav-link{display:none;}
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .feature-row{grid-template-columns:1fr;}
+  .how-steps{grid-template-columns:1fr;}
+  .testi-grid{grid-template-columns:1fr;}
+  .privacy-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-top{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .cards-grid{grid-template-columns:1fr;}
+  .privacy-grid{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+/* ── HOW IT WORKS CINEMATIC CARDS ── */
+.how-section { padding: 6rem 2rem; background: var(--cream); }
+.how-eyebrow { text-align:center;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.6rem; }
+.how-heading { font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,2.8rem);font-style:italic;font-weight:400;text-align:center;color:var(--text);margin-bottom:0.5rem; }
+.how-heading em { color:var(--sage); }
+.how-sub-txt { font-family:'Lora',serif;font-style:italic;font-size:1rem;color:var(--text-light);text-align:center;margin-bottom:3.5rem; }
+.how-cards { display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:1100px;margin:0 auto; }
+
+.hw-card {
+  border-radius:20px;overflow:hidden;position:relative;
+  min-height:540px;display:flex;flex-direction:column;
+  transition:transform 0.4s ease,box-shadow 0.4s ease;
+}
+.hw-card:hover { transform:translateY(-10px);box-shadow:0 28px 64px rgba(44,36,24,0.22); }
+
+/* Card 1: PetalPages Pink */
+.hw-card-1 {
+  background: linear-gradient(160deg,
+    #FAF6EE 0%, #F5D8DC 20%, #E8A0A8 40%,
+    #C4717A 65%, #A85060 85%, #8B3A4A 100%
+  );
+}
+.hw-card-1::after {
+  content:'';position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 140px 80px at 20% 20%, rgba(250,246,238,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 60px at 70% 15%, rgba(245,216,220,0.6) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 50px at 85% 40%, rgba(232,160,168,0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 200px 100px at 50% 35%, rgba(245,216,220,0.25) 0%, transparent 70%);
+  animation:hwClouds 12s ease-in-out infinite alternate;
+}
+@keyframes hwClouds { 0%{transform:translateX(0);} 100%{transform:translateX(10px);} }
+
+/* Card 2: PetalPages Deep Purple */
+.hw-card-2 {
+  background: linear-gradient(160deg,
+    #1a1228 0%, #2a1a38 20%, #3a2248 40%,
+    #2d1a3a 55%, #1e1228 75%, #0d0818 100%
+  );
+}
+.hw-card-2::after {
+  content:'';position:absolute;inset:0;z-index:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 15%, rgba(212,176,96,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 8%, white 0%, transparent 100%),
+    radial-gradient(2px 2px at 40% 22%, rgba(196,168,212,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 6%, white 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 14%, rgba(212,176,96,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 18%, white 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 32%, rgba(168,197,160,0.8) 0%, transparent 100%),
+    radial-gradient(2px 2px at 35% 28%, rgba(212,176,96,0.7) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 60% 30%, white 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 35%, rgba(196,168,212,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 40%, white 0%, transparent 100%),
+    radial-gradient(2px 2px at 30% 20%, rgba(232,160,168,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 48%, rgba(212,176,96,0.8) 0%, transparent 100%);
+  animation:hwStars 4s ease-in-out infinite alternate;
+}
+@keyframes hwStars { 0%{opacity:0.7;} 50%{opacity:1;} 100%{opacity:0.8;} }
+
+/* Card 3: PetalPages Sage Green */
+.hw-card-3 {
+  background: linear-gradient(160deg,
+    #D4E8CC 0%, #A8C5A0 18%, #7AAF7A 32%,
+    #6B8F6B 50%, #4a6b4a 68%, #2a4a2a 100%
+  );
+}
+.hw-card-3::after {
+  content:'';position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 100px 140px at 12% 55%, #2a4a2a 0%, transparent 60%),
+    radial-gradient(ellipse 80px 110px at 28% 62%, #3a5a3a 0%, transparent 60%),
+    radial-gradient(ellipse 90px 120px at 68% 52%, #2a4a2a 0%, transparent 60%),
+    radial-gradient(ellipse 110px 130px at 88% 60%, #1a3a1a 0%, transparent 60%),
+    radial-gradient(ellipse 250px 40px at 50% 40%, #6B8F6B 0%, transparent 70%),
+    radial-gradient(ellipse 120px 60px at 50% 10%, rgba(212,232,204,0.5) 0%, transparent 60%);
+}
+
+/* overlay for text readability */
+.hw-card::before {
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.1) 35%,rgba(0,0,0,0.62) 100%);
+}
+.hw-card-top { position:relative;z-index:2;padding:1.8rem; }
+.hw-card-bottom { position:relative;z-index:2;padding:1.8rem; }
+.hw-step-badge {
+  display:inline-flex;align-items:center;
+  background:rgba(255,255,255,0.18);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.3);border-radius:999px;
+  padding:0.4rem 1rem;font-size:0.7rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:white;margin-bottom:1.2rem;
+  font-family:'Instrument Sans',sans-serif;
+}
+.hw-card-heading {
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(1.8rem,2.8vw,2.4rem);
+  font-style:italic;font-weight:400;color:white;
+  line-height:1.1;margin-bottom:0.7rem;
+  text-shadow:0 2px 16px rgba(0,0,0,0.4);
+}
+.hw-card-desc {
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.88rem;color:rgba(255,255,255,0.88);line-height:1.68;
+  text-shadow:0 1px 8px rgba(0,0,0,0.3);
+}
+
+/* illustrations */
+.hw-illus { position:absolute;z-index:2;pointer-events:none; }
+
+/* card 1 envelopes */
+.hw-illus-1 { bottom:5rem;left:0;right:0;display:flex;justify-content:center;gap:0.6rem;padding:0 1.2rem; }
+.hw-env {
+  background:rgba(250,246,238,0.92);border-radius:8px;
+  padding:0.7rem 0.6rem;width:88px;text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);backdrop-filter:blur(4px);
+}
+.hw-env:nth-child(1){ animation:hwFloatA 5s ease-in-out infinite; }
+.hw-env:nth-child(2){ animation:hwFloatB 6s ease-in-out infinite 0.8s;transform:translateY(-10px); }
+.hw-env:nth-child(3){ animation:hwFloatA 5.5s ease-in-out infinite 1.5s; }
+@keyframes hwFloatA { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-8px) rotate(-3deg);} }
+@keyframes hwFloatB { 0%,100%{transform:translateY(-10px) rotate(2deg);} 50%{transform:translateY(-18px) rotate(2deg);} }
+.hw-env::before {
+  content:'';display:block;
+  border-left:44px solid transparent;border-right:44px solid transparent;
+  border-top:18px solid rgba(196,113,122,0.2);
+  margin:-0.7rem -0.6rem 0.5rem;border-radius:6px 6px 0 0;
+}
+.hw-env p { font-family:'Lora',serif;font-style:italic;font-size:0.62rem;color:#6B5840;line-height:1.45; }
+
+/* card 2 journal paper */
+.hw-illus-2 { bottom:4.5rem;left:1.2rem;right:1.2rem; }
+.hw-paper {
+  background:rgba(250,246,238,0.93);border-radius:12px;
+  padding:1rem 1.1rem;box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  backdrop-filter:blur(6px);position:relative;
+  animation:hwFloatPaper 7s ease-in-out infinite;
+}
+@keyframes hwFloatPaper { 0%,100%{transform:translateY(0) rotate(-1deg);} 50%{transform:translateY(-10px) rotate(0.5deg);} }
+.hw-ribbon { position:absolute;top:-12px;right:12px;font-size:1.5rem;transform:rotate(15deg);filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.hw-lines { display:flex;flex-direction:column;gap:0.45rem;margin-bottom:0.7rem; }
+.hw-line { height:1px;background:rgba(168,197,160,0.45);border-radius:999px; }
+.hw-line:nth-child(1){ width:85%; } .hw-line:nth-child(2){ width:100%; } .hw-line:nth-child(3){ width:65%; } .hw-line:nth-child(4){ width:90%; }
+.hw-dots { display:flex;gap:0.4rem;align-items:center; }
+.hw-dot { width:16px;height:16px;border-radius:50%; }
+.hw-dot-label { font-family:'Lora',serif;font-style:italic;font-size:0.62rem;color:#A89880; }
+
+/* card 3 share */
+.hw-illus-3 { bottom:4.5rem;left:1.2rem;right:1.2rem; }
+.hw-share-card {
+  background:white;border-radius:12px;padding:0.9rem 1rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);margin-bottom:0.6rem;
+  animation:hwFloatCard 6s ease-in-out infinite;
+}
+@keyframes hwFloatCard { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+.hw-share-icons { display:flex;gap:0.4rem;margin-bottom:0.35rem;font-size:0.95rem; }
+.hw-share-title { font-size:0.72rem;color:#2C2418;font-weight:400;margin-bottom:0.1rem; }
+.hw-share-sub { font-size:0.6rem;color:#A89880; }
+.hw-bubble {
+  background:#6B8F6B;color:white;border-radius:999px;
+  padding:0.5rem 1.1rem;font-size:0.74rem;
+  font-family:'Instrument Sans',sans-serif;display:inline-block;
+  box-shadow:0 4px 14px rgba(107,143,107,0.45);
+  animation:hwFloatBubble 5s ease-in-out infinite 1s;
+}
+@keyframes hwFloatBubble { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+
+@media(max-width:900px){ .how-cards{grid-template-columns:1fr;max-width:400px;} .hw-card{min-height:420px;} }
+@media(max-width:600px){ .how-section{padding:4rem 1.2rem;} }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">Petal<span>Pages</span></div>
+  <div class="nav-right">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="login.html" class="nav-link">Sign in</a>
+    <a href="register.html" class="nav-link">Register</a>
+    <a href="settings.html" class="nav-link">settings</a>
+    <a href="new-entry.html" class="nav-btn">Start writing</a>
+  </div>
+</nav>
+<!-- HERO -->
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-swirl"></div>
+  <canvas class="spiral-canvas" id="spiralCanvas"></canvas>
+
+  <div class="float-el" style="top:15%;left:8%;animation-duration:6s;animation-delay:0s;">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <ellipse cx="16" cy="16" rx="6" ry="12" fill="#A8C5A0" opacity="0.5" transform="rotate(0 16 16)"/>
+      <ellipse cx="16" cy="16" rx="6" ry="12" fill="#C4717A" opacity="0.4" transform="rotate(60 16 16)"/>
+      <ellipse cx="16" cy="16" rx="6" ry="12" fill="#D4B060" opacity="0.4" transform="rotate(120 16 16)"/>
+      <circle cx="16" cy="16" r="3" fill="#FAF6EE" opacity="0.8"/>
+    </svg>
+  </div>
+  <div class="float-el" style="top:20%;right:10%;animation-duration:7.5s;animation-delay:1.5s;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <ellipse cx="12" cy="12" rx="4" ry="9" fill="#C4717A" opacity="0.45" transform="rotate(30 12 12)"/>
+      <ellipse cx="12" cy="12" rx="4" ry="9" fill="#A8C5A0" opacity="0.4" transform="rotate(90 12 12)"/>
+      <ellipse cx="12" cy="12" rx="4" ry="9" fill="#D4B060" opacity="0.4" transform="rotate(150 12 12)"/>
+      <circle cx="12" cy="12" r="2.5" fill="#FAF6EE" opacity="0.9"/>
+    </svg>
+  </div>
+  <div class="float-el" style="bottom:25%;left:12%;animation-duration:8s;animation-delay:3s;">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2 C10 2, 14 6, 14 10 C14 14, 10 18, 10 18 C10 18, 6 14, 6 10 C6 6, 10 2, 10 2Z" fill="#A8C5A0" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="float-el" style="bottom:30%;right:8%;animation-duration:5.5s;animation-delay:2s;">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="7" stroke="#B8962E" stroke-width="1" fill="none" opacity="0.4"/>
+      <circle cx="8" cy="8" r="3" fill="#D4B060" opacity="0.4"/>
+    </svg>
+  </div>
+  <div class="float-el" style="top:55%;left:4%;animation-duration:9s;animation-delay:4s;">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <ellipse cx="14" cy="14" rx="5" ry="11" fill="#E8A0A8" opacity="0.4" transform="rotate(45 14 14)"/>
+      <ellipse cx="14" cy="14" rx="5" ry="11" fill="#6B8F6B" opacity="0.35" transform="rotate(135 14 14)"/>
+      <circle cx="14" cy="14" r="2.5" fill="#FAF6EE" opacity="0.85"/>
+    </svg>
+  </div>
+  <div class="float-el" style="top:40%;right:5%;animation-duration:6.5s;animation-delay:0.8s;">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M9 1 L10.5 6.5 L16 6.5 L11.5 10 L13 16 L9 12.5 L5 16 L6.5 10 L2 6.5 L7.5 6.5 Z" fill="#D4B060" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-tag">a place to be yourself</span>
+    <h1 class="hero-title">
+      <em>write.</em>
+      <span>feel. <span class="pink">bloom.</span></span>
+    </h1>
+    <p class="hero-sub">
+      your thoughts deserve a safe home — one that won't be found,
+      read, or judged. just you and your words.
+    </p>
+    <a href="new-entry.html" class="hero-cta">
+      start your journal
+      <span class="hero-cta-arrow">→</span>
+    </a>
+    <p class="hero-note">free forever · no credit card · completely private</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUOTE CARDS -->
+<section class="quotes-section">
+  <p class="quotes-label">from the pages of PetalPages</p>
+  <h2 class="quotes-title">words that feel like <em>home</em></h2>
+  <p class="quotes-sub">the kind of things you write when nobody's watching</p>
+
+  <div class="cards-grid">
+
+    <!-- card 1 — never lose your sense of wonder -->
+    <div class="qcard qcard-1">
+      <img class="qcard-img" src="pic1.png" alt="never lose your sense of wonder"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">never lose your sense of wonder</p>
+      </div>
+    </div>
+
+    <!-- card 2 — what's life without a little silliness -->
+    <div class="qcard qcard-2">
+      <img class="qcard-img" src="pic2.png" alt="what's life without a little silliness"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">what's life without a little silliness?</p>
+      </div>
+    </div>
+
+    <!-- card 3 — life is a soup and i'm a fork -->
+    <div class="qcard qcard-3">
+      <img class="qcard-img" src="pic3.png" alt="life is a soup and i'm a fork"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">life is a soup and i'm a fork</p>
+      </div>
+    </div>
+
+    <!-- card 4 — cool people live here -->
+    <div class="qcard qcard-4">
+      <img class="qcard-img" src="pic4.png" alt="cool people live here"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">write here. this is your space.</p>
+      </div>
+    </div>
+
+    <!-- card 5 — junk journaling is good for the soul -->
+    <div class="qcard qcard-5">
+      <img class="qcard-img" src="pic5.png" alt="junk journaling is good for the soul"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">junk journaling is good for the soul</p>
+      </div>
+    </div>
+
+    <!-- card 6 — don't be scared to be colorful -->
+    <div class="qcard qcard-6">
+      <img class="qcard-img" src="pic6.png" alt="don't be scared to be a little bit colorful"/>
+      <div class="qcard-overlay">
+        <p class="qcard-quote">don't be scared to be a little bit colorful</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="features-inner">
+    <div class="features-header">
+      <h2 class="features-title">built for girls who need a <em>real</em> safe space</h2>
+      <p class="features-subtitle">not another app. a place that actually understands.</p>
+    </div>
+    <div class="features-list">
+      <div class="feature-row">
+        <div class="feature-num"><strong>01</strong>Privacy</div>
+        <div class="feature-content">
+          <h3>Lock what's <em>sacred</em></h3>
+          <p>Password-protect individual entries with a key only you know. Even if someone opens your account — your locked pages stay sealed. Not even we can read them.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num"><strong>02</strong>Expression</div>
+        <div class="feature-content">
+          <h3>Make it feel like <em>you</em></h3>
+          <p>Choose your theme, font, and colors. Soft sage morning or deep midnight — your journal should feel like your room, not a generic app.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num"><strong>03</strong>Writing</div>
+        <div class="feature-content">
+          <h3>Write without <em>fear</em></h3>
+          <p>No character limits. No formatting rules. No one watching. Just your thoughts and a page that holds them — however messy, however honest.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-num"><strong>04</strong>Memory</div>
+        <div class="feature-content">
+          <h3>Remember how far you've <em>come</em></h3>
+          <p>Your old entries don't disappear. Come back to them — years later, on harder days — and see the girl who was already figuring it out.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIG QUOTE -->
+<div class="big-quote-section">
+  <div class="big-quote-inner">
+    <span class="big-quote-mark">"</span>
+    <p class="big-quote-text">she kept a journal — and in those pages, she was <em>entirely, ferociously, beautifully free.</em></p>
+    <span class="big-quote-author">— PetalPages, for every girl who has something to say</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <p class="how-eyebrow">simple as breathing</p>
+  <h2 class="how-heading">how it <em>works</em></h2>
+  <p class="how-sub-txt">three simple steps to your private garden</p>
+
+  <div class="how-cards">
+
+    <div class="hw-card hw-card-1">
+      <div class="hw-card-top">
+        <span class="hw-step-badge">Step 1</span>
+        <h3 class="hw-card-heading">plant your<br/>garden</h3>
+        <p class="hw-card-desc">create your space in seconds — or just try as a guest. no pressure, no forms, just you and a blank page waiting to bloom.</p>
+      </div>
+      <div class="hw-illus hw-illus-1">
+        <div class="hw-env"><p>dear diary,<br/>today was...</p></div>
+        <div class="hw-env"><p>feeling<br/>🌸 blooming</p></div>
+        <div class="hw-env"><p>grateful<br/>always ✦</p></div>
+      </div>
+      <div class="hw-card-bottom"></div>
+    </div>
+
+    <div class="hw-card hw-card-2">
+      <div class="hw-card-top">
+        <span class="hw-step-badge">Step 2</span>
+        <h3 class="hw-card-heading">make it<br/>yours</h3>
+        <p class="hw-card-desc">9 floral themes, draw your own background, add photos, lock entries with a password — every page feels like <em>you</em>.</p>
+      </div>
+      <div class="hw-illus hw-illus-2">
+        <div class="hw-paper">
+          <span class="hw-ribbon">🎀</span>
+          <div class="hw-lines">
+            <div class="hw-line"></div>
+            <div class="hw-line"></div>
+            <div class="hw-line"></div>
+            <div class="hw-line"></div>
+          </div>
+          <div class="hw-dots">
+            <div class="hw-dot" style="background:#A8C5A0;"></div>
+            <div class="hw-dot" style="background:#C4717A;"></div>
+            <div class="hw-dot" style="background:#D4B060;"></div>
+            <div class="hw-dot" style="background:#8B6BAE;"></div>
+            <span class="hw-dot-label">pick your theme ✦</span>
+          </div>
+        </div>
+      </div>
+      <div class="hw-card-bottom"></div>
+    </div>
+
+    <div class="hw-card hw-card-3">
+      <div class="hw-card-top">
+        <span class="hw-step-badge">Step 3</span>
+        <h3 class="hw-card-heading">bloom in<br/>private</h3>
+        <p class="hw-card-desc">your entries stay on your device — safe, private, always yours. share a beautiful card when you feel like it, or keep it all to yourself.</p>
+      </div>
+      <div class="hw-illus hw-illus-3">
+        <div class="hw-share-card">
+          <div class="hw-share-icons">🌸 ⭐ 💌</div>
+          <p class="hw-share-title">you've received something special...</p>
+          <p class="hw-share-sub">a journal entry · PetalPages ✦</p>
+        </div>
+        <div class="hw-bubble">i wrote this just for you 🌸</div>
+      </div>
+      <div class="hw-card-bottom"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="testi-inner">
+    <p style="text-align:center;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.6rem;">from our garden</p>
+    <h2 class="features-title" style="text-align:center;margin-bottom:0.5rem;">girls who found <em style="color:var(--pink);">their voice</em></h2>
+    <p class="features-subtitle" style="text-align:center;margin-bottom:3rem;">real words from real girls who finally had somewhere to breathe</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <span class="testi-quote-mark">"</span>
+        <p class="testi-text">I've never had a diary because someone always found it. PetalPages changed that. I finally have somewhere that's truly, completely mine.</p>
+        <div class="testi-author">Priya R. · Pune</div>
+      </div>
+      <div class="testi-card">
+        <span class="testi-quote-mark">"</span>
+        <p class="testi-text">The locked entries feature is everything. I write things I could never say out loud — and it feels completely safe here. No anxiety at all.</p>
+        <div class="testi-author">Meera S. · Ahmedabad</div>
+      </div>
+      <div class="testi-card">
+        <span class="testi-quote-mark">"</span>
+        <p class="testi-text">The themes make journaling feel magical. I look forward to opening PetalPages every night now. It's become my favourite ritual.</p>
+        <div class="testi-author">Ananya K. · Delhi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy-section" id="privacy">
+  <div class="privacy-inner">
+    <p style="font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.6rem;">our promise</p>
+    <h2 class="features-title">privacy is not a <em style="color:var(--sage);">feature.</em><br/>it's the foundation.</h2>
+    <div class="privacy-grid">
+      <div class="privacy-item">
+        <div class="privacy-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h4>End-to-end <em>encryption</em></h4>
+        <p>Your words are encrypted before leaving your screen. Nobody — not even us — can read them.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+        <h4>Zero ads, <em>zero tracking</em></h4>
+        <p>We do not sell your data. We do not track you. Your thoughts are not a product. Period.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+        <h4>Entry-level <em>locks</em></h4>
+        <p>Even if someone accesses your account, locked entries need a separate private password only you know.</p>
+      </div>
+      <div class="privacy-item">
+        <div class="privacy-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+        <h4>Delete <em>anytime</em></h4>
+        <p>Your data is yours. Delete an entry or your entire account — instantly and permanently, no questions asked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="start">
+  <div class="cta-inner">
+    <span class="cta-tag">your garden is waiting</span>
+    <h2 class="cta-title">ready to <em>bloom?</em></h2>
+    <p class="cta-body">a safe, whimsical space for your thoughts, dreams, and secrets. free forever. no ads. just you and your words.</p>
+    <a href="new-entry.html" class="hero-cta">start for free <span class="hero-cta-arrow">→</span></a>
+    <div class="cta-checks">
+      <span class="cta-check">Free forever</span>
+      <span class="cta-check">No credit card</span>
+      <span class="cta-check">Completely private</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo" style="color:rgba(255,255,255,0.75);">Petal<span>Pages</span></div>
+      <p>a private, whimsical journal for every girl who deserves a safe space to bloom.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="notes.html">Notes</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="period-tracker.html">Cycle Tracker</a></li>
+        <li><a href="404.html">404 Page</a></li>
+        <li><a href="mailto:hello@petalpages.app">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 PetalPages. made with love for every girl who has something to say.</p>
+    <p>built by Devanshi Soni</p>
+  </div>
+</footer>
+
+<script>
+  // ── APP LOCK CHECK ──
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+    if(s.appPw){
+      var entered = sessionStorage.getItem('pp_session_auth');
+      if(entered !== s.appPw){
+        var input = prompt('🔒 Enter your PetalPages password:');
+        if(input !== s.appPw){
+          alert('Incorrect password.');
+          document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#6B5840;">Access denied.</div>';
+          throw new Error('locked');
+        }
+        sessionStorage.setItem('pp_session_auth', s.appPw);
+      }
+    }
+  } catch(e) {}
+})();
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);});
+
+const canvas=document.getElementById('spiralCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;drawSpiral();});
+
+function drawSpiral(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width/2,cy=canvas.height/2;
+  const colors=['rgba(168,197,160,0.4)','rgba(196,113,122,0.3)','rgba(212,176,96,0.3)','rgba(255,255,255,0.5)'];
+  for(let ring=1;ring<=8;ring++){
+    const r=ring*55,dots=Math.floor(ring*8);
+    for(let d=0;d<dots;d++){
+      const angle=(d/dots)*Math.PI*2;
+      const x=cx+Math.cos(angle)*r+Math.random()*6-3;
+      const y=cy+Math.sin(angle)*r+Math.random()*6-3;
+      ctx.beginPath();ctx.arc(x,y,Math.random()*3+1,0,Math.PI*2);
+      ctx.fillStyle=colors[Math.floor(Math.random()*colors.length)];ctx.fill();
+    }
+  }
+  [[0.15,0.2],[0.85,0.15],[0.2,0.75],[0.8,0.7],[0.5,0.12],[0.1,0.5],[0.9,0.5]].forEach(([fx,fy])=>{
+    const x=canvas.width*fx,y=canvas.height*fy;
+    const fc=colors[Math.floor(Math.random()*colors.length)];
+    for(let p=0;p<5;p++){
+      const pa=(p/5)*Math.PI*2;
+      ctx.beginPath();ctx.ellipse(x+Math.cos(pa)*7,y+Math.sin(pa)*7,3,5,pa,0,Math.PI*2);
+      ctx.fillStyle=fc;ctx.fill();
+    }
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='rgba(250,246,238,0.8)';ctx.fill();
+  });
+}
+drawSpiral();
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform=e.target.classList.contains('qcard')?'translateY(0) rotate(0)':'translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.qcard,.feature-row,.how-step,.testi-card,.privacy-item').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(24px)';
+  el.style.transition=`opacity 0.6s ease ${i*0.06}s, transform 0.6s ease ${i*0.06}s`;
+  obs.observe(el);
+});// ── SHOW LOGGED-IN STATE ──
+(function(){
+  var userId = localStorage.getItem('pp_user_id');
+  var userName = localStorage.getItem('pp_user_name');
+  if(userId){
+    var signInLink = document.getElementById('navSignIn');
+    var registerLink = document.getElementById('navRegister');
+    if(signInLink) signInLink.remove();
+    if(registerLink){
+      registerLink.textContent = 'my garden';
+      registerLink.href = 'dashboard.html';
+    }
+    var cta = document.getElementById('navCta');
+    if(cta) cta.textContent = 'go to my garden';
+    // also update the hero + cta section buttons
+    document.querySelectorAll('a[href="new-entry.html"].hero-cta').forEach(function(a){
+      a.href = 'dashboard.html';
+      a.innerHTML = 'go to my garden <span class="hero-cta-arrow">→</span>';
+    });
+  }
+})();
+</script>
+</body>
+</html>

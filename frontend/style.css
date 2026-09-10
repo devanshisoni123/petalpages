@@ -1,0 +1,274 @@
+/* ═══════════════════════════════════════
+   PetalPages — Shared Stylesheet
+   Used across all pages
+═══════════════════════════════════════ */
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── COLOR VARIABLES ── */
+:root {
+  --sage: #6B8F6B;
+  --sage-light: #A8C5A0;
+  --sage-pale: #D4E8CC;
+  --pink: #C4717A;
+  --pink-light: #E8A0A8;
+  --pink-pale: #F5D8DC;
+  --cream: #FAF6EE;
+  --cream-dark: #F0EAD8;
+  --gold: #B8962E;
+  --gold-light: #D4B060;
+  --purple: #8B6BAE;
+  --lavender: #C4A8D4;
+  --lavender-pale: #EDE0F5;
+  --text: #2C2418;
+  --text-mid: #6B5840;
+  --text-light: #A89880;
+  --border: rgba(168, 124, 195, 0.18);
+}
+
+/* ── BASE ── */
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.font-serif    { font-family: 'Lora', serif; }
+.font-display  { font-family: 'DM Serif Display', serif; }
+.font-sans     { font-family: 'Instrument Sans', sans-serif; }
+
+/* ── SHARED NAV ── */
+.pp-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 2.5rem;
+  background: rgba(250, 246, 238, 0.9);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(168, 197, 160, 0.15);
+}
+.pp-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; font-style: italic;
+  color: var(--sage); text-decoration: none;
+}
+.pp-logo span { color: var(--pink); }
+.pp-nav-links { display: flex; align-items: center; gap: 0.6rem; }
+.pp-nav-link {
+  padding: 0.45rem 0.9rem; border-radius: 8px;
+  font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; color: var(--text-mid);
+  transition: all 0.2s; border: 1.5px solid transparent;
+}
+.pp-nav-link:hover { color: var(--sage); border-color: rgba(168, 197, 160, 0.3); }
+.pp-nav-link.active { background: var(--sage-pale); color: var(--sage); border-color: rgba(168, 197, 160, 0.3); }
+.pp-nav-btn {
+  background: var(--text); color: white;
+  padding: 0.52rem 1.2rem; border-radius: 8px;
+  font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; transition: all 0.2s;
+}
+.pp-nav-btn:hover { background: var(--sage); transform: translateY(-1px); }
+
+/* ── SHARED BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--text); color: white;
+  padding: 0.95rem 2.2rem; border-radius: 8px;
+  font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; border: none; cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.25s;
+}
+.btn-primary:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(107,143,107,0.25); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  border: 1.5px solid rgba(168, 197, 160, 0.4); color: var(--text-mid);
+  padding: 0.95rem 2.2rem; border-radius: 8px;
+  font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; background: transparent; cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.25s;
+}
+.btn-ghost:hover { background: var(--sage-pale); border-color: var(--sage-light); color: var(--sage); transform: translateY(-2px); }
+
+.btn-danger {
+  padding: 0.45rem 1rem; border-radius: 8px;
+  border: 1.5px solid rgba(196, 113, 122, 0.3);
+  background: transparent; color: var(--pink);
+  font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Instrument Sans', sans-serif; transition: all 0.2s;
+}
+.btn-danger:hover { background: var(--pink); color: white; }
+
+/* ── SHARED FORM ELEMENTS ── */
+.pp-input {
+  background: rgba(250, 246, 238, 0.8);
+  border: 1.5px solid rgba(168, 197, 160, 0.3);
+  border-radius: 10px; padding: 0.85rem 1rem;
+  font-size: 0.9rem; font-family: 'Instrument Sans', sans-serif;
+  font-weight: 300; color: var(--text);
+  outline: none; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.pp-input::placeholder { color: var(--text-light); font-style: italic; }
+.pp-input:focus { border-color: var(--sage); background: white; box-shadow: 0 0 0 3px rgba(107,143,107,0.1); }
+.pp-input.error { border-color: var(--pink); }
+
+.pp-label {
+  font-size: 0.72rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-mid); font-weight: 400;
+  display: block; margin-bottom: 0.4rem;
+}
+
+/* ── TOGGLE SWITCH ── */
+.pp-toggle {
+  width: 38px; height: 22px; border-radius: 999px;
+  background: rgba(168, 197, 160, 0.3);
+  position: relative; cursor: pointer;
+  transition: background 0.3s; border: none; flex-shrink: 0;
+}
+.pp-toggle.on { background: var(--sage); }
+.pp-toggle-knob {
+  position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: transform 0.3s;
+}
+.pp-toggle.on .pp-toggle-knob { transform: translateX(16px); }
+
+/* ── TOAST ── */
+.pp-toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(14px);
+  background: var(--text); color: white;
+  padding: 0.6rem 1.5rem; border-radius: 999px;
+  font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase;
+  z-index: 500; opacity: 0;
+  transition: all 0.3s ease; pointer-events: none;
+  white-space: nowrap; font-family: 'Instrument Sans', sans-serif;
+}
+.pp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SAVE STATUS ── */
+.pp-save-status {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.7rem; color: var(--text-light);
+  font-style: italic; font-family: 'Lora', serif;
+}
+.pp-save-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-light); transition: background 0.3s;
+}
+.pp-save-dot.saved { background: var(--sage-light); }
+.pp-save-dot.saving { background: var(--gold-light); animation: ppPulse 1s ease-in-out infinite; }
+@keyframes ppPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ── SECTION LABELS ── */
+.pp-eyebrow {
+  display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+  font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 0.75rem;
+}
+.pp-eyebrow::before, .pp-eyebrow::after {
+  content: ''; display: block; height: 1px; width: 40px;
+  background: linear-gradient(to right, transparent, var(--pink));
+}
+.pp-eyebrow::after { background: linear-gradient(to left, transparent, var(--pink)); }
+
+.pp-section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 400; text-align: center; color: var(--text);
+  margin-bottom: 0.6rem;
+}
+.pp-section-title em { font-style: italic; color: var(--sage); }
+
+.pp-section-sub {
+  font-family: 'Lora', serif; font-style: italic;
+  text-align: center; color: var(--text-mid);
+  font-size: 1.05rem; line-height: 1.7;
+  max-width: 500px; margin: 0 auto 3.5rem;
+}
+
+/* ── CARD ── */
+.pp-card {
+  background: white;
+  border: 1px solid rgba(168, 197, 160, 0.18);
+  border-radius: 16px; padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.pp-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(44,36,24,0.07); }
+
+/* ── GUEST BANNER ── */
+.pp-guest-bar {
+  background: rgba(184, 150, 46, 0.08);
+  border-bottom: 1px solid rgba(184, 150, 46, 0.18);
+  padding: 0.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.74rem; color: var(--text-mid);
+  flex-wrap: wrap; gap: 0.5rem; position: relative; z-index: 20;
+}
+.pp-guest-bar a { color: var(--sage); text-decoration: none; border-bottom: 1px solid rgba(107,143,107,0.3); }
+.pp-guest-bar a:hover { color: var(--pink); }
+.pp-guest-bar-right { display: flex; align-items: center; gap: 1rem; }
+.pp-guest-close { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 1rem; }
+
+/* ── DIVIDER ── */
+.pp-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(168,197,160,0.25), rgba(196,113,122,0.2), transparent);
+}
+
+/* ── FLOATING PETAL ANIMATION ── */
+.pp-float { pointer-events: none; animation: ppFloat ease-in-out infinite; }
+@keyframes ppFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(3deg); }
+  66% { transform: translateY(-6px) rotate(-2deg); }
+}
+
+/* ── STORAGE WARNING BANNER ── */
+.storage-warning {
+  background: rgba(196, 113, 122, 0.08);
+  border: 1px solid rgba(196, 113, 122, 0.2);
+  border-radius: 10px; padding: 0.8rem 1rem;
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  font-size: 0.78rem; color: var(--text-mid); line-height: 1.6;
+}
+.storage-warning svg { width: 15px; height: 15px; stroke: var(--pink); fill: none; stroke-width: 1.5; flex-shrink: 0; margin-top: 2px; }
+.storage-warning strong { color: var(--pink); }
+
+/* ── SECURITY NOTE ── */
+.security-note {
+  background: rgba(184, 150, 46, 0.08);
+  border: 1px solid rgba(184, 150, 46, 0.2);
+  border-radius: 10px; padding: 0.8rem 1rem;
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  font-size:0.75rem; color: var(--text-mid); line-height: 1.6; margin-top: 0.6rem;
+}
+.security-note svg { width: 14px; height: 14px; stroke: var(--gold); fill: none; stroke-width: 1.5; flex-shrink: 0; margin-top: 2px; }
+
+/* ── PROTOTYPE BADGE ── */
+.prototype-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(184, 150, 46, 0.1);
+  border: 1px solid rgba(184, 150, 46, 0.25);
+  border-radius: 6px; padding: 0.3rem 0.8rem;
+  font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ── RESPONSIVE HELPERS ── */
+@media (max-width: 768px) {
+  .pp-nav { padding: 1rem 1.2rem; }
+  .hide-mobile { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, .pp-float { animation: none !important; transition: none !important; }
+}

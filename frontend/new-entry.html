@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Apply saved settings on every page load -->
+  <script>
+  (function () {
+    try {
+      var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+      var root = document.documentElement;
+
+      // Accent color
+      if (s.accent) { root.style.setProperty('--sage', s.accent); }
+      if (s.accentPale) { root.style.setProperty('--sage-pale', s.accentPale); }
+
+      // Sage light derived from accent
+      if (s.accentLight) { root.style.setProperty('--sage-light', s.accentLight); }
+
+      // Dark mode
+      if (s.dark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.body && (document.body.style.background = '#1A1A2E');
+      }
+
+      // Font
+      if (s.font) {
+        var fontMap = {
+          'Lora': "'Lora', serif",
+          'DM Serif': "'DM Serif Display', serif",
+          'Sans': "'Instrument Sans', sans-serif"
+        };
+        var f = fontMap[s.font];
+        if (f) root.style.setProperty('--body-font', f);
+      }
+    } catch (e) {}
+  })();
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetalPages — New Entry</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ── ROOT VARIABLES ── */
+    :root {
+      --sage: #6B8F6B;
+      --sage-light: #A8C5A0;
+      --sage-pale: #D4E8CC;
+      --pink: #C4717A;
+      --pink-pale: #F5D8DC;
+      --pink-light: #E8A0A8;
+      --cream: #FAF6EE;
+      --cream-dark: #F0EAD8;
+      --gold: #B8962E;
+      --gold-light: #D4B060;
+      --text: #2C2418;
+      --text-mid: #6B5840;
+      --text-light: #A89880;
+      --purple: #8B6BAE;
+      --lavender: #C4A8D4;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--cream);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── GUEST BAR ── */
+    .guest-bar {
+      background: rgba(184, 150, 46, 0.08);
+      border-bottom: 1px solid rgba(184, 150, 46, 0.18);
+      padding: 0.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-mid);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    .guest-bar a {
+      color: var(--sage);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(107, 143, 107, 0.3);
+    }
+
+    .guest-bar a:hover {
+      color: var(--pink);
+    }
+
+    .gb-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .gb-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 2rem;
+      background: rgba(250, 246, 238, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(168, 197, 160, 0.15);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover {
+      color: var(--sage);
+    }
+
+    .back-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-3px);
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--sage);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--pink);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .save-status {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-style: italic;
+      font-family: 'Lora', serif;
+    }
+
+    .save-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-light);
+      transition: background 0.3s;
+    }
+
+    .save-dot.saved {
+      background: var(--sage-light);
+    }
+
+    .save-dot.saving {
+      background: var(--gold-light);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .btn-theme {
+      padding: 0.48rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(168, 197, 160, 0.3);
+      background: transparent;
+      color: var(--text-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s;
+    }
+
+    .btn-theme:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .theme-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage-light), var(--pink-pale));
+      border: 1.5px solid rgba(168, 197, 160, 0.5);
+      transition: background 0.4s;
+    }
+
+    .btn-save-draft {
+      padding: 0.48rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(168, 197, 160, 0.3);
+      background: transparent;
+      color: var(--text-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-save-draft:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .btn-publish {
+      padding: 0.48rem 1.2rem;
+      border-radius: 8px;
+      background: var(--text);
+      color: white;
+      border: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s;
+    }
+
+    .btn-publish:hover {
+      background: var(--sage);
+      transform: translateY(-1px);
+    }
+
+    .btn-publish svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      min-height: calc(100vh - 58px);
+    }
+
+    /* ── JOURNAL PAGE ── */
+    .journal-page {
+      position: relative;
+      padding: 2.5rem 3rem;
+      overflow: hidden;
+      transition: all 0.5s ease;
+      background: white;
+    }
+
+    /* Default (no theme) — clean white */
+    .journal-page.theme-none {
+      background: white;
+    }
+
+    /* ═══ THEME BACKGROUNDS ═══ */
+
+    /* Theme 1: Garden — soft sage greens, vines, flowers */
+    .journal-page.theme-garden {
+      background:
+        radial-gradient(ellipse 30% 30% at 2% 20%, rgba(107, 143, 107, 0.07) 0%, transparent 80%),
+        radial-gradient(ellipse 20% 40% at 98% 50%, rgba(168, 197, 160, 0.08) 0%, transparent 70%),
+        #FDFDF8;
+    }
+
+    /* Theme 2: Floral Ink — cream with magenta ink feel */
+    .journal-page.theme-floral-ink {
+      background:
+        radial-gradient(ellipse 25% 35% at 0% 15%, rgba(139, 58, 107, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 20% 30% at 100% 80%, rgba(196, 113, 122, 0.07) 0%, transparent 70%),
+        #FFFBF7;
+    }
+
+    /* Theme 3: Pink Lily — soft blush */
+    .journal-page.theme-pink-lily {
+      background:
+        radial-gradient(ellipse 35% 40% at 0% 10%, rgba(196, 113, 122, 0.08) 0%, transparent 75%),
+        radial-gradient(ellipse 25% 35% at 100% 90%, rgba(232, 160, 168, 0.08) 0%, transparent 70%),
+        #FFFCFC;
+    }
+
+    /* Theme 4: Bouquet — lavender purple tones */
+    .journal-page.theme-bouquet {
+      background:
+        radial-gradient(ellipse 30% 40% at 2% 5%, rgba(139, 107, 174, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 20% 30% at 98% 85%, rgba(196, 168, 212, 0.08) 0%, transparent 70%),
+        #FDFBFF;
+    }
+
+    /* Theme 5: Enchanted — vintage parchment forest */
+    .journal-page.theme-enchanted {
+      background:
+        radial-gradient(ellipse 25% 35% at 1% 30%, rgba(107, 143, 107, 0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 30% at 99% 20%, rgba(184, 150, 46, 0.07) 0%, transparent 70%),
+        #FAF7EE;
+    }
+
+    /* Theme 6: Nature — fresh botanical greens */
+    .journal-page.theme-nature {
+      background:
+        radial-gradient(ellipse 28% 38% at 0% 8%, rgba(74, 107, 74, 0.08) 0%, transparent 75%),
+        radial-gradient(ellipse 22% 32% at 100% 92%, rgba(107, 143, 107, 0.07) 0%, transparent 70%),
+        #F8FBF5;
+    }
+
+    /* Theme 7: About Me — warm beige */
+    .journal-page.theme-about {
+      background:
+        radial-gradient(ellipse 30% 35% at 1% 10%, rgba(139, 115, 85, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 25% 30% at 99% 85%, rgba(184, 150, 46, 0.06) 0%, transparent 70%),
+        #FDFAF5;
+    }
+
+    /* Theme 8: Welcome — soft monochrome */
+    .journal-page.theme-welcome {
+      background:
+        radial-gradient(ellipse 25% 30% at 0% 10%, rgba(85, 85, 85, 0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 20% 25% at 100% 90%, rgba(120, 120, 120, 0.04) 0%, transparent 70%),
+        #FAFAFA;
+    }
+
+    /* Theme 9: Rapunzel — dusty purple gold */
+    .journal-page.theme-rapunzel {
+      background:
+        radial-gradient(ellipse 28% 38% at 1% 5%, rgba(123, 107, 139, 0.08) 0%, transparent 75%),
+        radial-gradient(ellipse 22% 32% at 99% 95%, rgba(184, 150, 46, 0.07) 0%, transparent 70%),
+        #FBF9FF;
+    }
+
+    /* ══ SVG FLORAL DECORATIONS — drawn per theme ══ */
+    .floral-deco {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .floral-deco.visible {
+      opacity: 1;
+    }
+
+    /* top-left corner */
+    .deco-tl { top: 0; left: 0; width: 200px; height: 220px; }
+    /* bottom-right corner */
+    .deco-br { bottom: 0; right: 0; width: 180px; height: 200px; }
+    /* left side vine */
+    .deco-lv { top: 50%; left: 0; transform: translateY(-50%); width: 80px; height: 300px; }
+    /* right side */
+    .deco-rv { top: 50%; right: 0; transform: translateY(-50%); width: 80px; height: 300px; }
+    /* top center small */
+    .deco-tc { top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 60px; }
+
+    /* ── WRITING AREA ── */
+    .writing-zone {
+      position: relative;
+      z-index: 1;
+    }
+
+    .entry-dateline {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .entry-dateline::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: rgba(168, 197, 160, 0.5);
+    }
+
+    .title-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      resize: none;
+      overflow: hidden;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s, color 0.4s;
+      padding: 0 0 0.5rem;
+    }
+
+    .title-input::placeholder {
+      color: rgba(44, 36, 24, 0.18);
+    }
+
+    .title-input:focus {
+      border-bottom-color: rgba(168, 197, 160, 0.35);
+    }
+
+    .mood-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .mood-label {
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .mood-pills {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .mood-pill {
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(168, 197, 160, 0.25);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.76rem;
+      color: var(--text-mid);
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .mood-pill:hover,
+    .mood-pill.selected {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+      color: var(--sage);
+    }
+
+    /* Ruled lines like real journal paper */
+    .ruled-area {
+      position: relative;
+    }
+
+    .ruled-area::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 37px,
+        rgba(168, 197, 160, 0.18) 37px,
+        rgba(168, 197, 160, 0.18) 38px
+      );
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 4px;
+    }
+
+    .content-area {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 38px;
+      resize: none;
+      min-height: 380px;
+      transition: color 0.4s, font-family 0.2s;
+      padding: 0;
+    }
+
+    .content-area::placeholder {
+      color: rgba(44, 36, 24, 0.15);
+      line-height: 38px;
+    }
+
+    .word-count-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(168, 197, 160, 0.12);
+    }
+
+    .word-count {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar-panel {
+      background: white;
+      padding: 1.8rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      overflow-y: auto;
+      border-left: 1px solid rgba(168, 197, 160, 0.12);
+    }
+
+    .panel-title {
+      font-size: 0.64rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(168, 197, 160, 0.18);
+    }
+
+    .tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--sage-pale);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      color: var(--sage);
+    }
+
+    .tag-chip button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--sage);
+      font-size: 0.7rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .tag-input {
+      background: var(--cream);
+      border: 1.5px solid rgba(168, 197, 160, 0.22);
+      border-radius: 8px;
+      padding: 0.48rem 0.7rem;
+      font-size: 0.78rem;
+      font-family: 'Instrument Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    .tag-input:focus {
+      border-color: var(--sage);
+    }
+
+    .tag-input::placeholder {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .lock-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1.5px solid rgba(168, 197, 160, 0.18);
+    }
+
+    .lock-toggle:hover {
+      background: var(--cream-dark);
+    }
+
+    .lock-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .lock-toggle-left svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .lock-toggle-text p {
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+
+    .lock-toggle-text span {
+      font-size: 0.66rem;
+      color: var(--text-light);
+    }
+
+    .toggle-switch {
+      width: 34px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(168, 197, 160, 0.3);
+      position: relative;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch.on {
+      background: var(--sage);
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.on .toggle-knob {
+      transform: translateX(16px);
+    }
+
+    .lock-pw-section {
+      display: none;
+      margin-top: 0.7rem;
+    }
+
+    .lock-pw-section.show {
+      display: block;
+    }
+
+    .lock-pw-input {
+      background: var(--cream);
+      border: 1.5px solid rgba(196, 113, 122, 0.25);
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.78rem;
+      font-family: 'Instrument Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+
+    .lock-pw-input::placeholder {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .lock-hint {
+      font-size: 0.66rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+      font-style: italic;
+    }
+
+    .font-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+    }
+
+    .font-option {
+      padding: 0.55rem 0.4rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(168, 197, 160, 0.2);
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      transition: all 0.2s;
+    }
+
+    .font-option:hover,
+    .font-option.selected {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+      color: var(--sage);
+    }
+
+    .font-option[data-font="serif"] {
+      font-family: 'Lora', serif;
+      font-style: italic;
+    }
+
+    .font-option[data-font="display"] {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+    }
+
+    .font-option[data-font="sans"] {
+      font-family: 'Instrument Sans', sans-serif;
+    }
+
+    .font-option[data-font="mono"] {
+      font-family: monospace;
+      font-size: 0.76rem;
+    }
+
+    .tip-card {
+      background: linear-gradient(135deg, var(--sage-pale), var(--pink-pale));
+      border-radius: 10px;
+      padding: 0.9rem;
+      border: 1px solid rgba(168, 197, 160, 0.2);
+    }
+
+    .tip-card p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.78rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .tip-refresh {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.66rem;
+      color: var(--text-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: color 0.2s;
+    }
+
+    .tip-refresh:hover {
+      color: var(--sage);
+    }
+
+    .tip-refresh svg {
+      width: 10px;
+      height: 10px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    /* ── SUCCESS ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(250, 246, 238, 0.95);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .success-overlay.show {
+      display: flex;
+    }
+
+    .success-box {
+      max-width: 400px;
+      padding: 2rem;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage-pale), var(--pink-pale));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.1rem;
+    }
+
+    .success-icon svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--sage);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .success-box h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.9rem;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-box h2 em {
+      color: var(--sage);
+    }
+
+    .success-box p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 1.6rem;
+    }
+
+    .success-actions {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+
+    /* ══ THEME PICKER MODAL ══ */
+    .theme-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(44, 36, 24, 0.45);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .theme-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .theme-modal {
+      background: white;
+      border-radius: 22px 22px 0 0;
+      padding: 1.8rem 2rem 2.5rem;
+      width: 100%;
+      max-width: 900px;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.1, 0.64, 1);
+    }
+
+    .theme-modal-backdrop.open .theme-modal {
+      transform: translateY(0);
+    }
+
+    .theme-modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.3rem;
+    }
+
+    .theme-modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .theme-modal-title em {
+      color: var(--sage);
+    }
+
+    .theme-modal-sub {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-bottom: 1.4rem;
+    }
+
+    .theme-modal-close {
+      background: var(--cream);
+      border: none;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      transition: background 0.2s;
+    }
+
+    .theme-modal-close:hover {
+      background: var(--cream-dark);
+    }
+
+    /* Theme swatches grid */
+    .theme-swatches {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.9rem;
+    }
+
+    /* Swatch = colored card with CSS flower preview */
+    .t-swatch {
+      border-radius: 14px;
+      aspect-ratio: 3 / 4;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border: 2.5px solid transparent;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 12px rgba(44, 36, 24, 0.08);
+    }
+
+    .t-swatch:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(44, 36, 24, 0.16);
+    }
+
+    .t-swatch.active {
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(107, 143, 107, 0.2), 0 8px 24px rgba(44, 36, 24, 0.12);
+    }
+
+    .t-swatch .t-check {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--sage);
+      color: white;
+      font-size: 0.6rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .t-swatch.active .t-check {
+      display: flex;
+    }
+
+    .t-swatch-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.6rem 0.4rem 0.3rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 400;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+      color: white;
+    }
+
+    /* Individual swatch backgrounds — CSS illustrated */
+
+    /* 1 Garden — green with SVG vine flowers */
+    .t-1 { background: linear-gradient(160deg, #e8f5e2 0%, #f5faf0 40%, #d4e8cc 100%); }
+    /* 2 Floral Ink — cream + pink */
+    .t-2 { background: linear-gradient(145deg, #fff0f5 0%, #fce4ec 50%, #f8bbd0 100%); }
+    /* 3 Pink Lily — blush rose */
+    .t-3 { background: linear-gradient(160deg, #fce4ec 0%, #fdf2f5 50%, #f8d7e3 100%); }
+    /* 4 Bouquet — soft purple */
+    .t-4 { background: linear-gradient(150deg, #f3e5f5 0%, #faf0ff 50%, #e8d5f0 100%); }
+    /* 5 Enchanted — parchment forest */
+    .t-5 { background: linear-gradient(155deg, #f5f0e0 0%, #faf7ed 50%, #e8e0c8 100%); }
+    /* 6 Nature — botanical green */
+    .t-6 { background: linear-gradient(160deg, #e8f5e9 0%, #f5faf5 50%, #c8e6c9 100%); }
+    /* 7 About Me — warm beige */
+    .t-7 { background: linear-gradient(150deg, #fdf8f0 0%, #faf4e8 50%, #f0e6d0 100%); }
+    /* 8 Welcome — soft grey */
+    .t-8 { background: linear-gradient(155deg, #fafafa 0%, #f5f5f5 50%, #eeeeee 100%); }
+    /* 9 Rapunzel — dusty lavender gold */
+    .t-9 { background: linear-gradient(160deg, #f5f0ff 0%, #faf7ff 50%, #e8e0f5 100%); }
+
+    /* None swatch */
+    .t-none {
+      border-radius: 14px;
+      aspect-ratio: 3 / 4;
+      border: 2px dashed rgba(168, 197, 160, 0.4);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      color: var(--text-light);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--cream);
+      transition: all 0.25s;
+    }
+
+    .t-none:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+      transform: translateY(-5px);
+    }
+
+    .t-none svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.2;
+    }
+
+    .t-none.active-none {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    /* Toast */
+    .pp-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(14px);
+      background: var(--text);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      z-index: 400;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: 'Instrument Sans', sans-serif;
+    }
+
+    .pp-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .sidebar-panel { display: none; }
+      .journal-page { padding: 2rem 1.5rem; }
+      .topbar { padding: 0.9rem 1.2rem; }
+      .theme-swatches { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .theme-swatches { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+
+    /* ── CUSTOM BG ── */
+    .journal-page.theme-custom-bg {
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+    }
+
+    .journal-page.theme-custom-bg .writing-zone {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(2px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 0 -0.5rem;
+    }
+
+    /* ── INLINE IMAGE IN EDITOR ── */
+    .insert-img-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.75rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(168, 197, 160, 0.3);
+      background: transparent;
+      color: var(--text-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .insert-img-btn:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+      background: var(--sage-pale);
+    }
+
+    .insert-img-btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .selected-align {
+      background: var(--sage-pale) !important;
+      color: var(--sage) !important;
+      border-color: var(--sage-light) !important;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(168, 197, 160, 0.15);
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 16px;
+      background: rgba(168, 197, 160, 0.25);
+    }
+
+    /* Inline images in rich editor */
+    .rich-editor {
+      min-height: 380px;
+      outline: none;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 38px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rich-editor:empty::before {
+      content: attr(data-placeholder);
+      color: rgba(44, 36, 24, 0.15);
+      pointer-events: none;
+      font-style: italic;
+    }
+
+    .rich-editor img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 0.8rem 0;
+      display: block;
+      box-shadow: 0 4px 16px rgba(44, 36, 24, 0.1);
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .rich-editor img:hover {
+      box-shadow: 0 8px 28px rgba(44, 36, 24, 0.15);
+      transform: scale(1.01);
+    }
+
+    .rich-editor img.img-left {
+      float: left;
+      margin-right: 1rem;
+      max-width: 45%;
+    }
+
+    .rich-editor img.img-right {
+      float: right;
+      margin-left: 1rem;
+      max-width: 45%;
+    }
+
+    /* Image size options popup */
+    .img-size-popup {
+      position: fixed;
+      z-index: 500;
+      background: white;
+      border-radius: 10px;
+      padding: 0.6rem;
+      box-shadow: 0 8px 28px rgba(44, 36, 24, 0.15);
+      border: 1px solid rgba(168, 197, 160, 0.2);
+      display: none;
+      gap: 0.4rem;
+      flex-direction: column;
+      min-width: 130px;
+    }
+
+    .img-size-popup.show {
+      display: flex;
+    }
+
+    .img-size-btn {
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: var(--text-mid);
+      font-family: 'Instrument Sans', sans-serif;
+      text-align: left;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .img-size-btn:hover {
+      background: var(--sage-pale);
+      color: var(--sage);
+    }
+
+    .img-size-btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .topbar-nav-links { display: none !important; }
+    }
+
+    /* ══ DRAW BACKGROUND ══ */
+    .draw-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(44, 36, 24, 0.5);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .draw-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .draw-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: min(95vw, 820px);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transform: scale(0.95);
+      transition: transform 0.3s;
+    }
+
+    .draw-modal-backdrop.open .draw-modal {
+      transform: scale(1);
+    }
+
+    .draw-modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .draw-modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .draw-modal-title em {
+      color: var(--sage);
+    }
+
+    .draw-close {
+      background: var(--cream);
+      border: none;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      transition: background 0.2s;
+    }
+
+    .draw-close:hover {
+      background: var(--cream-dark);
+    }
+
+    .draw-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      padding: 0.7rem 0;
+      border-top: 1px solid rgba(168, 197, 160, 0.12);
+      border-bottom: 1px solid rgba(168, 197, 160, 0.12);
+    }
+
+    .draw-tool-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(168, 197, 160, 0.25);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .draw-tool-btn:hover,
+    .draw-tool-btn.active {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+    }
+
+    .draw-tool-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-mid);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .draw-sep {
+      width: 1px;
+      height: 24px;
+      background: rgba(168, 197, 160, 0.2);
+    }
+
+    .draw-color-row {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .draw-color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .draw-color-swatch:hover {
+      transform: scale(1.2);
+    }
+
+    .draw-color-swatch.active {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px white, 0 0 0 3px var(--text);
+    }
+
+    .draw-size-row {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .draw-size-btn {
+      border: 1.5px solid rgba(168, 197, 160, 0.25);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .draw-size-btn:hover,
+    .draw-size-btn.active {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+    }
+
+    .draw-canvas-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(168, 197, 160, 0.2);
+      flex: 1;
+      cursor: crosshair;
+      position: relative;
+    }
+
+    #drawCanvas {
+      display: block;
+      width: 100%;
+      touch-action: none;
+    }
+
+    .draw-bg-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .draw-bg-preset {
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(168, 197, 160, 0.22);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: var(--text-mid);
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .draw-bg-preset:hover {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+      color: var(--sage);
+    }
+
+    .draw-actions {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .draw-actions-left {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .btn-draw-clear {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(196, 113, 122, 0.25);
+      background: transparent;
+      color: var(--pink);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-draw-clear:hover {
+      background: var(--pink-pale);
+    }
+
+    .btn-draw-apply {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      background: var(--text);
+      color: white;
+      border: none;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-draw-apply:hover {
+      background: var(--sage);
+    }
+
+    /* ══ SHARE MODAL ══ */
+    .share-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(44, 36, 24, 0.5);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .share-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .share-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      width: min(95vw, 460px);
+      transform: scale(0.95);
+      transition: transform 0.3s;
+    }
+
+    .share-modal-backdrop.open .share-modal {
+      transform: scale(1);
+    }
+
+    .share-modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.4rem;
+    }
+
+    .share-modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .share-modal-title em {
+      color: var(--sage);
+    }
+
+    .share-preview {
+      background: var(--cream);
+      border: 1px solid rgba(168, 197, 160, 0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .share-preview-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .share-preview-text {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .share-preview-meta {
+      font-size: 0.68rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .share-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .share-opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid rgba(168, 197, 160, 0.2);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Instrument Sans', sans-serif;
+      text-align: left;
+      width: 100%;
+    }
+
+    .share-opt-btn:hover {
+      background: var(--cream);
+      border-color: rgba(168, 197, 160, 0.4);
+    }
+
+    .share-opt-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .share-opt-label {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .share-opt-sub {
+      font-size: 0.72rem;
+      color: var(--text-light);
+    }
+
+    .share-link-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .share-link-input {
+      background: var(--cream);
+      border: 1.5px solid rgba(168, 197, 160, 0.25);
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.78rem;
+      font-family: 'Instrument Sans', sans-serif;
+      color: var(--text-mid);
+      outline: none;
+      flex: 1;
+    }
+
+    .btn-copy-link {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      background: var(--text);
+      color: white;
+      border: none;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-copy-link:hover {
+      background: var(--sage);
+    }
+
+    .share-note {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      font-family: 'Lora', serif;
+      font-style: italic;
+      margin-top: 0.8rem;
+      line-height: 1.55;
+    }
+
+    /* Draw & share buttons in topbar */
+    .btn-draw,
+    .btn-share {
+      padding: 0.48rem 0.9rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(168, 197, 160, 0.3);
+      background: transparent;
+      color: var(--text-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .btn-draw:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .btn-share {
+      background: var(--sage-pale);
+      border-color: var(--sage-light);
+      color: var(--sage);
+    }
+
+    .btn-share:hover {
+      background: var(--sage);
+      color: white;
+    }
+
+    .btn-draw svg,
+    .btn-share svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      .topbar-nav-links { display: none !important; }
+      .btn-theme, .btn-draw, .btn-share { padding: 0.4rem 0.6rem !important; font-size: 0.65rem !important; }
+      .btn-save-draft { display: none !important; }
+      .title-input { font-size: 1.5rem !important; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar { padding: 0.7rem 0.8rem !important; }
+      .journal-page { padding: 1.2rem 1rem !important; }
+      .sidebar-panel { display: none !important; }
+      .page-wrap { grid-template-columns: 1fr !important; }
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Toast -->
+  <div class="pp-toast" id="ppToast"></div>
+
+  <!-- Guest bar -->
+  <div class="guest-bar" id="guestBar">
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+      <span>Exploring as guest — entries saved on this device.</span>
+    </div>
+    <div class="gb-right">
+      <a href="register.html">Create free account</a>
+      <a href="login.html">Sign in</a>
+      <button class="gb-close" onclick="document.getElementById('guestBar').style.display='none'">✕</button>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="dashboard.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+        back
+      </a>
+      <a href="index.html" class="logo">Petal<span>Pages</span></a>
+      <!-- Quick nav links -->
+      <div style="display:flex;align-items:center;gap:0.4rem;margin-left:1rem;">
+        <a href="dashboard.html" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.8rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.25);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:all 0.2s;font-family:inherit;" onmouseover="this.style.background='var(--sage-pale)';this.style.color='var(--sage)';this.style.borderColor='var(--sage-light)';" onmouseout="this.style.background='';this.style.color='var(--text-mid)';this.style.borderColor='rgba(168,197,160,0.25)';">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+          journal
+        </a>
+        <a href="notes.html" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.8rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.25);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:all 0.2s;font-family:inherit;" onmouseover="this.style.background='var(--sage-pale)';this.style.color='var(--sage)';this.style.borderColor='var(--sage-light)';" onmouseout="this.style.background='';this.style.color='var(--text-mid)';this.style.borderColor='rgba(168,197,160,0.25)';">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+          notes
+        </a>
+        <a href="period-tracker.html" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.8rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.25);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:all 0.2s;font-family:inherit;" onmouseover="this.style.background='var(--sage-pale)';this.style.color='var(--sage)';this.style.borderColor='var(--sage-light)';" onmouseout="this.style.background='';this.style.color='var(--text-mid)';this.style.borderColor='rgba(168,197,160,0.25)';">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" /></svg>
+          cycle
+        </a>
+        <a href="settings.html" style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.8rem;border-radius:8px;border:1.5px solid rgba(168,197,160,0.25);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:all 0.2s;font-family:inherit;" onmouseover="this.style.background='var(--sage-pale)';this.style.color='var(--sage)';this.style.borderColor='var(--sage-light)';" onmouseout="this.style.background='';this.style.color='var(--text-mid)';this.style.borderColor='rgba(168,197,160,0.25)';">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+          settings
+        </a>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="save-status">
+        <div class="save-dot" id="saveDot"></div>
+        <span id="saveText">unsaved</span>
+      </div>
+      <button class="btn-draw" onclick="openDrawModal()" title="Draw background">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+        draw
+      </button>
+      <button class="btn-share" onclick="openShareModal()" title="Share entry">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
+        share
+      </button>
+      <button class="btn-theme" onclick="openThemeModal()">
+        <span class="theme-swatch" id="themeSwatch"></span>
+        page theme
+      </button>
+      <button class="btn-save-draft" onclick="saveDraft()">save draft</button>
+      <button class="btn-publish" onclick="publishEntry()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+        save entry
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="page-wrap">
+
+    <!-- Journal Page -->
+    <div class="journal-page theme-none" id="journalPage">
+
+      <!-- SVG Floral Decorations — hidden by default, shown per theme -->
+
+      <!-- Garden: top-left vine + flowers -->
+      <svg class="floral-deco deco-tl" id="deco-garden-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M10 220 C10 180, 30 150, 20 100 C10 60, 40 30, 80 20 C100 15, 130 25, 150 10" stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round" />
+        <path d="M20 180 C5 165, 0 145, 15 135" stroke="#7AAF7A" stroke-width="1.5" fill="none" />
+        <!-- flower 1 -->
+        <circle cx="15" cy="135" r="3" fill="#C4717A" opacity="0.7" />
+        <ellipse cx="15" cy="128" rx="4" ry="7" fill="#E8A0A8" opacity="0.6" transform="rotate(-20 15 128)" />
+        <ellipse cx="22" cy="131" rx="4" ry="7" fill="#E8A0A8" opacity="0.6" transform="rotate(40 22 131)" />
+        <ellipse cx="8" cy="131" rx="4" ry="7" fill="#F5D8DC" opacity="0.6" transform="rotate(-60 8 131)" />
+        <!-- leaf 1 -->
+        <ellipse cx="35" cy="155" rx="10" ry="5" fill="#A8C5A0" opacity="0.6" transform="rotate(-30 35 155)" />
+        <!-- flower 2 -->
+        <circle cx="80" cy="25" r="3" fill="#D4B060" opacity="0.7" />
+        <ellipse cx="80" cy="17" rx="4" ry="7" fill="#FAF6EE" opacity="0.8" transform="rotate(10 80 17)" />
+        <ellipse cx="87" cy="22" rx="4" ry="7" fill="#FAF6EE" opacity="0.7" transform="rotate(60 87 22)" />
+        <ellipse cx="73" cy="22" rx="4" ry="7" fill="#F5D8DC" opacity="0.6" transform="rotate(-50 73 22)" />
+        <!-- leaf 2 -->
+        <ellipse cx="55" cy="40" rx="12" ry="5" fill="#7AAF7A" opacity="0.5" transform="rotate(20 55 40)" />
+        <ellipse cx="45" cy="55" rx="10" ry="4" fill="#A8C5A0" opacity="0.5" transform="rotate(-15 45 55)" />
+        <!-- small dots -->
+        <circle cx="60" cy="80" r="2" fill="#D4B060" opacity="0.4" />
+        <circle cx="30" cy="110" r="1.5" fill="#C4717A" opacity="0.35" />
+        <circle cx="100" cy="50" r="2" fill="#A8C5A0" opacity="0.4" />
+      </svg>
+
+      <!-- Garden: bottom-right -->
+      <svg class="floral-deco deco-br" id="deco-garden-br" viewBox="0 0 180 200" fill="none">
+        <path d="M170 0 C170 40, 150 70, 160 120 C170 160, 140 185, 100 195 C80 200, 50 190, 30 200" stroke="#A8C5A0" stroke-width="2" fill="none" stroke-linecap="round" />
+        <circle cx="155" cy="75" r="3" fill="#C4717A" opacity="0.7" />
+        <ellipse cx="155" cy="67" rx="4" ry="7" fill="#E8A0A8" opacity="0.6" transform="rotate(15 155 67)" />
+        <ellipse cx="162" cy="72" rx="4" ry="7" fill="#F5D8DC" opacity="0.6" transform="rotate(65 162 72)" />
+        <ellipse cx="148" cy="72" rx="4" ry="7" fill="#E8A0A8" opacity="0.5" transform="rotate(-45 148 72)" />
+        <ellipse cx="125" cy="160" rx="11" ry="5" fill="#A8C5A0" opacity="0.5" transform="rotate(25 125 160)" />
+        <ellipse cx="145" cy="145" rx="9" ry="4" fill="#7AAF7A" opacity="0.45" transform="rotate(-20 145 145)" />
+        <circle cx="100" cy="185" r="3" fill="#D4B060" opacity="0.6" />
+        <ellipse cx="100" cy="177" rx="4" ry="6" fill="#FAF6EE" opacity="0.7" transform="rotate(-5 100 177)" />
+        <ellipse cx="107" cy="182" rx="4" ry="6" fill="#F5D8DC" opacity="0.6" transform="rotate(55 107 182)" />
+        <ellipse cx="93" cy="182" rx="4" ry="6" fill="#FAF6EE" opacity="0.6" transform="rotate(-55 93 182)" />
+        <circle cx="60" cy="120" r="2" fill="#C4717A" opacity="0.35" />
+        <circle cx="140" cy="110" r="1.5" fill="#D4B060" opacity="0.4" />
+      </svg>
+
+      <!-- Floral Ink: top-left magenta flowers -->
+      <svg class="floral-deco deco-tl" id="deco-floral-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M5 220 Q20 160 10 100 Q0 50 60 10 Q90 -5 150 5" stroke="#C4717A" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5" />
+        <!-- big flower top -->
+        <circle cx="90" cy="35" r="6" fill="#8B3A6B" opacity="0.6" />
+        <ellipse cx="90" cy="18" rx="8" ry="14" fill="#C4717A" opacity="0.5" transform="rotate(0 90 18)" />
+        <ellipse cx="105" cy="28" rx="8" ry="14" fill="#E8A0A8" opacity="0.45" transform="rotate(60 105 28)" />
+        <ellipse cx="105" cy="50" rx="8" ry="14" fill="#C4717A" opacity="0.4" transform="rotate(120 105 50)" />
+        <ellipse cx="90" cy="58" rx="8" ry="14" fill="#E8A0A8" opacity="0.45" transform="rotate(180 90 58)" />
+        <ellipse cx="75" cy="50" rx="8" ry="14" fill="#C4717A" opacity="0.4" transform="rotate(240 75 50)" />
+        <ellipse cx="75" cy="28" rx="8" ry="14" fill="#E8A0A8" opacity="0.45" transform="rotate(300 75 28)" />
+        <!-- medium flower -->
+        <circle cx="30" cy="120" r="4" fill="#8B3A6B" opacity="0.5" />
+        <ellipse cx="30" cy="110" rx="6" ry="10" fill="#C4717A" opacity="0.4" transform="rotate(0 30 110)" />
+        <ellipse cx="40" cy="118" rx="6" ry="10" fill="#E8A0A8" opacity="0.38" transform="rotate(72 40 118)" />
+        <ellipse cx="37" cy="130" rx="6" ry="10" fill="#C4717A" opacity="0.35" transform="rotate(144 37 130)" />
+        <ellipse cx="23" cy="130" rx="6" ry="10" fill="#E8A0A8" opacity="0.35" transform="rotate(216 23 130)" />
+        <ellipse cx="20" cy="118" rx="6" ry="10" fill="#C4717A" opacity="0.38" transform="rotate(288 20 118)" />
+        <!-- leaves -->
+        <ellipse cx="55" cy="70" rx="14" ry="6" fill="#5a7a4a" opacity="0.25" transform="rotate(30 55 70)" />
+        <ellipse cx="15" cy="170" rx="12" ry="5" fill="#5a7a4a" opacity="0.2" transform="rotate(-20 15 170)" />
+      </svg>
+
+      <!-- Floral Ink: right side -->
+      <svg class="floral-deco deco-rv" id="deco-floral-rv" viewBox="0 0 80 300" fill="none">
+        <path d="M75 10 Q60 80 70 150 Q80 220 60 290" stroke="#C4717A" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" />
+        <circle cx="65" cy="80" r="3.5" fill="#8B3A6B" opacity="0.5" />
+        <ellipse cx="65" cy="72" rx="5" ry="9" fill="#C4717A" opacity="0.42" transform="rotate(0 65 72)" />
+        <ellipse cx="73" cy="77" rx="5" ry="9" fill="#E8A0A8" opacity="0.38" transform="rotate(60 73 77)" />
+        <ellipse cx="73" cy="89" rx="5" ry="9" fill="#C4717A" opacity="0.35" transform="rotate(120 73 89)" />
+        <ellipse cx="65" cy="94" rx="5" ry="9" fill="#E8A0A8" opacity="0.38" transform="rotate(180 65 94)" />
+        <ellipse cx="57" cy="89" rx="5" ry="9" fill="#C4717A" opacity="0.35" transform="rotate(240 57 89)" />
+        <ellipse cx="57" cy="77" rx="5" ry="9" fill="#E8A0A8" opacity="0.38" transform="rotate(300 57 77)" />
+        <circle cx="68" cy="200" r="3" fill="#8B3A6B" opacity="0.4" />
+        <ellipse cx="68" cy="193" rx="4" ry="8" fill="#C4717A" opacity="0.35" transform="rotate(15 68 193)" />
+        <ellipse cx="75" cy="199" rx="4" ry="8" fill="#E8A0A8" opacity="0.32" transform="rotate(75 75 199)" />
+        <ellipse cx="75" cy="210" rx="4" ry="8" fill="#C4717A" opacity="0.3" transform="rotate(135 75 210)" />
+      </svg>
+
+      <!-- Pink Lily: elegant corners -->
+      <svg class="floral-deco deco-tl" id="deco-lily-tl" viewBox="0 0 200 220" fill="none">
+        <!-- lily petals top-left -->
+        <path d="M5 80 Q30 40 70 20 Q90 12 110 15" stroke="#E8A0A8" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" />
+        <path d="M60 25 Q40 60 50 100 Q55 120 40 150" stroke="#E8A0A8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5" />
+        <!-- lily 1 -->
+        <ellipse cx="85" cy="30" rx="12" ry="22" fill="#F5D8DC" opacity="0.65" transform="rotate(-30 85 30)" />
+        <ellipse cx="100" cy="22" rx="10" ry="20" fill="#E8A0A8" opacity="0.55" transform="rotate(10 100 22)" />
+        <ellipse cx="115" cy="32" rx="11" ry="21" fill="#C4717A" opacity="0.45" transform="rotate(45 115 32)" />
+        <ellipse cx="110" cy="50" rx="10" ry="20" fill="#F5D8DC" opacity="0.55" transform="rotate(80 110 50)" />
+        <ellipse cx="95" cy="55" rx="10" ry="18" fill="#E8A0A8" opacity="0.5" transform="rotate(110 95 55)" />
+        <!-- stamen -->
+        <circle cx="98" cy="38" r="5" fill="#D4B060" opacity="0.7" />
+        <circle cx="98" cy="38" r="2.5" fill="#B8962E" opacity="0.8" />
+        <!-- lily 2 smaller -->
+        <ellipse cx="30" cy="120" rx="9" ry="16" fill="#F5D8DC" opacity="0.55" transform="rotate(-20 30 120)" />
+        <ellipse cx="42" cy="112" rx="8" ry="15" fill="#E8A0A8" opacity="0.5" transform="rotate(20 42 112)" />
+        <ellipse cx="48" cy="125" rx="8" ry="15" fill="#C4717A" opacity="0.4" transform="rotate(60 48 125)" />
+        <circle cx="38" cy="118" r="4" fill="#D4B060" opacity="0.6" />
+        <!-- leaves -->
+        <path d="M60 80 Q80 70 90 85" stroke="#7AAF7A" stroke-width="2" fill="none" opacity="0.5" />
+        <ellipse cx="70" cy="90" rx="14" ry="5" fill="#A8C5A0" opacity="0.4" transform="rotate(15 70 90)" />
+        <path d="M15 160 Q30 145 45 155" stroke="#7AAF7A" stroke-width="1.5" fill="none" opacity="0.45" />
+      </svg>
+
+      <!-- Bouquet: purple florals -->
+      <svg class="floral-deco deco-tl" id="deco-bouquet-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M10 220 Q25 170 15 120 Q5 70 50 30 Q80 10 130 5" stroke="#C4A8D4" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.5" />
+        <!-- rose-like flower -->
+        <circle cx="90" cy="40" r="14" fill="none" stroke="#8B6BAE" stroke-width="1.5" opacity="0.4" />
+        <circle cx="90" cy="40" r="10" fill="none" stroke="#C4A8D4" stroke-width="1.5" opacity="0.5" />
+        <circle cx="90" cy="40" r="6" fill="none" stroke="#8B6BAE" stroke-width="1.5" opacity="0.4" />
+        <circle cx="90" cy="40" r="3" fill="#8B6BAE" opacity="0.6" />
+        <!-- petals around -->
+        <ellipse cx="90" cy="23" rx="5" ry="9" fill="#E8D5F0" opacity="0.6" transform="rotate(0 90 23)" />
+        <ellipse cx="103" cy="28" rx="5" ry="9" fill="#C4A8D4" opacity="0.55" transform="rotate(51 103 28)" />
+        <ellipse cx="107" cy="43" rx="5" ry="9" fill="#E8D5F0" opacity="0.55" transform="rotate(102 107 43)" />
+        <ellipse cx="99" cy="56" rx="5" ry="9" fill="#C4A8D4" opacity="0.5" transform="rotate(153 99 56)" />
+        <ellipse cx="81" cy="56" rx="5" ry="9" fill="#E8D5F0" opacity="0.5" transform="rotate(204 81 56)" />
+        <ellipse cx="73" cy="43" rx="5" ry="9" fill="#C4A8D4" opacity="0.5" transform="rotate(255 73 43)" />
+        <ellipse cx="77" cy="28" rx="5" ry="9" fill="#E8D5F0" opacity="0.55" transform="rotate(306 77 28)" />
+        <!-- small flowers -->
+        <circle cx="28" cy="130" r="3" fill="#8B6BAE" opacity="0.5" />
+        <ellipse cx="28" cy="122" rx="4" ry="7" fill="#E8D5F0" opacity="0.5" transform="rotate(0 28 122)" />
+        <ellipse cx="35" cy="127" rx="4" ry="7" fill="#C4A8D4" opacity="0.45" transform="rotate(60 35 127)" />
+        <ellipse cx="35" cy="139" rx="4" ry="7" fill="#E8D5F0" opacity="0.45" transform="rotate(120 35 139)" />
+        <!-- leaves -->
+        <ellipse cx="55" cy="75" rx="14" ry="5" fill="#7AAF7A" opacity="0.3" transform="rotate(25 55 75)" />
+        <ellipse cx="15" cy="170" rx="12" ry="4" fill="#A8C5A0" opacity="0.28" transform="rotate(-15 15 170)" />
+      </svg>
+
+      <!-- Enchanted: fairy tale corner vines -->
+      <svg class="floral-deco deco-tl" id="deco-enchanted-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M8 220 C15 190,5 160,20 130 C30 110,15 80,35 55 C50 35,80 15,120 8 C140 4,165 8,185 5" stroke="#B8962E" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" />
+        <!-- sparkle stars -->
+        <path d="M150 20 L152 14 L154 20 L160 22 L154 24 L152 30 L150 24 L144 22 Z" fill="#D4B060" opacity="0.5" />
+        <path d="M50 60 L51.5 56 L53 60 L57 61.5 L53 63 L51.5 67 L50 63 L46 61.5 Z" fill="#B8962E" opacity="0.4" />
+        <!-- lantern shapes -->
+        <rect x="165" y="40" width="14" height="18" rx="3" fill="none" stroke="#D4B060" stroke-width="1.2" opacity="0.45" />
+        <line x1="172" y1="38" x2="172" y2="40" stroke="#D4B060" stroke-width="1.2" opacity="0.45" />
+        <ellipse cx="172" cy="49" rx="5" ry="6" fill="#FAF6EE" opacity="0.3" />
+        <circle cx="172" cy="49" r="2" fill="#D4B060" opacity="0.5" />
+        <!-- small flowers -->
+        <circle cx="90" cy="25" r="3" fill="#C4717A" opacity="0.5" />
+        <ellipse cx="90" cy="18" rx="4" ry="7" fill="#F5D8DC" opacity="0.5" />
+        <ellipse cx="97" cy="23" rx="4" ry="7" fill="#E8A0A8" opacity="0.45" transform="rotate(60 97 23)" />
+        <ellipse cx="97" cy="33" rx="4" ry="7" fill="#F5D8DC" opacity="0.45" transform="rotate(120 97 33)" />
+        <!-- vine flourishes -->
+        <path d="M40 100 Q60 90 55 110 Q50 125 70 120" stroke="#7AAF7A" stroke-width="1.2" fill="none" opacity="0.4" />
+        <circle cx="70" cy="120" r="3" fill="#7AAF7A" opacity="0.4" />
+        <ellipse cx="45" cy="150" rx="10" ry="4" fill="#A8C5A0" opacity="0.3" transform="rotate(20 45 150)" />
+      </svg>
+
+      <!-- Nature: botanical greens -->
+      <svg class="floral-deco deco-tl" id="deco-nature-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M10 220 Q20 180,8 140 Q-2 100,20 65 Q38 35,75 18 Q105 5,150 8" stroke="#4a6b4a" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.45" />
+        <!-- daisy -->
+        <circle cx="95" cy="30" r="5" fill="#F5C842" opacity="0.75" />
+        <ellipse cx="95" cy="15" rx="4" ry="9" fill="white" opacity="0.85" />
+        <ellipse cx="107" cy="20" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(51 107 20)" />
+        <ellipse cx="111" cy="32" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(102 111 32)" />
+        <ellipse cx="103" cy="44" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(153 103 44)" />
+        <ellipse cx="87" cy="44" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(204 87 44)" />
+        <ellipse cx="79" cy="32" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(255 79 32)" />
+        <ellipse cx="83" cy="20" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(306 83 20)" />
+        <!-- large leaves -->
+        <path d="M30 80 Q50 55 65 75" stroke="#4a6b4a" stroke-width="2" fill="none" opacity="0.5" />
+        <path d="M30 80 Q55 80 65 75" stroke="#4a6b4a" stroke-width="1" fill="#c8e6c9" opacity="0.3" />
+        <path d="M10 140 Q35 115 48 138" stroke="#6B8F6B" stroke-width="2" fill="none" opacity="0.45" />
+        <path d="M10 140 Q35 145 48 138" stroke="#6B8F6B" stroke-width="1" fill="#D4E8CC" opacity="0.3" />
+        <!-- mountain tiny -->
+        <path d="M140 60 L155 35 L170 60 Z" stroke="#7AAF7A" stroke-width="1.2" fill="#D4E8CC" opacity="0.3" />
+        <path d="M155 35 L162 48" stroke="white" stroke-width="1" opacity="0.5" />
+        <!-- flying birds -->
+        <path d="M60 30 Q65 26 70 30" stroke="#4a6b4a" stroke-width="1" fill="none" opacity="0.4" />
+        <path d="M72 25 Q77 21 82 25" stroke="#4a6b4a" stroke-width="1" fill="none" opacity="0.35" />
+      </svg>
+
+      <!-- About Me: warm cozy stationery -->
+      <svg class="floral-deco deco-tl" id="deco-about-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M10 220 Q25 175,15 130 Q5 90,30 55 Q55 20,100 10 Q130 3,165 8" stroke="#8B7355" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.35" />
+        <!-- washi tape look at top -->
+        <rect x="40" y="8" width="80" height="12" rx="2" fill="#D4B060" opacity="0.15" />
+        <line x1="40" y1="14" x2="120" y2="14" stroke="#B8962E" stroke-width="0.5" opacity="0.2" stroke-dasharray="4,3" />
+        <!-- paper clip -->
+        <path d="M155 15 Q162 8,169 15 Q175 22,168 28 Q161 35,155 28 Q150 22,155 15" stroke="#8B7355" stroke-width="1.5" fill="none" opacity="0.4" />
+        <!-- small flowers -->
+        <circle cx="70" cy="35" r="3" fill="#C4717A" opacity="0.5" />
+        <ellipse cx="70" cy="28" rx="3.5" ry="6" fill="#F5D8DC" opacity="0.55" />
+        <ellipse cx="77" cy="33" rx="3.5" ry="6" fill="#E8A0A8" opacity="0.5" transform="rotate(60 77 33)" />
+        <ellipse cx="75" cy="43" rx="3.5" ry="6" fill="#F5D8DC" opacity="0.48" transform="rotate(120 75 43)" />
+        <!-- bear paw print -->
+        <circle cx="35" cy="130" r="6" fill="#D4B060" opacity="0.2" />
+        <circle cx="28" cy="122" r="3" fill="#D4B060" opacity="0.18" />
+        <circle cx="36" cy="120" r="3" fill="#D4B060" opacity="0.18" />
+        <circle cx="44" cy="122" r="3" fill="#D4B060" opacity="0.18" />
+        <!-- star doodle -->
+        <path d="M155 70 L157 64 L159 70 L165 72 L159 74 L157 80 L155 74 L149 72 Z" fill="#D4B060" opacity="0.35" />
+        <path d="M30 170 L31.5 166 L33 170 L37 171.5 L33 173 L31.5 177 L30 173 L26 171.5 Z" fill="#8B7355" opacity="0.3" />
+      </svg>
+
+      <!-- Welcome: clean doodle style -->
+      <svg class="floral-deco deco-tl" id="deco-welcome-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M8 218 Q20 180,10 140 Q2 105,22 70 Q42 35,85 15 Q110 5,150 8" stroke="#888" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.3" />
+        <!-- camera doodle -->
+        <rect x="120" y="25" width="40" height="30" rx="5" stroke="#666" stroke-width="1.5" fill="none" opacity="0.3" />
+        <circle cx="140" cy="40" r="9" stroke="#666" stroke-width="1.2" fill="none" opacity="0.3" />
+        <circle cx="140" cy="40" r="5" stroke="#888" stroke-width="1" fill="none" opacity="0.25" />
+        <rect x="122" y="18" width="12" height="8" rx="2" stroke="#666" stroke-width="1" fill="none" opacity="0.25" />
+        <!-- small hearts -->
+        <path d="M25 80 Q28 74,32 80 Q36 85,32 90 Q28 94,25 90 Q21 85,25 80" stroke="#999" stroke-width="1" fill="none" opacity="0.3" />
+        <path d="M50 150 Q52 146,55 150 Q57 153,55 156 Q52 159,50 156 Q47 153,50 150" stroke="#aaa" stroke-width="1" fill="none" opacity="0.28" />
+        <!-- tape strips -->
+        <rect x="55" y="12" width="40" height="9" rx="2" fill="#ccc" opacity="0.2" transform="rotate(-5 55 12)" />
+        <rect x="20" y="160" width="35" height="8" rx="2" fill="#ccc" opacity="0.18" transform="rotate(8 20 160)" />
+        <!-- flower doodle -->
+        <circle cx="70" cy="50" r="4" stroke="#888" stroke-width="1.2" fill="none" opacity="0.3" />
+        <ellipse cx="70" cy="40" rx="4" ry="8" stroke="#999" stroke-width="1" fill="none" opacity="0.25" />
+        <ellipse cx="79" cy="46" rx="4" ry="8" stroke="#999" stroke-width="1" fill="none" opacity="0.25" transform="rotate(60 79 46)" />
+        <ellipse cx="79" cy="58" rx="4" ry="8" stroke="#999" stroke-width="1" fill="none" opacity="0.25" transform="rotate(120 79 58)" />
+      </svg>
+
+      <!-- Rapunzel: lanterns + purple flowers -->
+      <svg class="floral-deco deco-tl" id="deco-rapunzel-tl" viewBox="0 0 200 220" fill="none">
+        <path d="M10 220 Q20 180,8 135 Q-2 95,25 60 Q48 28,90 12 Q120 2,160 6" stroke="#9B8BB8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" />
+        <!-- lantern 1 -->
+        <rect x="140" y="15" width="16" height="22" rx="4" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.5" />
+        <line x1="148" y1="12" x2="148" y2="15" stroke="#D4B060" stroke-width="1.5" opacity="0.5" />
+        <ellipse cx="148" cy="26" rx="6" ry="8" fill="rgba(245,200,66,0.12)" />
+        <circle cx="148" cy="26" r="3" fill="#D4B060" opacity="0.4" />
+        <!-- lantern 2 floating -->
+        <rect x="165" y="45" width="14" height="20" rx="3" stroke="#D4B060" stroke-width="1.2" fill="none" opacity="0.4" />
+        <line x1="172" y1="43" x2="172" y2="45" stroke="#D4B060" stroke-width="1.2" opacity="0.4" />
+        <circle cx="172" cy="55" r="2.5" fill="#D4B060" opacity="0.35" />
+        <!-- crown deco -->
+        <path d="M80 18 L83 8 L87 15 L92 5 L97 15 L101 8 L104 18 Z" stroke="#8B6BAE" stroke-width="1.2" fill="none" opacity="0.45" />
+        <!-- purple flowers -->
+        <circle cx="50" cy="80" r="4" fill="#8B6BAE" opacity="0.5" />
+        <ellipse cx="50" cy="70" rx="5" ry="9" fill="#E8D5F0" opacity="0.55" transform="rotate(0 50 70)" />
+        <ellipse cx="59" cy="75" rx="5" ry="9" fill="#C4A8D4" opacity="0.5" transform="rotate(60 59 75)" />
+        <ellipse cx="59" cy="87" rx="5" ry="9" fill="#E8D5F0" opacity="0.5" transform="rotate(120 59 87)" />
+        <ellipse cx="50" cy="92" rx="5" ry="9" fill="#C4A8D4" opacity="0.5" transform="rotate(180 50 92)" />
+        <ellipse cx="41" cy="87" rx="5" ry="9" fill="#E8D5F0" opacity="0.45" transform="rotate(240 41 87)" />
+        <ellipse cx="41" cy="75" rx="5" ry="9" fill="#C4A8D4" opacity="0.5" transform="rotate(300 41 75)" />
+        <!-- sparkle stars -->
+        <path d="M130 50 L131.5 45 L133 50 L138 51.5 L133 53 L131.5 58 L130 53 L125 51.5 Z" fill="#D4B060" opacity="0.5" />
+        <path d="M20 150 L21 147 L22 150 L25 151 L22 152 L21 155 L20 152 L17 151 Z" fill="#8B6BAE" opacity="0.4" />
+        <!-- hair-like vine -->
+        <path d="M165 100 Q175 130,168 160 Q162 185,170 210" stroke="#D4B060" stroke-width="2" fill="none" opacity="0.3" stroke-linecap="round" />
+      </svg>
+
+      <!-- ── WRITING ZONE ── -->
+      <div class="writing-zone">
+        <p class="entry-dateline" id="dateLine">loading...</p>
+        <textarea class="title-input" id="entryTitle" placeholder="give this moment a name..." rows="1" oninput="autoResize(this);markUnsaved();"></textarea>
+        <div class="mood-section">
+          <span class="mood-label">how are you feeling?</span>
+          <div class="mood-pills">
+            <button class="mood-pill" onclick="selectMood(this,'🌸 blooming')">🌸 blooming</button>
+            <button class="mood-pill" onclick="selectMood(this,'🌧 heavy')">🌧 heavy</button>
+            <button class="mood-pill" onclick="selectMood(this,'✨ grateful')">✨ grateful</button>
+            <button class="mood-pill" onclick="selectMood(this,'🌙 reflective')">🌙 reflective</button>
+            <button class="mood-pill" onclick="selectMood(this,'🔥 fired up')">🔥 fired up</button>
+            <button class="mood-pill" onclick="selectMood(this,'😶 numb')">😶 numb</button>
+          </div>
+        </div>
+        <div style="height:1px;background:linear-gradient(to right,rgba(168,197,160,0.3),transparent);margin-bottom:1.5rem;"></div>
+
+        <!-- Editor toolbar -->
+        <div class="editor-toolbar">
+          <button class="insert-img-btn" onclick="saveCursor();document.getElementById('inlineImgInput').click()" title="Insert image anywhere">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+            insert photo
+          </button>
+          <input type="file" id="inlineImgInput" accept="image/*" style="display:none;" onchange="insertInlineImage(event)" />
+          <div class="toolbar-sep"></div>
+          <button class="insert-img-btn align-btn selected-align" data-align="full" onclick="setAlign('full')" title="Full width">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="4" /><rect x="3" y="10" width="18" height="4" /><rect x="3" y="17" width="18" height="4" /></svg>
+            full
+          </button>
+          <button class="insert-img-btn align-btn" data-align="left" onclick="setAlign('left')" title="Float left">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1" /><line x1="14" y1="5" x2="21" y2="5" /><line x1="14" y1="8" x2="21" y2="8" /><line x1="3" y1="14" x2="21" y2="14" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+            left
+          </button>
+          <button class="insert-img-btn align-btn" data-align="right" onclick="setAlign('right')" title="Float right">
+            <svg viewBox="0 0 24 24"><rect x="13" y="3" width="8" height="8" rx="1" /><line x1="3" y1="5" x2="10" y2="5" /><line x1="3" y1="8" x2="10" y2="8" /><line x1="3" y1="14" x2="21" y2="14" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+            right
+          </button>
+        </div>
+
+        <div class="ruled-area">
+          <div
+            class="rich-editor content-area"
+            id="entryContent"
+            contenteditable="true"
+            data-placeholder="pour your heart out here — no rules, no judgement, just you and the page..."
+            oninput="updateWordCount();markUnsaved();autoSave();"
+          ></div>
+        </div>
+
+        <!-- Image size popup -->
+        <div class="img-size-popup" id="imgSizePopup">
+          <button class="img-size-btn" onclick="resizeImg('100%')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1" /></svg>Full width
+          </button>
+          <button class="img-size-btn" onclick="resizeImg('60%')">
+            <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1" /></svg>Medium
+          </button>
+          <button class="img-size-btn" onclick="resizeImg('35%')">
+            <svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1" /></svg>Small
+          </button>
+          <button class="img-size-btn" onclick="floatImg('left')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1" /><line x1="14" y1="5" x2="21" y2="5" /></svg>Float left
+          </button>
+          <button class="img-size-btn" onclick="floatImg('right')">
+            <svg viewBox="0 0 24 24"><rect x="13" y="3" width="8" height="8" rx="1" /><line x1="3" y1="5" x2="10" y2="5" /></svg>Float right
+          </button>
+          <button class="img-size-btn" onclick="removeImg()" style="color:var(--pink);">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>Remove
+          </button>
+        </div>
+
+        <div class="word-count-bar">
+          <div class="word-count">
+            <span><span id="wordCount">0</span> words</span>
+            <span><span id="charCountDisplay">0</span> chars</span>
+            <span>~<span id="readTime">0</span> min</span>
+          </div>
+          <p style="font-size:0.68rem;color:var(--text-light);font-style:italic;font-family:'Lora',serif;">saved on this device</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-panel">
+      <div>
+        <p class="panel-title">tags</p>
+        <div class="tags-wrap" id="tagsWrap"></div>
+        <input type="text" class="tag-input" id="tagInput" placeholder="add a tag, enter..." onkeydown="handleTagInput(event)" />
+      </div>
+      <div>
+        <p class="panel-title">privacy</p>
+        <div class="lock-toggle" onclick="toggleLock()">
+          <div class="lock-toggle-left">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            <div class="lock-toggle-text">
+              <p id="lockLabel">lock this entry</p>
+              <span id="lockSub">requires a password</span>
+            </div>
+          </div>
+          <div class="toggle-switch" id="lockSwitch"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="lock-pw-section" id="lockPwSection">
+          <input type="password" class="lock-pw-input" id="lockPw" placeholder="entry password..." />
+          <p class="lock-hint">separate from your account password</p>
+          <!-- Security note -->
+          <div class="security-note" style="background:rgba(184,150,46,0.08);border:1px solid rgba(184,150,46,0.2);border-radius:10px;padding:0.8rem 1rem;display:flex;align-items:flex-start;gap:0.7rem;font-size:0.74rem;color:#6B5840;line-height:1.6;margin-top:0.6rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+            <span><strong style="color:#B8962E;">Prototype note:</strong> entry passwords are stored locally on your device. For a fully secure app, a real backend with encryption is needed.</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="panel-title">writing style</p>
+        <div class="font-options">
+          <button class="font-option selected" data-font="serif" onclick="setFont(this,'Lora,serif','italic')">Lora</button>
+          <button class="font-option" data-font="display" onclick="setFont(this,'DM Serif Display,serif','italic')">DM Serif</button>
+          <button class="font-option" data-font="sans" onclick="setFont(this,'Instrument Sans,sans-serif','normal')">Sans</button>
+          <button class="font-option" data-font="mono" onclick="setFont(this,'monospace','normal')">Mono</button>
+        </div>
+      </div>
+      <div>
+        <p class="panel-title">writing prompt</p>
+        <div class="tip-card">
+          <p id="promptText">"what is something you've been carrying that you haven't told anyone?"</p>
+          <button class="tip-refresh" onclick="refreshPrompt()">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" /></svg>
+            new prompt
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-box">
+      <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg></div>
+      <h2>entry <em>saved</em></h2>
+      <p>your words are safe. they'll always be here.</p>
+      <div class="success-actions">
+        <a href="dashboard.html" class="btn-publish" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.5;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+          go to garden
+        </a>
+        <button class="btn-save-draft" onclick="writeAnother()">write another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ THEME MODAL ══ -->
+  <div class="theme-modal-backdrop" id="themeModalBackdrop" onclick="handleBackdropClick(event)">
+    <div class="theme-modal">
+      <div class="theme-modal-top">
+        <p class="theme-modal-title">pick your <em>page mood</em></p>
+        <button class="theme-modal-close" onclick="closeThemeModal()">✕</button>
+      </div>
+      <p class="theme-modal-sub">each theme adds beautiful floral decorations to your journal page</p>
+      <div class="theme-swatches">
+
+        <div class="t-none active-none" id="tNone" onclick="clearTheme()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="9" y1="9" x2="15" y2="15" /><line x1="15" y1="9" x2="9" y2="15" /></svg>
+          clean
+        </div>
+
+        <!-- Custom BG tile -->
+        <div class="t-swatch t-custom" id="ts-custom" onclick="document.getElementById('customBgInput').click()">
+          <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;background:linear-gradient(135deg,#fce4ec,#f3e5f5,#e8f5e9);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8B6BAE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+            <span style="font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:#8B6BAE;text-align:center;padding:0 0.3rem;">your photo</span>
+          </div>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Custom</div>
+        </div>
+        <input type="file" id="customBgInput" accept="image/*" style="display:none;" onchange="applyCustomBg(event)" />
+
+        <div class="t-swatch t-1" id="ts-1" onclick="applyTheme('garden','Garden','#5a7a4a')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <path d="M5 130 C5 100,20 80,10 55 C5 35,25 15,50 8 C65 3,80 8,95 5" stroke="#A8C5A0" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+            <circle cx="52" cy="20" r="4" fill="#C4717A" opacity="0.7" />
+            <ellipse cx="52" cy="11" rx="4" ry="7" fill="#E8A0A8" opacity="0.65" />
+            <ellipse cx="61" cy="17" rx="4" ry="7" fill="#F5D8DC" opacity="0.6" transform="rotate(60 61 17)" />
+            <ellipse cx="59" cy="29" rx="4" ry="7" fill="#E8A0A8" opacity="0.6" transform="rotate(120 59 29)" />
+            <ellipse cx="45" cy="29" rx="4" ry="7" fill="#F5D8DC" opacity="0.6" transform="rotate(240 45 29)" />
+            <ellipse cx="43" cy="17" rx="4" ry="7" fill="#E8A0A8" opacity="0.6" transform="rotate(300 43 17)" />
+            <ellipse cx="25" cy="75" rx="10" ry="4" fill="#A8C5A0" opacity="0.4" transform="rotate(20 25 75)" />
+            <ellipse cx="10" cy="95" rx="9" ry="4" fill="#7AAF7A" opacity="0.4" transform="rotate(-15 10 95)" />
+            <circle cx="15" cy="55" r="3" fill="#D4B060" opacity="0.5" />
+            <ellipse cx="15" cy="47" rx="3" ry="6" fill="#F5F0E0" opacity="0.6" />
+            <ellipse cx="22" cy="52" rx="3" ry="6" fill="#FAF6EE" opacity="0.55" transform="rotate(60 22 52)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Garden</div>
+        </div>
+
+        <div class="t-swatch t-2" id="ts-2" onclick="applyTheme('floral-ink','Floral Ink','#8B3A6B')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <circle cx="55" cy="30" r="7" fill="#8B3A6B" opacity="0.55" />
+            <ellipse cx="55" cy="16" rx="6" ry="11" fill="#C4717A" opacity="0.5" />
+            <ellipse cx="67" cy="23" rx="6" ry="11" fill="#E8A0A8" opacity="0.45" transform="rotate(60 67 23)" />
+            <ellipse cx="68" cy="38" rx="6" ry="11" fill="#C4717A" opacity="0.4" transform="rotate(120 68 38)" />
+            <ellipse cx="56" cy="46" rx="6" ry="11" fill="#E8A0A8" opacity="0.45" transform="rotate(180 56 46)" />
+            <ellipse cx="43" cy="38" rx="6" ry="11" fill="#C4717A" opacity="0.4" transform="rotate(240 43 38)" />
+            <ellipse cx="43" cy="23" rx="6" ry="11" fill="#E8A0A8" opacity="0.45" transform="rotate(300 43 23)" />
+            <circle cx="20" cy="90" r="4" fill="#8B3A6B" opacity="0.45" />
+            <ellipse cx="20" cy="81" rx="4" ry="8" fill="#C4717A" opacity="0.4" />
+            <ellipse cx="28" cy="87" rx="4" ry="8" fill="#E8A0A8" opacity="0.38" transform="rotate(60 28 87)" />
+            <ellipse cx="28" cy="98" rx="4" ry="8" fill="#C4717A" opacity="0.35" transform="rotate(120 28 98)" />
+            <ellipse cx="12" cy="98" rx="4" ry="8" fill="#E8A0A8" opacity="0.35" transform="rotate(240 12 98)" />
+            <ellipse cx="38" cy="65" rx="10" ry="4" fill="#5a7a4a" opacity="0.2" transform="rotate(25 38 65)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Floral Ink</div>
+        </div>
+
+        <div class="t-swatch t-3" id="ts-3" onclick="applyTheme('pink-lily','Pink Lily','#C4717A')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <ellipse cx="60" cy="28" rx="11" ry="20" fill="#F5D8DC" opacity="0.65" transform="rotate(-25 60 28)" />
+            <ellipse cx="73" cy="20" rx="9" ry="18" fill="#E8A0A8" opacity="0.6" transform="rotate(10 73 20)" />
+            <ellipse cx="80" cy="35" rx="10" ry="19" fill="#C4717A" opacity="0.45" transform="rotate(45 80 35)" />
+            <ellipse cx="75" cy="50" rx="9" ry="17" fill="#F5D8DC" opacity="0.55" transform="rotate(80 75 50)" />
+            <ellipse cx="60" cy="54" rx="9" ry="16" fill="#E8A0A8" opacity="0.5" transform="rotate(110 60 54)" />
+            <circle cx="67" cy="36" r="6" fill="#D4B060" opacity="0.65" />
+            <circle cx="67" cy="36" r="3" fill="#B8962E" opacity="0.75" />
+            <ellipse cx="20" cy="95" rx="8" ry="14" fill="#F5D8DC" opacity="0.55" transform="rotate(-15 20 95)" />
+            <ellipse cx="32" cy="88" rx="7" ry="13" fill="#E8A0A8" opacity="0.5" transform="rotate(20 32 88)" />
+            <circle cx="25" cy="91" r="4" fill="#D4B060" opacity="0.55" />
+            <path d="M40 65 Q55 55 60 70" stroke="#7AAF7A" stroke-width="2" fill="none" opacity="0.45" />
+            <ellipse cx="48" cy="68" rx="11" ry="4" fill="#A8C5A0" opacity="0.38" transform="rotate(10 48 68)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Pink Lily</div>
+        </div>
+
+        <div class="t-swatch t-4" id="ts-4" onclick="applyTheme('bouquet','Bouquet','#7B5EA7')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <circle cx="55" cy="35" r="12" fill="none" stroke="#8B6BAE" stroke-width="1.5" opacity="0.4" />
+            <circle cx="55" cy="35" r="8" fill="none" stroke="#C4A8D4" stroke-width="1.5" opacity="0.5" />
+            <circle cx="55" cy="35" r="4" fill="#8B6BAE" opacity="0.55" />
+            <ellipse cx="55" cy="21" rx="4" ry="8" fill="#E8D5F0" opacity="0.6" />
+            <ellipse cx="66" cy="26" rx="4" ry="8" fill="#C4A8D4" opacity="0.55" transform="rotate(51 66 26)" />
+            <ellipse cx="69" cy="38" rx="4" ry="8" fill="#E8D5F0" opacity="0.55" transform="rotate(102 69 38)" />
+            <ellipse cx="62" cy="49" rx="4" ry="8" fill="#C4A8D4" opacity="0.5" transform="rotate(153 62 49)" />
+            <ellipse cx="48" cy="49" rx="4" ry="8" fill="#E8D5F0" opacity="0.5" transform="rotate(204 48 49)" />
+            <ellipse cx="41" cy="38" rx="4" ry="8" fill="#C4A8D4" opacity="0.5" transform="rotate(255 41 38)" />
+            <ellipse cx="44" cy="26" rx="4" ry="8" fill="#E8D5F0" opacity="0.55" transform="rotate(306 44 26)" />
+            <circle cx="18" cy="90" r="4" fill="#C4717A" opacity="0.5" />
+            <ellipse cx="18" cy="81" rx="4" ry="7" fill="#F5D8DC" opacity="0.5" />
+            <ellipse cx="26" cy="87" rx="4" ry="7" fill="#E8A0A8" opacity="0.45" transform="rotate(60 26 87)" />
+            <ellipse cx="26" cy="97" rx="4" ry="7" fill="#F5D8DC" opacity="0.45" transform="rotate(120 26 97)" />
+            <ellipse cx="40" cy="68" rx="10" ry="4" fill="#7AAF7A" opacity="0.3" transform="rotate(20 40 68)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Bouquet</div>
+        </div>
+
+        <div class="t-swatch t-5" id="ts-5" onclick="applyTheme('enchanted','Enchanted','#B8962E')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <path d="M5 130 Q10 95,5 65 Q0 40,20 20 Q38 5,70 3 Q85 1,98 3" stroke="#B8962E" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" />
+            <rect x="72" y="10" width="10" height="14" rx="3" fill="none" stroke="#D4B060" stroke-width="1.2" opacity="0.55" />
+            <line x1="77" y1="8" x2="77" y2="10" stroke="#D4B060" stroke-width="1.2" opacity="0.55" />
+            <circle cx="77" cy="17" r="2.5" fill="#D4B060" opacity="0.4" />
+            <path d="M58 18 L60 12 L62 18 L68 20 L62 22 L60 28 L58 22 L52 20 Z" fill="#D4B060" opacity="0.5" />
+            <circle cx="30" cy="55" r="3.5" fill="#C4717A" opacity="0.55" />
+            <ellipse cx="30" cy="47" rx="4" ry="7" fill="#F5D8DC" opacity="0.55" />
+            <ellipse cx="38" cy="52" rx="4" ry="7" fill="#E8A0A8" opacity="0.5" transform="rotate(60 38 52)" />
+            <ellipse cx="38" cy="62" rx="4" ry="7" fill="#F5D8DC" opacity="0.5" transform="rotate(120 38 62)" />
+            <ellipse cx="22" cy="62" rx="4" ry="7" fill="#E8A0A8" opacity="0.5" transform="rotate(240 22 62)" />
+            <path d="M10 90 Q22 80,28 95" stroke="#7AAF7A" stroke-width="1.5" fill="none" opacity="0.45" />
+            <path d="M10 90 Q22 95,28 95" stroke="#7AAF7A" stroke-width="1" fill="#D4E8CC" opacity="0.3" />
+            <path d="M20 14 L21 11 L22 14 L25 15 L22 16 L21 19 L20 16 L17 15 Z" fill="#B8962E" opacity="0.4" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Enchanted</div>
+        </div>
+
+        <div class="t-swatch t-6" id="ts-6" onclick="applyTheme('nature','Nature','#4a6b4a')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <circle cx="55" cy="28" r="5" fill="#F5C842" opacity="0.75" />
+            <ellipse cx="55" cy="15" rx="4" ry="9" fill="white" opacity="0.85" />
+            <ellipse cx="66" cy="20" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(51 66 20)" />
+            <ellipse cx="69" cy="32" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(102 69 32)" />
+            <ellipse cx="62" cy="42" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(153 62 42)" />
+            <ellipse cx="48" cy="42" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(204 48 42)" />
+            <ellipse cx="41" cy="32" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(255 41 32)" />
+            <ellipse cx="44" cy="20" rx="4" ry="9" fill="white" opacity="0.8" transform="rotate(306 44 20)" />
+            <path d="M10 75 Q28 55,40 72" stroke="#4a6b4a" stroke-width="2" fill="none" opacity="0.5" />
+            <path d="M10 75 Q30 78,40 72" stroke="#4a6b4a" stroke-width="1" fill="#c8e6c9" opacity="0.35" />
+            <path d="M8 105 Q28 88,38 108" stroke="#6B8F6B" stroke-width="2" fill="none" opacity="0.45" />
+            <path d="M8 105 Q28 110,38 108" stroke="#6B8F6B" stroke-width="1" fill="#D4E8CC" opacity="0.3" />
+            <path d="M62 65 Q72 55,82 65" stroke="#4a6b4a" stroke-width="1.5" fill="none" opacity="0.4" />
+            <path d="M62 65 Q72 70,82 65" stroke="#4a6b4a" stroke-width="1" fill="#c8e6c9" opacity="0.28" />
+            <path d="M22 12 Q26 8,30 12" stroke="#4a6b4a" stroke-width="1" fill="none" opacity="0.4" />
+            <path d="M32 8 Q36 4,40 8" stroke="#4a6b4a" stroke-width="1" fill="none" opacity="0.35" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Nature</div>
+        </div>
+
+        <div class="t-swatch t-7" id="ts-7" onclick="applyTheme('about','About Me','#8B7355')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <rect x="25" y="5" width="50" height="8" rx="2" fill="#D4B060" opacity="0.2" />
+            <path d="M72 12 Q79 5,86 12 Q92 18,86 24 Q79 30,72 24 Q66 18,72 12" stroke="#8B7355" stroke-width="1.5" fill="none" opacity="0.4" />
+            <circle cx="45" cy="40" r="3.5" fill="#C4717A" opacity="0.55" />
+            <ellipse cx="45" cy="32" rx="3.5" ry="6.5" fill="#F5D8DC" opacity="0.6" />
+            <ellipse cx="52" cy="37" rx="3.5" ry="6.5" fill="#E8A0A8" opacity="0.55" transform="rotate(60 52 37)" />
+            <ellipse cx="52" cy="47" rx="3.5" ry="6.5" fill="#F5D8DC" opacity="0.5" transform="rotate(120 52 47)" />
+            <ellipse cx="38" cy="47" rx="3.5" ry="6.5" fill="#E8A0A8" opacity="0.5" transform="rotate(240 38 47)" />
+            <ellipse cx="38" cy="37" rx="3.5" ry="6.5" fill="#F5D8DC" opacity="0.55" transform="rotate(300 38 37)" />
+            <circle cx="18" cy="80" r="7" fill="#D4B060" opacity="0.18" />
+            <circle cx="11" cy="72" r="3.5" fill="#D4B060" opacity="0.15" />
+            <circle cx="19" cy="70" r="3.5" fill="#D4B060" opacity="0.15" />
+            <circle cx="27" cy="72" r="3.5" fill="#D4B060" opacity="0.15" />
+            <path d="M60 70 L62 64 L64 70 L70 72 L64 74 L62 80 L60 74 L54 72 Z" fill="#D4B060" opacity="0.35" />
+            <path d="M18 105 L19 102 L20 105 L23 106 L20 107 L19 110 L18 107 L15 106 Z" fill="#8B7355" opacity="0.3" />
+            <rect x="55" y="8" width="25" height="6" rx="1.5" fill="#ccc" opacity="0.22" transform="rotate(-4 55 8)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">About Me</div>
+        </div>
+
+        <div class="t-swatch t-8" id="ts-8" onclick="applyTheme('welcome','Welcome','#555')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <rect x="30" y="40" width="40" height="32" rx="5" stroke="#888" stroke-width="1.5" fill="none" opacity="0.3" />
+            <circle cx="50" cy="56" r="10" stroke="#888" stroke-width="1.2" fill="none" opacity="0.3" />
+            <circle cx="50" cy="56" r="5" stroke="#aaa" stroke-width="1" fill="none" opacity="0.25" />
+            <rect x="32" y="32" width="10" height="10" rx="2" stroke="#888" stroke-width="1" fill="none" opacity="0.25" />
+            <rect x="28" y="8" width="30" height="7" rx="2" fill="#ccc" opacity="0.2" transform="rotate(-4 28 8)" />
+            <rect x="12" y="105" width="28" height="7" rx="2" fill="#ccc" opacity="0.18" transform="rotate(6 12 105)" />
+            <path d="M15 55 Q18 49,22 55 Q25 60,22 65 Q18 69,15 65 Q12 60,15 55" stroke="#999" stroke-width="1" fill="none" opacity="0.3" />
+            <path d="M72 88 Q74 84,77 88 Q79 91,77 94 Q74 97,72 94 Q70 91,72 88" stroke="#aaa" stroke-width="1" fill="none" opacity="0.28" />
+            <circle cx="75" cy="30" r="4" stroke="#888" stroke-width="1.2" fill="none" opacity="0.3" />
+            <ellipse cx="75" cy="22" rx="3.5" ry="7" stroke="#999" stroke-width="1" fill="none" opacity="0.25" />
+            <ellipse cx="82" cy="27" rx="3.5" ry="7" stroke="#999" stroke-width="1" fill="none" opacity="0.25" transform="rotate(60 82 27)" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Welcome</div>
+        </div>
+
+        <div class="t-swatch t-9" id="ts-9" onclick="applyTheme('rapunzel','Rapunzel','#7B6B8B')">
+          <svg viewBox="0 0 100 130" style="width:100%;height:100%;position:absolute;inset:0;" fill="none">
+            <rect x="68" y="8" width="10" height="16" rx="3" stroke="#D4B060" stroke-width="1.5" fill="none" opacity="0.55" />
+            <line x1="73" y1="6" x2="73" y2="8" stroke="#D4B060" stroke-width="1.5" opacity="0.55" />
+            <circle cx="73" cy="16" r="2.5" fill="#D4B060" opacity="0.45" />
+            <rect x="80" y="28" width="9" height="14" rx="3" stroke="#D4B060" stroke-width="1.2" fill="none" opacity="0.45" />
+            <line x1="84.5" y1="26" x2="84.5" y2="28" stroke="#D4B060" stroke-width="1.2" opacity="0.45" />
+            <path d="M40 20 L42 14 L44 20 L50 22 L44 24 L42 30 L40 24 L34 22 Z" stroke="#8B6BAE" stroke-width="1.2" fill="none" opacity="0.45" />
+            <circle cx="22" cy="65" r="5" fill="#8B6BAE" opacity="0.5" />
+            <ellipse cx="22" cy="54" rx="5" ry="9" fill="#E8D5F0" opacity="0.6" />
+            <ellipse cx="31" cy="59" rx="5" ry="9" fill="#C4A8D4" opacity="0.55" transform="rotate(60 31 59)" />
+            <ellipse cx="31" cy="71" rx="5" ry="9" fill="#E8D5F0" opacity="0.55" transform="rotate(120 31 71)" />
+            <ellipse cx="22" cy="76" rx="5" ry="9" fill="#C4A8D4" opacity="0.55" transform="rotate(180 22 76)" />
+            <ellipse cx="13" cy="71" rx="5" ry="9" fill="#E8D5F0" opacity="0.5" transform="rotate(240 13 71)" />
+            <ellipse cx="13" cy="59" rx="5" ry="9" fill="#C4A8D4" opacity="0.55" transform="rotate(300 13 59)" />
+            <path d="M80 100 Q88 115,83 128" stroke="#D4B060" stroke-width="2" fill="none" opacity="0.3" stroke-linecap="round" />
+            <path d="M10 12 L11 9 L12 12 L15 13 L12 14 L11 17 L10 14 L7 13 Z" fill="#8B6BAE" opacity="0.4" />
+          </svg>
+          <div class="t-check">✦</div>
+          <div class="t-swatch-label">Rapunzel</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── APP LOCK CHECK ──
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('pp_settings') || '{}');
+        if (s.appPw) {
+          var entered = sessionStorage.getItem('pp_session_auth');
+          if (entered !== s.appPw) {
+            var input = prompt('🔒 Enter your PetalPages password:');
+            if (input !== s.appPw) {
+              alert('Incorrect password.');
+              document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#6B5840;">Access denied.</div>';
+              throw new Error('locked');
+            }
+            sessionStorage.setItem('pp_session_auth', s.appPw);
+          }
+        }
+      } catch (e) {}
+    })();
+
+    const STORAGE_KEY = 'petalpages_guest_entries';
+    const THEME_KEY = 'pp_journal_theme';
+    let selectedMood = '', isLocked = false, tags = [], autoSaveTimer = null;
+    let activeTheme = null, savedRange = null, selectedImg = null, lastImgAlign = 'full';
+    const urlParams = new URLSearchParams(window.location.search);
+    const editingId = urlParams.get('id');
+
+    // Hide guest bar if logged in
+    if (localStorage.getItem('pp_user_id')) {
+      document.getElementById('guestBar').style.display = 'none';
+    }
+
+    // ── LOAD / LOCK SCREEN ──
+
+    async function loadEntryForEdit() {
+      if (!editingId) return;
+      const userId = localStorage.getItem('pp_user_id');
+      if (!userId) return;
+      try {
+        const response = await fetch('http://localhost:8080/api/entries/single/' + editingId, {
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('pp_token') }
+        });
+        if (!response.ok) return;
+        const entry = await response.json();
+        document.getElementById('entryTitle').value = entry.title || '';
+        autoResize(document.getElementById('entryTitle'));
+        document.getElementById('entryContent').innerHTML = entry.content || '';
+        if (entry.mood) {
+          document.querySelectorAll('.mood-pill').forEach(function (b) {
+            if (b.textContent.trim() === entry.mood.trim()) { b.classList.add('selected'); selectedMood = entry.mood; }
+          });
+        }
+        if (entry.theme && entry.theme !== 'none' && THEME_CONFIG[entry.theme]) {
+          applyTheme(entry.theme, entry.theme, THEME_CONFIG[entry.theme].accent);
+        }
+        if (entry.tags) {
+          tags = entry.tags.split(',').filter(function (t) { return t.trim().length > 0; });
+          renderTags();
+        }
+        if (entry.locked) {
+          isLocked = true;
+          document.getElementById('lockSwitch').classList.add('on');
+          document.getElementById('lockPwSection').classList.add('show');
+          document.getElementById('lockLabel').textContent = 'entry is locked';
+          document.getElementById('lockSub').textContent = 'password protected ✦';
+          document.getElementById('lockPw').value = entry.lockPassword || '';
+
+          // Require password before showing content
+          showLockScreen(entry.lockPassword || '');
+        }
+        updateWordCount();
+        markSaved();
+      } catch (err) { console.warn('Could not load entry for edit', err); }
+    }
+
+    function showLockScreen(correctPassword) {
+      const overlay = document.createElement('div');
+      overlay.id = 'lockCheckOverlay';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(250,246,238,0.98);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML = `
+        <div style="max-width:340px;width:100%;text-align:center;padding:2rem;">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#D4E8CC,#F5D8DC);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B8F6B" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h2 style="font-family:'DM Serif Display',serif;font-style:italic;font-size:1.4rem;color:#2C2418;margin-bottom:0.5rem;">this entry is <em style="color:#6B8F6B;">locked</em></h2>
+          <p style="font-family:'Lora',serif;font-style:italic;font-size:0.85rem;color:#6B5840;margin-bottom:1.2rem;">enter the password to view it</p>
+          <input type="password" id="lockCheckInput" placeholder="entry password..." style="width:100%;padding:0.8rem 1rem;border-radius:10px;border:1.5px solid rgba(168,197,160,0.3);font-size:0.9rem;font-family:'Instrument Sans',sans-serif;outline:none;margin-bottom:0.5rem;box-sizing:border-box;"/>
+          <p id="lockCheckError" style="font-size:0.75rem;color:#C4717A;margin-bottom:0.8rem;display:none;">incorrect password, try again</p>
+          <button id="lockCheckBtn" style="width:100%;padding:0.85rem;border-radius:10px;background:#2C2418;color:white;border:none;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Instrument Sans',sans-serif;">unlock entry</button>
+          <a href="dashboard.html" style="display:block;margin-top:1rem;font-size:0.78rem;color:#A89880;text-decoration:none;">← back to garden</a>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const checkBtn = document.getElementById('lockCheckBtn');
+      const input = document.getElementById('lockCheckInput');
+      const errorMsg = document.getElementById('lockCheckError');
+
+      function attemptUnlock() {
+        if (input.value === correctPassword) {
+          overlay.remove();
+        } else {
+          errorMsg.style.display = 'block';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      checkBtn.addEventListener('click', attemptUnlock);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') attemptUnlock(); });
+      input.focus();
+    }
+
+    // Theme config
+    const THEME_CONFIG = {
+      'garden':     { decos: ['deco-garden-tl', 'deco-garden-br'], accent: '#5a7a4a' },
+      'floral-ink': { decos: ['deco-floral-tl', 'deco-floral-rv'], accent: '#8B3A6B' },
+      'pink-lily':  { decos: ['deco-lily-tl'],                     accent: '#C4717A' },
+      'bouquet':    { decos: ['deco-bouquet-tl'],                  accent: '#7B5EA7' },
+      'enchanted':  { decos: ['deco-enchanted-tl'],                accent: '#B8962E' },
+      'nature':     { decos: ['deco-nature-tl'],                   accent: '#4a6b4a' },
+      'about':      { decos: ['deco-about-tl'],                    accent: '#8B7355' },
+      'welcome':    { decos: ['deco-welcome-tl'],                  accent: '#555555' },
+      'rapunzel':   { decos: ['deco-rapunzel-tl'],                 accent: '#7B6B8B' },
+    };
+
+    // ── DATE ──
+    const now = new Date();
+    document.getElementById('dateLine').textContent =
+      now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) +
+      ' · ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+    // ── UTILS ──
+
+    function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+
+    function markUnsaved() { document.getElementById('saveDot').className = 'save-dot'; document.getElementById('saveText').textContent = 'unsaved'; }
+    function markSaving() { document.getElementById('saveDot').className = 'save-dot saving'; document.getElementById('saveText').textContent = 'saving...'; }
+    function markSaved() { document.getElementById('saveDot').className = 'save-dot saved'; document.getElementById('saveText').textContent = 'draft saved'; }
+
+    function selectMood(btn, mood) {
+      document.querySelectorAll('.mood-pill').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected'); selectedMood = mood; markUnsaved();
+    }
+
+    function updateWordCount() {
+      const editor = document.getElementById('entryContent');
+      const text = editor.innerText || editor.textContent || '';
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      document.getElementById('wordCount').textContent = words;
+      document.getElementById('charCountDisplay').textContent = text.length;
+      document.getElementById('readTime').textContent = Math.max(1, Math.ceil(words / 200));
+    }
+
+    function autoSave() { clearTimeout(autoSaveTimer); markSaving(); autoSaveTimer = setTimeout(() => saveDraft(true), 2000); }
+
+    // ── TAGS ──
+
+    function handleTagInput(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const val = document.getElementById('tagInput').value.trim().replace(',', '');
+        if (val && !tags.includes(val)) { tags.push(val); renderTags(); }
+        document.getElementById('tagInput').value = '';
+      }
+    }
+
+    function renderTags() {
+      var wrap = document.getElementById('tagsWrap');
+      wrap.innerHTML = '';
+      tags.forEach(function (tag) {
+        var chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.setAttribute('data-tag', tag); // ← robust data-attribute
+        chip.appendChild(document.createTextNode(tag));
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'x';
+        btn.style.cssText = 'background:none;border:none;cursor:pointer;color:inherit;margin-left:2px;font-size:0.75rem;padding:0;line-height:1;';
+        btn.addEventListener('click', function () {
+          var tagToRemove = chip.getAttribute('data-tag'); // ← use data-tag not textContent
+          tags = tags.filter(function (t) { return t !== tagToRemove; });
+          renderTags();
+          markUnsaved();
+        });
+        chip.appendChild(btn);
+        wrap.appendChild(chip);
+      });
+    }
+
+    function removeTag(t) { tags = tags.filter(function (x) { return x !== t; }); renderTags(); }
+
+    // ── LOCK ──
+
+    function toggleLock() {
+      isLocked = !isLocked;
+      document.getElementById('lockSwitch').classList.toggle('on', isLocked);
+      document.getElementById('lockPwSection').classList.toggle('show', isLocked);
+      document.getElementById('lockLabel').textContent = isLocked ? 'entry is locked' : 'lock this entry';
+      document.getElementById('lockSub').textContent = isLocked ? 'password protected ✦' : 'requires a password';
+    }
+
+    // ── FONT ──
+
+    function setFont(btn, font, style) {
+      document.querySelectorAll('.font-option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('entryContent').style.fontFamily = font;
+      document.getElementById('entryContent').style.fontStyle = style;
+    }
+
+    // ── WRITING PROMPTS ──
+
+    const prompts = [
+      '"what is something you have been carrying that you have not told anyone?"',
+      '"describe a moment this week when you felt most like yourself."',
+      '"what would you tell your past self from one year ago?"',
+      '"what are you afraid to want?"',
+      '"write about a small thing that made you feel seen recently."',
+      '"what does your ideal ordinary day look like?"',
+      '"what feeling are you avoiding right now?"',
+      '"if your life were a book, what chapter are you in?"',
+      '"what are you most proud of that you never say out loud?"',
+      '"describe the last time you laughed until it hurt."',
+    ];
+    let promptIdx = 0;
+    function refreshPrompt() { promptIdx = (promptIdx + 1) % prompts.length; document.getElementById('promptText').textContent = prompts[promptIdx]; }
+
+    // ── GET EDITOR DATA ──
+
+    function getEditorHTML() { return document.getElementById('entryContent').innerHTML; }
+    function getEditorText() { return document.getElementById('entryContent').innerText || ''; }
+
+    // ── SAVE DRAFT ──
+
+    function saveDraft(silent) {
+      const title = document.getElementById('entryTitle').value.trim();
+      const content = getEditorHTML();
+      const text = getEditorText().trim();
+      if (!text && !title) { markSaved(); return; }
+      const entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const di = entries.findIndex(e => e.isDraft && !e.published);
+      const draft = {
+        id: di >= 0 ? entries[di].id : Date.now(),
+        title: title || 'untitled draft', content, mood: selectedMood, tags,
+        locked: isLocked, lockPw: isLocked ? document.getElementById('lockPw').value : '',
+        date: now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        time: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        isDraft: true, published: false,
+      };
+      if (di >= 0) entries[di] = draft; else entries.unshift(draft);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      markSaved();
+    }
+
+    // ── PUBLISH ──
+
+    async function publishEntry() {
+      const title = document.getElementById('entryTitle').value.trim();
+      const text = getEditorText().trim();
+      if (!text) {
+        document.getElementById('entryContent').setAttribute('data-placeholder', 'your entry needs some words first... ✦');
+        document.getElementById('entryContent').focus();
+        return;
+      }
+
+      const userId = localStorage.getItem('pp_user_id');
+
+      if (userId) {
+        try {
+          const url = editingId
+            ? 'http://localhost:8080/api/entries/single/' + editingId
+            : 'http://localhost:8080/api/entries/' + userId;
+          const method = editingId ? 'PUT' : 'POST';
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('pp_token')
+            },
+            body: JSON.stringify({
+              title: title || 'untitled entry',
+              content: getEditorHTML(),
+              mood: selectedMood,
+              theme: activeTheme || 'none',
+              tags: tags.join(','),
+              locked: isLocked,
+              lockPassword: isLocked ? document.getElementById('lockPw').value : ''
+            })
+          });
+          if (!response.ok) throw new Error('Save failed');
+          launchPetals();
+          document.getElementById('successOverlay').classList.add('show');
+        } catch (err) {
+          alert('Could not save to server. Make sure the backend is running.');
+        }
+        return;
+      }
+
+      // Guest — same as before, localStorage only
+      const entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const di = entries.findIndex(e => e.isDraft && !e.published);
+      const entry = {
+        id: di >= 0 ? entries[di].id : Date.now(),
+        title: title || 'untitled entry', content: getEditorHTML(), mood: selectedMood, tags,
+        locked: isLocked, lockPw: isLocked ? document.getElementById('lockPw').value : '',
+        date: now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        time: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        isDraft: false, published: true,
+      };
+      if (di >= 0) entries[di] = entry; else entries.unshift(entry);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      launchPetals();
+      document.getElementById('successOverlay').classList.add('show');
+    }
+
+    function writeAnother() {
+      document.getElementById('successOverlay').classList.remove('show');
+      document.getElementById('entryTitle').value = '';
+      document.getElementById('entryContent').innerHTML = '';
+      document.getElementById('entryTitle').style.height = 'auto';
+      selectedMood = ''; tags = []; renderTags(); isLocked = false;
+      document.getElementById('lockSwitch').classList.remove('on');
+      document.getElementById('lockPwSection').classList.remove('show');
+      document.querySelectorAll('.mood-pill').forEach(b => b.classList.remove('selected'));
+      updateWordCount(); markUnsaved();
+      document.getElementById('entryTitle').focus();
+    }
+
+    // ── PETALS CONFETTI ──
+
+    function launchPetals() {
+      const colors = ['#A8C5A0', '#C4717A', '#D4B060', '#E8A0A8', '#6B8F6B', '#D4E8CC'];
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        const size = 8 + Math.random() * 10;
+        p.style.cssText = 'position:fixed;left:' + (10 + Math.random() * 80) + '%;top:-20px;width:' + size + 'px;height:' + (size * 1.4) + 'px;background:' + colors[Math.floor(Math.random() * colors.length)] + ';border-radius:60% 40% 60% 40%/50% 60% 40% 50%;opacity:0.75;pointer-events:none;z-index:999;animation:pf ' + (1.5 + Math.random() * 2) + 's ease-in ' + (Math.random() * 0.6) + 's both;';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 4000);
+      }
+    }
+    const ps = document.createElement('style');
+    ps.textContent = '@keyframes pf{0%{transform:translateY(-20px) rotate(0deg);opacity:0.75;}100%{transform:translateY(100vh) rotate(500deg) translateX(40px);opacity:0;}}';
+    document.head.appendChild(ps);
+
+    // ══ THEME SYSTEM ══
+
+    function openThemeModal() { document.getElementById('themeModalBackdrop').classList.add('open'); }
+    function closeThemeModal() { document.getElementById('themeModalBackdrop').classList.remove('open'); }
+    function handleBackdropClick(e) { if (e.target.id === 'themeModalBackdrop') closeThemeModal(); }
+
+    function applyTheme(themeId, name, accent) {
+      activeTheme = themeId;
+      closeThemeModal();
+      const jp = document.getElementById('journalPage');
+      jp.className = 'journal-page theme-' + themeId;
+      jp.style.backgroundImage = '';
+      document.querySelectorAll('.floral-deco').forEach(d => d.classList.remove('visible'));
+      const config = THEME_CONFIG[themeId];
+      if (config) config.decos.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('visible'); });
+      document.getElementById('themeSwatch').style.background = accent;
+      document.getElementById('themeSwatch').style.border = '1.5px solid ' + accent;
+      document.querySelectorAll('.t-swatch').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.t-swatch').forEach(t => {
+        const oc = t.getAttribute('onclick') || '';
+        if (oc.includes("'" + themeId + "'")) t.classList.add('active');
+      });
+      document.getElementById('tNone').classList.remove('active-none');
+      localStorage.setItem(THEME_KEY, JSON.stringify({ themeId, name, accent }));
+      showToast('✦ ' + name);
+    }
+
+    function clearTheme() {
+      activeTheme = null; closeThemeModal();
+      const jp = document.getElementById('journalPage');
+      jp.className = 'journal-page theme-none'; jp.style.backgroundImage = '';
+      document.querySelectorAll('.floral-deco').forEach(d => d.classList.remove('visible'));
+      document.getElementById('themeSwatch').style.background = '';
+      document.getElementById('themeSwatch').style.border = '';
+      document.querySelectorAll('.t-swatch').forEach(t => t.classList.remove('active'));
+      document.getElementById('tNone').classList.add('active-none');
+      localStorage.removeItem(THEME_KEY);
+      showToast('back to clean page');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('ppToast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ── CUSTOM BACKGROUND PHOTO ──
+
+    function applyCustomBg(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const url = e.target.result;
+        const jp = document.getElementById('journalPage');
+        jp.className = 'journal-page theme-custom-bg';
+        jp.style.backgroundImage = 'url(' + JSON.stringify(url) + ')';
+        document.querySelectorAll('.floral-deco').forEach(d => d.classList.remove('visible'));
+        document.getElementById('themeSwatch').style.background = 'linear-gradient(135deg,#fce4ec,#f3e5f5)';
+        document.getElementById('themeSwatch').style.border = '1.5px solid #C4A8D4';
+        document.querySelectorAll('.t-swatch').forEach(t => t.classList.remove('active'));
+        document.getElementById('ts-custom').classList.add('active');
+        document.getElementById('tNone').classList.remove('active-none');
+        localStorage.setItem(THEME_KEY, JSON.stringify({ themeId: 'custom', name: 'Custom', accent: '#8B6BAE', bgUrl: url }));
+        showToast('✦ your photo applied');
+        closeThemeModal();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    // ── INLINE IMAGE INSERT ──
+
+    function setAlign(align) {
+      lastImgAlign = align;
+      document.querySelectorAll('.align-btn').forEach(b => {
+        b.classList.remove('selected-align');
+        if (b.dataset.align === align) b.classList.add('selected-align');
+      });
+    }
+
+    function saveCursor() {
+      const editor = document.getElementById('entryContent');
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0 && editor.contains(sel.anchorNode)) {
+        savedRange = sel.getRangeAt(0).cloneRange();
+      } else {
+        savedRange = null;
+      }
+    }
+
+    function insertInlineImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const editor = document.getElementById('entryContent');
+
+        // Build img element
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'journal image';
+        img.style.borderRadius = '10px';
+        img.style.display = 'block';
+        img.style.margin = '0.8rem auto';
+        img.style.boxShadow = '0 4px 16px rgba(44,36,24,0.12)';
+        img.style.cursor = 'pointer';
+        img.style.maxWidth = '100%';
+
+        // Alignment
+        if (lastImgAlign === 'left') {
+          img.style.float = 'left';
+          img.style.margin = '0.5rem 1rem 0.5rem 0';
+          img.style.maxWidth = '42%';
+        } else if (lastImgAlign === 'right') {
+          img.style.float = 'right';
+          img.style.margin = '0.5rem 0 0.5rem 1rem';
+          img.style.maxWidth = '42%';
+        }
+
+        // Click to show popup
+        img.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          selectedImg = this;
+          showImgPopup(ev.clientX, ev.clientY);
+        });
+
+        // Insert into editor
+        if (savedRange) {
+          try {
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+            savedRange.collapse(false);
+            // Insert line break then image
+            const frag = document.createDocumentFragment();
+            frag.appendChild(document.createElement('br'));
+            frag.appendChild(img);
+            frag.appendChild(document.createElement('br'));
+            savedRange.insertNode(frag);
+            // Move cursor after
+            const newRange = document.createRange();
+            newRange.setStartAfter(img.nextSibling || img);
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+            savedRange = null;
+          } catch (err) {
+            console.warn('Range insert failed, appending:', err);
+            appendImg(editor, img);
+          }
+        } else {
+          appendImg(editor, img);
+        }
+
+        img.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        updateWordCount(); markUnsaved();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function appendImg(editor, img) {
+      editor.appendChild(document.createElement('br'));
+      editor.appendChild(img);
+      editor.appendChild(document.createElement('br'));
+    }
+
+    // ── IMAGE POPUP ──
+
+    function showImgPopup(x, y) {
+      const popup = document.getElementById('imgSizePopup');
+      popup.classList.add('show');
+      const px = Math.min(x, window.innerWidth - 165);
+      const py = Math.min(y + 8, window.innerHeight - 210);
+      popup.style.left = px + 'px';
+      popup.style.top = py + 'px';
+    }
+    function hideImgPopup() { document.getElementById('imgSizePopup').classList.remove('show'); selectedImg = null; }
+    function resizeImg(size) {
+      if (!selectedImg) return;
+      selectedImg.style.float = ''; selectedImg.style.maxWidth = size;
+      selectedImg.style.display = 'block'; selectedImg.style.margin = '0.8rem auto';
+      hideImgPopup();
+    }
+    function floatImg(dir) {
+      if (!selectedImg) return;
+      selectedImg.style.float = dir; selectedImg.style.maxWidth = '42%';
+      selectedImg.style.margin = dir === 'left' ? '0.5rem 1rem 0.5rem 0' : '0.5rem 0 0.5rem 1rem';
+      hideImgPopup();
+    }
+    function removeImg() {
+      if (!selectedImg) return;
+      selectedImg.remove(); selectedImg = null; hideImgPopup(); updateWordCount(); markUnsaved();
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#imgSizePopup') && !e.target.closest('.rich-editor')) hideImgPopup();
+    });
+
+    // ── RESTORE SAVED THEME ──
+
+    window.addEventListener('load', function () {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (!saved) return;
+      try {
+        const s = JSON.parse(saved);
+        if (s.themeId === 'custom' && s.bgUrl) {
+          const jp = document.getElementById('journalPage');
+          jp.className = 'journal-page theme-custom-bg';
+          jp.style.backgroundImage = 'url(' + JSON.stringify(s.bgUrl) + ')';
+          document.getElementById('themeSwatch').style.background = 'linear-gradient(135deg,#fce4ec,#f3e5f5)';
+          document.getElementById('ts-custom').classList.add('active');
+        } else if (s.themeId) {
+          applyTheme(s.themeId, s.name, s.accent);
+        }
+      } catch (e) { console.warn('Theme restore failed:', e); }
+    });
+
+    // ── INIT ──
+    updateWordCount();
+    document.getElementById('entryTitle').focus();
+    loadEntryForEdit();
+
+    // ══ DRAW BACKGROUND ══
+    var drawCanvas, drawCtx;
+    var isDrawing = false;
+    var drawTool = 'brush';
+    var drawColor = '#A8C5A0';
+    var drawSize = 3;
+    var drawOpacity = 0.6;
+    var drawHistory = []
+    var lastX = 0, lastY = 0;
+    var shapeStartX = 0, shapeStartY = 0;
+    var shapeSnapshotCanvas = document.createElement('canvas');
+
+    function openDrawModal() {
+      document.getElementById('drawModalBackdrop').classList.add('open');
+      if (!drawCanvas) {
+        drawCanvas = document.getElementById('drawCanvas');
+        drawCtx = drawCanvas.getContext('2d');
+        resizeDrawCanvas();
+        window.addEventListener('resize', resizeDrawCanvas);
+        initDrawEvents();
+      }
+    }
+    function closeDrawModal() { document.getElementById('drawModalBackdrop').classList.remove('open'); }
+    function handleDrawBackdrop(e) { if (e.target.id === 'drawModalBackdrop') closeDrawModal(); }
+
+    function resizeDrawCanvas() {
+      var wrap = drawCanvas.parentElement;
+      var W = wrap.offsetWidth;
+      var H = Math.min(350, window.innerHeight * 0.4);
+      // Save existing
+      var img = drawCanvas.toDataURL();
+      drawCanvas.width = W;
+      drawCanvas.height = H;
+      drawCanvas.style.height = H + 'px';
+      // Restore
+      var i = new Image();
+      i.onload = function () { drawCtx.drawImage(i, 0, 0); };
+      i.src = img;
+    }
+
+    function initDrawEvents() {
+      // Mouse
+      drawCanvas.addEventListener('mousedown', function (e) { startDraw(e.offsetX, e.offsetY); });
+      drawCanvas.addEventListener('mousemove', function (e) { if (isDrawing) draw(e.offsetX, e.offsetY); });
+      drawCanvas.addEventListener('mouseup', stopDraw);
+      drawCanvas.addEventListener('mouseleave', stopDraw);
+      // Touch
+      drawCanvas.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        var r = drawCanvas.getBoundingClientRect();
+        var t = e.touches[0];
+        startDraw(t.clientX - r.left, t.clientY - r.top);
+      }, { passive: false });
+      drawCanvas.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+        if (!isDrawing) return;
+        var r = drawCanvas.getBoundingClientRect();
+        var t = e.touches[0];
+        draw(t.clientX - r.left, t.clientY - r.top);
+      }, { passive: false });
+      drawCanvas.addEventListener('touchend', stopDraw);
+    }
+
+    function startDraw(x, y) {
+      isDrawing = true;
+      lastX = x; lastY = y;
+      // Save state for undo
+      drawHistory.push(drawCanvas.toDataURL());
+      if (drawHistory.length > 20) drawHistory.shift();
+
+      if (drawTool === 'rect' || drawTool === 'circle' || drawTool === 'line') {
+        shapeStartX = x; shapeStartY = y;
+        shapeSnapshotCanvas.width = drawCanvas.width;
+        shapeSnapshotCanvas.height = drawCanvas.height;
+        shapeSnapshotCanvas.getContext('2d').drawImage(drawCanvas, 0, 0);
+      } else {
+        // Dot on click (brush/eraser)
+        drawDot(x, y);
+      }
+    }
+
+    function drawDot(x, y) {
+      drawCtx.globalAlpha = drawOpacity;
+      drawCtx.globalCompositeOperation = 'source-over';
+      drawCtx.fillStyle = drawColor;
+      drawCtx.beginPath();
+      drawCtx.arc(x, y, drawSize / 2, 0, Math.PI * 2);
+      drawCtx.fill();
+    }
+
+    function draw(x, y) {
+      if (!isDrawing) return;
+
+      if (drawTool === 'rect' || drawTool === 'circle' || drawTool === 'line') {
+        // Redraw the snapshot, then preview the shape on top
+        drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        drawCtx.drawImage(shapeSnapshotCanvas, 0, 0);
+        drawCtx.globalAlpha = drawOpacity;
+        drawCtx.globalCompositeOperation = 'source-over';
+        drawCtx.strokeStyle = drawColor;
+        drawCtx.lineWidth = drawSize;
+        drawCtx.lineCap = 'round';
+        drawCtx.lineJoin = 'round';
+
+        if (drawTool === 'rect') {
+          drawCtx.strokeRect(shapeStartX, shapeStartY, x - shapeStartX, y - shapeStartY);
+        } else if (drawTool === 'circle') {
+          var rx = Math.abs(x - shapeStartX) / 2;
+          var ry = Math.abs(y - shapeStartY) / 2;
+          var cx = (x + shapeStartX) / 2;
+          var cy = (y + shapeStartY) / 2;
+          drawCtx.beginPath();
+          drawCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+          drawCtx.stroke();
+        } else if (drawTool === 'line') {
+          drawCtx.beginPath();
+          drawCtx.moveTo(shapeStartX, shapeStartY);
+          drawCtx.lineTo(x, y);
+          drawCtx.stroke();
+        }
+        lastX = x; lastY = y;
+        return;
+      }
+
+      drawCtx.globalAlpha = drawOpacity;
+      if (drawTool === 'eraser') {
+        drawCtx.globalCompositeOperation = 'destination-out';
+        drawCtx.globalAlpha = 1;
+      } else {
+        drawCtx.globalCompositeOperation = 'source-over';
+      }
+      drawCtx.strokeStyle = drawColor;
+      drawCtx.lineWidth = drawSize;
+      drawCtx.lineCap = 'round';
+      drawCtx.lineJoin = 'round';
+      drawCtx.beginPath();
+      drawCtx.moveTo(lastX, lastY);
+      drawCtx.lineTo(x, y);
+      drawCtx.stroke();
+      lastX = x; lastY = y;
+    }
+
+    function stopDraw() { isDrawing = false; drawCtx.globalAlpha = 1; drawCtx.globalCompositeOperation = 'source-over'; }
+
+    function setDrawTool(tool) {
+      drawTool = tool;
+      document.querySelectorAll('.draw-tool-btn').forEach(function (b) { b.classList.remove('active'); });
+      var idMap = { brush: 'toolBrush', eraser: 'toolEraser' };
+      if (idMap[tool]) document.getElementById(idMap[tool]).classList.add('active');
+      drawCanvas.style.cursor = tool === 'eraser' ? 'cell' : 'crosshair';
+    }
+
+    function setShapeTool(btn, tool) {
+      drawTool = tool;
+      document.querySelectorAll('.draw-tool-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      drawCanvas.style.cursor = 'crosshair';
+    }
+
+    function setDrawColor(swatch, color) {
+      drawColor = color; drawTool = 'brush';
+      document.querySelectorAll('.draw-color-swatch').forEach(function (s) { s.classList.remove('active'); });
+      swatch.classList.add('active');
+      setDrawTool('brush');
+    }
+    function setDrawColorHex(color) { drawColor = color; drawTool = 'brush'; }
+
+    function setDrawSize(btn, size) {
+      drawSize = size;
+      document.querySelectorAll('.draw-size-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    var currentCanvasBg = '#FAF6EE';
+
+    function setCanvasBg(color) {
+      currentCanvasBg = color;
+      if (drawCanvas) drawCanvas.parentElement.style.background = color;
+    }
+
+    function stampPetals() {
+      var petals = ['🌸', '🌺', '🌻', '🪷', '💐'];
+      for (var i = 0; i < 12; i++) {
+        var x = Math.random() * drawCanvas.width;
+        var y = Math.random() * drawCanvas.height;
+        drawCtx.font = (20 + Math.random() * 20) + 'px serif';
+        drawCtx.globalAlpha = 0.5 + Math.random() * 0.5;
+        drawCtx.fillText(petals[Math.floor(Math.random() * petals.length)], x, y);
+      }
+      drawCtx.globalAlpha = 1;
+      showToast('🌸 petals stamped!');
+    }
+
+    function stampStars() {
+      var stars = ['✦', '★', '✧', '⭐', '💫'];
+      for (var i = 0; i < 15; i++) {
+        var x = Math.random() * drawCanvas.width;
+        var y = Math.random() * drawCanvas.height;
+        drawCtx.font = (12 + Math.random() * 16) + 'px serif';
+        drawCtx.fillStyle = '#D4B060';
+        drawCtx.globalAlpha = 0.4 + Math.random() * 0.5;
+        drawCtx.fillText(stars[Math.floor(Math.random() * stars.length)], x, y);
+      }
+      drawCtx.globalAlpha = 1;
+      showToast('✦ stars scattered!');
+    }
+
+    function clearDrawCanvas() {
+      drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+      drawHistory = [];
+    }
+
+    function undoDrawing() {
+      if (drawHistory.length === 0) { showToast('nothing to undo'); return; }
+      var prev = drawHistory.pop();
+      var i = new Image();
+      i.onload = function () { drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); drawCtx.drawImage(i, 0, 0); };
+      i.src = prev;
+    }
+
+    function applyDrawingAsBg() {
+      // Composite: paint the chosen background color first, then your strokes on top
+      var composite = document.createElement('canvas');
+      composite.width = drawCanvas.width;
+      composite.height = drawCanvas.height;
+      var cctx = composite.getContext('2d');
+      cctx.fillStyle = currentCanvasBg;
+      cctx.fillRect(0, 0, composite.width, composite.height);
+      cctx.drawImage(drawCanvas, 0, 0);
+
+      var dataUrl = composite.toDataURL('image/png');
+      var jp = document.getElementById('journalPage');
+      jp.style.backgroundImage = "url('" + dataUrl + "')";
+      jp.style.backgroundSize = 'cover';
+      jp.style.backgroundPosition = 'center';
+      jp.classList.add('themed');
+      document.getElementById('themeSwatch').style.background = 'linear-gradient(135deg,#A8C5A0,#C4717A)';
+      closeDrawModal();
+      showToast('🎨 drawing applied as background!');
+      localStorage.setItem('pp_drawn_bg', dataUrl);
+    }
+
+    // Restore drawn bg on load
+    (function () {
+      var saved = localStorage.getItem('pp_drawn_bg');
+      if (saved) {
+        var jp = document.getElementById('journalPage');
+        jp.style.backgroundImage = "url('" + saved + "')";
+        jp.style.backgroundSize = 'cover';
+        jp.style.backgroundPosition = 'center';
+        jp.classList.add('themed');
+      }
+    })();
+
+    // ══ SHARE ══
+
+    function openShareModal() {
+      var title = document.getElementById('entryTitle').value || 'untitled entry';
+      var content = document.getElementById('entryContent').innerText || '';
+      var date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('sharePreviewTitle').textContent = title;
+      document.getElementById('sharePreviewText').textContent = content.substring(0, 200) + (content.length > 200 ? '...' : '');
+      document.getElementById('sharePreviewMeta').textContent = date + ' · PetalPages ✦';
+      document.getElementById('shareLinkInput').value = 'petalpages.app/share/' + Date.now().toString(36);
+      document.getElementById('shareModalBackdrop').classList.add('open');
+    }
+    function closeShareModal() { document.getElementById('shareModalBackdrop').classList.remove('open'); }
+    function handleShareBackdrop(e) { if (e.target.id === 'shareModalBackdrop') closeShareModal(); }
+
+    function shareWhatsApp() {
+      var title = document.getElementById('entryTitle').value || 'my journal entry';
+      var content = document.getElementById('entryContent').innerText || '';
+      var date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      var text = '🌸 *' + title + '*\n\n' + content.substring(0, 500) + (content.length > 500 ? '...' : '') + '\n\n_' + date + ' · written on PetalPages_';
+      var url = 'https://wa.me/?text=' + encodeURIComponent(text);
+      window.open(url, '_blank');
+      closeShareModal();
+    }
+
+    function shareAsText() {
+      var title = document.getElementById('entryTitle').value || 'untitled entry';
+      var content = document.getElementById('entryContent').innerText || '';
+      var date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      var text = title + '\n\n' + content + '\n\n— ' + date + ' · PetalPages';
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('📋 copied to clipboard!');
+        closeShareModal();
+      }).catch(function () {
+        showToast('could not copy — try selecting text manually');
+      });
+    }
+
+    function shareAsImage() {
+      var title = document.getElementById('entryTitle').value || 'untitled entry';
+      var content = document.getElementById('entryContent').innerText || '';
+      var date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      // Create a beautiful share card canvas
+      var c = document.createElement('canvas');
+      c.width = 800; c.height = 500;
+      var ctx = c.getContext('2d');
+
+      // Background gradient
+      var grad = ctx.createLinearGradient(0, 0, 800, 500);
+      grad.addColorStop(0, '#FAF6EE');
+      grad.addColorStop(1, '#F0EAD8');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 800, 500);
+
+      // Decorative border
+      ctx.strokeStyle = 'rgba(168,197,160,0.4)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(20, 20, 760, 460);
+
+      // Inner border
+      ctx.strokeStyle = 'rgba(196,113,122,0.15)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(28, 28, 744, 444);
+
+      // PetalPages watermark top
+      ctx.fillStyle = '#6B8F6B';
+      ctx.font = 'italic 18px Georgia, serif';
+      ctx.fillText('PetalPages', 40, 60);
+
+      // Decorative dots
+      ctx.fillStyle = '#C4717A';
+      [700, 720, 740, 760].forEach(function (x) { ctx.beginPath(); ctx.arc(x, 50, 3, 0, Math.PI * 2); ctx.fill(); });
+
+      // Divider line
+      ctx.strokeStyle = 'rgba(168,197,160,0.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(40, 75); ctx.lineTo(760, 75); ctx.stroke();
+
+      // Title
+      ctx.fillStyle = '#2C2418';
+      ctx.font = 'italic bold 28px Georgia, serif';
+      ctx.fillText(title.substring(0, 50), 40, 120);
+
+      // Content — word wrap
+      ctx.fillStyle = '#6B5840';
+      ctx.font = 'italic 16px Georgia, serif';
+      var words = content.split(' ');
+      var line = '', y = 165, maxWidth = 720, lineH = 28;
+      for (var n = 0; n < words.length; n++) {
+        var test = line + words[n] + ' ';
+        if (ctx.measureText(test).width > maxWidth && n > 0) {
+          ctx.fillText(line, 40, y);
+          line = words[n] + ' ';
+          y += lineH;
+          if (y > 390) { ctx.fillText('...', 40, y); break; }
+        } else { line = test; }
+      }
+      if (y <= 390) ctx.fillText(line, 40, y);
+
+      // Bottom divider
+      ctx.strokeStyle = 'rgba(168,197,160,0.3)';
+      ctx.beginPath(); ctx.moveTo(40, 420); ctx.lineTo(760, 420); ctx.stroke();
+
+      // Date + branding
+      ctx.fillStyle = '#A89880';
+      ctx.font = '13px Arial, sans-serif';
+      ctx.fillText(date, 40, 450);
+      ctx.fillText('written privately on PetalPages 🌸', 400, 450);
+
+      // Download
+      var link = document.createElement('a');
+      link.download = 'petalpages-entry-' + Date.now() + '.png';
+      link.href = c.toDataURL('image/png');
+      link.click();
+      showToast('🖼️ image saved!');
+      closeShareModal();
+    }
+
+    function copyShareLink() {
+      var link = document.getElementById('shareLinkInput').value;
+      navigator.clipboard.writeText(link).then(function () {
+        document.getElementById('shareLinkInput').style.borderColor = 'var(--sage)';
+        showToast('✦ link copied!');
+        setTimeout(function () { document.getElementById('shareLinkInput').style.borderColor = ''; }, 2000);
+      }).catch(function () { showToast('could not copy link'); });
+    }
+
+    function removeDrawnBg() {
+      localStorage.removeItem('pp_drawn_bg');
+      var jp = document.getElementById('journalPage');
+      jp.style.backgroundImage = '';
+      jp.classList.remove('themed');
+      showToast('background removed');
+    }
+  </script>
+
+  <!-- ══ DRAW BACKGROUND MODAL ══ -->
+  <div class="draw-modal-backdrop" id="drawModalBackdrop" onclick="handleDrawBackdrop(event)">
+    <div class="draw-modal">
+      <div class="draw-modal-top">
+        <p class="draw-modal-title">draw your <em>background</em></p>
+        <button class="draw-close" onclick="closeDrawModal()">✕</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="draw-toolbar">
+        <!-- Tools -->
+        <button class="draw-tool-btn active" id="toolBrush" onclick="setDrawTool('brush')" title="Brush">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
+        </button>
+        <button class="draw-tool-btn" id="toolEraser" onclick="setDrawTool('eraser')" title="Eraser">
+          <svg viewBox="0 0 24 24"><path d="M20 20H7L3 16l11-11 6 6z" /><path d="M6.0253 10.0002L14 18" /></svg>
+        </button>
+        <button class="draw-tool-btn" id="toolPetal" onclick="stampPetals()" title="Stamp petals">🌸</button>
+        <button class="draw-tool-btn" id="toolStar" onclick="stampStars()" title="Stamp stars">✦</button>
+        <div class="draw-sep"></div>
+        <button class="draw-tool-btn" id="toolRect" onclick="setShapeTool(this,'rect')" title="Rectangle">
+          <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1" /></svg>
+        </button>
+        <button class="draw-tool-btn" id="toolCircle" onclick="setShapeTool(this,'circle')" title="Circle">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>
+        </button>
+        <button class="draw-tool-btn" id="toolLine" onclick="setShapeTool(this,'line')" title="Line">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="19" x2="19" y2="5" /></svg>
+        </button>
+        <div class="draw-sep"></div>
+        <!-- Colors -->
+        <div class="draw-color-row" id="drawColorRow">
+          <div class="draw-color-swatch active" style="background:#A8C5A0;" onclick="setDrawColor(this,'#A8C5A0')"></div>
+          <div class="draw-color-swatch" style="background:#C4717A;" onclick="setDrawColor(this,'#C4717A')"></div>
+          <div class="draw-color-swatch" style="background:#D4B060;" onclick="setDrawColor(this,'#D4B060')"></div>
+          <div class="draw-color-swatch" style="background:#8B6BAE;" onclick="setDrawColor(this,'#8B6BAE')"></div>
+          <div class="draw-color-swatch" style="background:#E8A0A8;" onclick="setDrawColor(this,'#E8A0A8')"></div>
+          <div class="draw-color-swatch" style="background:#2C2418;" onclick="setDrawColor(this,'#2C2418')"></div>
+          <div class="draw-color-swatch" style="background:#FAF6EE;border:1.5px solid #ddd;" onclick="setDrawColor(this,'#FAF6EE')"></div>
+          <input type="color" value="#A8C5A0" id="drawColorPicker" style="width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;padding:0;" onchange="setDrawColorHex(this.value)" title="Custom color" />
+        </div>
+        <div class="draw-sep"></div>
+        <!-- Size -->
+        <div class="draw-size-row">
+          <button class="draw-size-btn active" style="width:20px;height:20px;" id="sizeS" onclick="setDrawSize(this,3)"><div style="width:4px;height:4px;border-radius:50%;background:var(--text-mid);"></div></button>
+          <button class="draw-size-btn" style="width:24px;height:24px;" id="sizeM" onclick="setDrawSize(this,8)"><div style="width:8px;height:8px;border-radius:50%;background:var(--text-mid);"></div></button>
+          <button class="draw-size-btn" style="width:28px;height:28px;" id="sizeL" onclick="setDrawSize(this,14)"><div style="width:14px;height:14px;border-radius:50%;background:var(--text-mid);"></div></button>
+          <button class="draw-size-btn" style="width:32px;height:32px;" id="sizeXL" onclick="setDrawSize(this,22)"><div style="width:20px;height:20px;border-radius:50%;background:var(--text-mid);"></div></button>
+        </div>
+        <div class="draw-sep"></div>
+        <!-- Opacity -->
+        <input type="range" min="10" max="100" value="60" id="drawOpacity" style="width:70px;accent-color:var(--sage);" oninput="drawOpacity=this.value/100" title="Opacity" />
+      </div>
+
+      <!-- BG presets -->
+      <div class="draw-bg-row">
+        <span style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);">canvas:</span>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#FAF6EE')">🤍 cream</button>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#D4E8CC')">🌿 sage</button>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#F5D8DC')">🌸 blush</button>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#EDE0F5')">🌙 lavender</button>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#F5ECC8')">✨ gold</button>
+        <button class="draw-bg-preset" onclick="setCanvasBg('#1A1A2E')">🖤 midnight</button>
+      </div>
+
+      <!-- Canvas -->
+      <div class="draw-canvas-wrap">
+        <canvas id="drawCanvas"></canvas>
+      </div>
+
+      <!-- Actions -->
+      <div class="draw-actions">
+        <div class="draw-actions-left">
+          <button class="btn-draw-clear" onclick="clearDrawCanvas()">clear canvas</button>
+          <button class="btn-draw-clear" onclick="removeDrawnBg()">remove journal background</button>
+          <button class="draw-tool-btn" onclick="undoDrawing()" title="Undo" style="width:auto;padding:0.5rem 0.8rem;gap:0.35rem;display:flex;font-size:0.72rem;color:var(--text-mid);font-family:'Instrument Sans',sans-serif;letter-spacing:0.08em;text-transform:uppercase;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 14 4 9 9 4" /><path d="M20 20v-7a4 4 0 0 0-4-4H4" /></svg>
+            undo
+          </button>
+        </div>
+        <button class="btn-draw-apply" onclick="applyDrawingAsBg()">apply as background ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SHARE MODAL ══ -->
+  <div class="share-modal-backdrop" id="shareModalBackdrop" onclick="handleShareBackdrop(event)">
+    <div class="share-modal">
+      <div class="share-modal-top">
+        <p class="share-modal-title">share your <em>entry</em></p>
+        <button class="draw-close" onclick="closeShareModal()">✕</button>
+      </div>
+
+      <!-- Preview -->
+      <div class="share-preview">
+        <p class="share-preview-title" id="sharePreviewTitle">untitled entry</p>
+        <p class="share-preview-text" id="sharePreviewText">your entry content will appear here...</p>
+        <p class="share-preview-meta" id="sharePreviewMeta">✦ PetalPages</p>
+      </div>
+
+      <!-- Share options -->
+      <div class="share-options">
+        <button class="share-opt-btn" onclick="shareWhatsApp()">
+          <div class="share-opt-icon" style="background:#e8f5e9;">💬</div>
+          <div>
+            <p class="share-opt-label">Share on WhatsApp</p>
+            <p class="share-opt-sub">send as a message</p>
+          </div>
+        </button>
+        <button class="share-opt-btn" onclick="shareAsImage()">
+          <div class="share-opt-icon" style="background:var(--pink-pale);">🖼️</div>
+          <div>
+            <p class="share-opt-label">Download as image</p>
+            <p class="share-opt-sub">save a beautiful card of your entry</p>
+          </div>
+        </button>
+        <button class="share-opt-btn" onclick="shareAsText()">
+          <div class="share-opt-icon" style="background:var(--sage-pale);">📋</div>
+          <div>
+            <p class="share-opt-label">Copy text</p>
+            <p class="share-opt-sub">copy entry to clipboard</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- Copy link -->
+      <div>
+        <p style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:0.5rem;">shareable link (prototype)</p>
+        <div class="share-link-row">
+          <input type="text" class="share-link-input" id="shareLinkInput" readonly value="petalpages.app/entry/shared" />
+          <button class="btn-copy-link" onclick="copyShareLink()">copy</button>
+        </div>
+      </div>
+      <p class="share-note">🔒 only content you choose to share leaves your device. locked entries cannot be shared.</p>
+    </div>
+  </div>
+
+</body>
+</html>

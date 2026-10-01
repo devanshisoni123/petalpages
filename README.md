@@ -2,7 +2,9 @@
 
 A private, full-stack journaling app. Write daily entries, keep notes, and track your cycle, all behind your own login.
 
-**Live:** [devanshisoni123.github.io/petalpages](https://devanshisoni123.github.io/petalpages)
+**Frontend preview:** [devanshisoni123.github.io/petalpages](https://devanshisoni123.github.io/petalpages)
+
+> The backend is currently offline, so sign-up and login are unavailable. The full code is in this repo.
 
 ## Features
 
@@ -38,7 +40,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-On Windows use `mvnw.cmd spring-boot:run`. You need Java and a running MySQL instance. Set your database credentials and JWT secret in `backend/src/main/resources/application.properties` (or as environment variables).
+On Windows use `mvnw.cmd spring-boot:run`. You need Java and a running MySQL instance. The app reads its configuration from environment variables: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` and `JWT_SECRET` (a random string of at least 32 characters).
 
 **Frontend**
 
